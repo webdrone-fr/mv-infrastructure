@@ -6,8 +6,8 @@
   "currentVersion" : "1.21",
   "meveoVersionBase" : "6.9.0",
   "transient" : true,
-  "codeOnly" : false,
   "inDraft" : true,
+  "codeOnly" : false,
   "moduleItems" : [ {
     "dtoClassName" : "org.meveo.api.dto.CustomEntityCategoryDto",
     "dtoData" : {
@@ -178,15 +178,7 @@
         "unique" : false,
         "matrixColumns" : [ ]
       } ],
-      "actions" : [ {
-        "code" : "listCount",
-        "description" : "List proxy deployments",
-        "appliesTo" : "CE_ApplicationInstance",
-        "label" : "List proxy deployments",
-        "script" : "com.webdrone.proxy.deployment.WebdroneApiV1",
-        "applicableToEntityList" : false,
-        "applicableToEntityInstance" : true
-      } ]
+      "actions" : []
     }
   }, {
     "dtoClassName" : "org.meveo.api.dto.CustomEntityTemplateDto",
