@@ -244,15 +244,7 @@
         "unique" : false,
         "matrixColumns" : [ ]
       } ],
-      "actions" : [ {
-        "code" : "listCount",
-        "description" : "List proxy deployments",
-        "appliesTo" : "CE_ApplicationInstance",
-        "label" : "List proxy deployments",
-        "script" : "com.webdrone.proxy.deployment.WebdroneApiV1",
-        "applicableToEntityList" : false,
-        "applicableToEntityInstance" : true
-      } ]
+      "actions" : [ ]
     }
   }, {
     "dtoClassName" : "org.meveo.api.dto.CustomEntityTemplateDto",
