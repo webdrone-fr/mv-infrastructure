@@ -245,14 +245,6 @@
         "matrixColumns" : [ ]
       } ],
       "actions" : [ {
-        "code" : "listStartServices",
-        "description" : "List Start Services",
-        "appliesTo" : "CE_ApplicationInstance",
-        "label" : "List start services",
-        "script" : "com.webdrone.startservice.WebdroneStartServiceApi",
-        "applicableToEntityList" : false,
-        "applicableToEntityInstance" : true
-      }, {
         "code" : "listCount",
         "description" : "List proxy deployments",
         "appliesTo" : "CE_ApplicationInstance",
