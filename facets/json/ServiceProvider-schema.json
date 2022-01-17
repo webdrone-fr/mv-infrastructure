@@ -1,0 +1,124 @@
+{
+    "storages": ["SQL"],
+    "default": "Server provider",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "ServiceProvider",
+    "title": "Server provider",
+    "type": "object",
+    "properties": {
+        "apiBaseUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "API base URL",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_apiBaseUrl",
+            "title": "ServiceProvider.apiBaseUrl",
+            "type": "string",
+            "maxLength": 1000
+        },
+        "image": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_image_item",
+                "title": "ServiceProvider.image item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Images",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_image",
+            "title": "ServiceProvider.image",
+            "type": "object"
+        },
+        "code": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Code",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_code",
+            "title": "ServiceProvider.code",
+            "type": "string",
+            "maxLength": 50
+        },
+        "zone": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_zone_item",
+                "title": "ServiceProvider.zone item",
+                "type": "string",
+                "maxLength": 50
+            }},
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_zone",
+            "title": "ServiceProvider.zone",
+            "type": "object"
+        },
+        "organization": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_organization_item",
+                "title": "ServiceProvider.organization item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Organization",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_organization",
+            "title": "ServiceProvider.organization",
+            "type": "object"
+        },
+        "serverType": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_serverType_item",
+                "title": "ServiceProvider.serverType item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_serverType",
+            "title": "ServiceProvider.serverType",
+            "type": "object"
+        },
+        "description": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Description",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_description",
+            "title": "ServiceProvider.description",
+            "type": "string",
+            "maxLength": 255
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_status",
+            "title": "ServiceProvider.status",
+            "type": "array",
+            "items": {
+                "id": "CE_ServiceProvider_status_item",
+                "title": "ServiceProvider.status item",
+                "type": "string",
+                "maxLength": 50
+            }
+        }
+    }
+}
