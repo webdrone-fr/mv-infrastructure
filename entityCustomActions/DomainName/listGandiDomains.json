@@ -1,0 +1,1 @@
+{"code":"listGandiDomains","description":"List Gandi Domains","appliesTo":"CE_DomainName","label":"List from Gandi","script":"org.meveo.gandi.ListDomains","applicableToEntityList":true,"applicableToEntityInstance":false}
