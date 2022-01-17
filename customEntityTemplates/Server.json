@@ -1,0 +1,14 @@
+{
+  "code" : "Server",
+  "name" : "Server",
+  "description" : "Server ",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false,
+  "fields" : [ ],
+  "actions" : [ ]
+}
