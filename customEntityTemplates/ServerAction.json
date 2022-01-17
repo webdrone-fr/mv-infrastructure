@@ -1,0 +1,14 @@
+{
+  "code" : "ServerAction",
+  "name" : "Action on server",
+  "description" : "Action on server",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false,
+  "fields" : [ ],
+  "actions" : [ ]
+}
