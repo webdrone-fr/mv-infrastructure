@@ -1,0 +1,14 @@
+{
+  "code" : "DomainName",
+  "name" : "Domain name",
+  "description" : "Domain Name",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false,
+  "fields" : [ ],
+  "actions" : [ ]
+}
