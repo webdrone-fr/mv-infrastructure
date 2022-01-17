@@ -1,0 +1,14 @@
+{
+  "code" : "ServiceProvider",
+  "name" : "Server provider",
+  "description" : "Server provider",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false,
+  "fields" : [ ],
+  "actions" : [ ]
+}
