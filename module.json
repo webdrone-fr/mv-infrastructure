@@ -1,0 +1,9 @@
+{
+  "code" : "infrastructure",
+  "description" : "Infrastructure management",
+  "license" : "GPL",
+  "currentVersion" : "1.31",
+  "isInDraft" : true,
+  "moduleDependencies" : [ ],
+  "moduleFiles" : [ ]
+}
