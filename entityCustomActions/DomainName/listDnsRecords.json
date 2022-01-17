@@ -1,0 +1,1 @@
+{"code":"listDnsRecords","description":"List DNS Records","appliesTo":"CE_DomainName","label":"List DNS Records","script":"org.meveo.gandi.ListDnsRecords","applicableToEntityList":false,"applicableToEntityInstance":true}
