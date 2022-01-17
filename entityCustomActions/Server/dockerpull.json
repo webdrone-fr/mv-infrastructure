@@ -1,0 +1,1 @@
+{"code":"dockerpull","description":"Execute Dockerpull","appliesTo":"CE_Server","label":"Dockerpull","script":"org.meveo.script.SergentCommand","applicableToEntityList":false,"applicableToEntityInstance":true}
