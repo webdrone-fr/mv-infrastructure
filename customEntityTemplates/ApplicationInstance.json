@@ -1,0 +1,14 @@
+{
+  "code" : "ApplicationInstance",
+  "name" : "Apps",
+  "description" : "Application instance",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false,
+  "fields" : [ ],
+  "actions" : [ ]
+}
