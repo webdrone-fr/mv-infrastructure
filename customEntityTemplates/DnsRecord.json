@@ -1,0 +1,14 @@
+{
+  "code" : "DnsRecord",
+  "name" : "DNS record",
+  "description" : "DNS Record",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false,
+  "fields" : [ ],
+  "actions" : [ ]
+}
