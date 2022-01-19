@@ -8,6 +8,7 @@ import javax.ws.rs.core.*;
 
 import com.google.gson.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -53,11 +54,13 @@ public class ListCloudflareDomains extends Script {
                 domainName.setRegistar("CLOUDFLARE");
                 domainName.setUuid(serverObj.get("id").getAsString());
                 domainName.setName(serverObj.get("name").getAsString());
-                // NormedName?
+                // NormedName? - necessary?
                 domainName.setCreationDate(OffsetDateTime.parse(serverObj.get("created_on").getAsString()).toInstant());
                 domainName.setRegistrationDate(OffsetDateTime.parse(serverObj.get("activated_on").getAsString()).toInstant());
                 domainName.setLastUpdate(OffsetDateTime.parse(serverObj.get("modified_on").getAsString()).toInstant());
-                //?Tld?
+                // Tld?
+                String tld = StringUtils.split(serverObj.get("name").getAsString(), ".")[1];
+                domainName.setTld(tld);
                 logger.info("domain name:{}", domainName.getName());
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, domainName);

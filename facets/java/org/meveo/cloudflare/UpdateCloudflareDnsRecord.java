@@ -9,9 +9,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -26,10 +23,10 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CreateCloudflareDnsRecord extends Script {
+public class UpdateCloudflareDnsRecord extends Script {
     
 
-    private static final Logger logger = LoggerFactory.getLogger(CreateCloudflareDnsRecord.class);
+    private static final Logger logger = LoggerFactory.getLogger(UpdateCloudflareDnsRecord.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
@@ -50,11 +47,11 @@ public class CreateCloudflareDnsRecord extends Script {
         if (credential==null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
         } else {
-            logger.info("using credential {}({}) with username {}",credential.getDomainName(), credential.getUuid(), credential.getUsername()); //Need to verify username
+            logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername()); //Need to verify username
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://api.cloudflare.com/client/v4/zones/"+domainName.getUuid()+"/dns_records");
+        WebTarget target = client.target("https://api.cloudflare.com/client/v4/zones/"+domainName.getUuid()+"/dns_records/"+record.getUuid());
 
         Map<String, Object> body = Map.of(
             "type", record.getRecordType(), 
@@ -68,17 +65,14 @@ public class CreateCloudflareDnsRecord extends Script {
         Response response = 
             CredentialHelperService.setCredential(target.request(), credential)
                 .header("Content-Type", "application/json")
-                .post(Entity.json(resp));
-       
+                .put(Entity.json(resp));
+        
         String value = response.readEntity(String.class);
         logger.info("response  :" + value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
-        if (response.getStatus()==201) {
+        if (response.getStatus()==200) {
             record.setLastSyncDate(Instant.now());
-            // Need to set Uuid to keep it consistent with one set by cloudflare
-            JsonObject serverObj =  (JsonObject) new JsonParser().parse(value).getAsJsonObject().get("result");
-            record.setUuid(serverObj.get("id").getAsString());
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, record);
             } catch (Exception e) {
