@@ -27,7 +27,7 @@ public class ListCloudflareDomains extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
-    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4/";
+    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4";
 
 
     @Override
@@ -41,7 +41,7 @@ public class ListCloudflareDomains extends Script {
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         // Cloudflare Zone: A Zone is a domain name along with its subdomains and other identities
-        WebTarget target = client.target("https://api.cloudflare.com/client/v4/zones");
+        WebTarget target = client.target(CLOUDFLARE_URL+"/zones");
         Response response = CredentialHelperService.setCredential(target.request(), credential).get();
         String value = response.readEntity(String.class);
         logger.info("response : " + value);

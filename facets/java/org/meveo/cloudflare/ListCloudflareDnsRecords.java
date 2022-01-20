@@ -29,7 +29,7 @@ public class ListCloudflareDnsRecords extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
-    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4/";
+    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -42,7 +42,7 @@ public class ListCloudflareDnsRecords extends Script {
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://api.cloudflare.com/client/v4/zones/"+domainName.getUuid()+"/dns_records");
+        WebTarget target = client.target(CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records");
         Response response = CredentialHelperService.setCredential(target.request(), credential).get();
         String value = response.readEntity(String.class);
         logger.info("response :", value);
@@ -58,9 +58,10 @@ public class ListCloudflareDnsRecords extends Script {
                     record.setRecordType(type);
                     record.setTtl(serverObj.get("ttl").getAsLong());
                     record.setName(serverObj.get("name").getAsString());
-                    record.setValue(serverObj.get("content").getAsString()); // To be confirmed
+                    record.setValue(serverObj.get("content").getAsString());
                     record.setLastSyncDate(Instant.now());
                     record.setUuid(serverObj.get("id").getAsString());
+                    record.setProviderSideId(serverObj.get("id").getAsString()); // for creation of new records
                     logger.info("record :{} {} {}", record.getRecordType(),record.getName(),record.getValue());
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, record);

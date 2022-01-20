@@ -31,7 +31,7 @@ public class UpdateCloudflareDnsRecord extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
-    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4/";
+    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -51,7 +51,7 @@ public class UpdateCloudflareDnsRecord extends Script {
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://api.cloudflare.com/client/v4/zones/"+domainName.getUuid()+"/dns_records/"+record.getUuid());
+        WebTarget target = client.target(CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
 
         Map<String, Object> body = Map.of(
             "type", record.getRecordType(), 

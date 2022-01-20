@@ -34,14 +34,14 @@ public class CreateCloudflareDnsRecord extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
-    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4/";
+    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION);
         DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
         if (record.getDomainName()==null || record.getRecordType()==null || record.getName()==null
-        || record.getName().isEmpty() || record.getValue()==null || record.getValue().isEmpty()) {
+            || record.getName().isEmpty() || record.getValue()==null || record.getValue().isEmpty()) {
             throw new BusinessException("invalid record");
         }
         DomainName domainName = record.getDomainName();
@@ -50,16 +50,16 @@ public class CreateCloudflareDnsRecord extends Script {
         if (credential==null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
         } else {
-            logger.info("using credential {}({}) with username {}",credential.getDomainName(), credential.getUuid(), credential.getUsername()); //Need to verify username
+            logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername()); //Need to verify username
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://api.cloudflare.com/client/v4/zones/"+domainName.getUuid()+"/dns_records");
+        WebTarget target = client.target(CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records");
 
         Map<String, Object> body = Map.of(
             "type", record.getRecordType(), 
             "name", record.getName(), 
-            "content", record.getValue(),
+            "content", record.getValue(), // needs to be valid IPv4 address
             "ttl", String.valueOf(record.getTtl()));
             // set default proxied value to true for A and CNAME records?
             // proxied: Whether the record is receiving the performance and security benefits of Cloudflare
@@ -69,16 +69,16 @@ public class CreateCloudflareDnsRecord extends Script {
             CredentialHelperService.setCredential(target.request(), credential)
                 .header("Content-Type", "application/json")
                 .post(Entity.json(resp));
-       
+
         String value = response.readEntity(String.class);
         logger.info("response  :" + value);
         logger.debug("response status : {}", response.getStatus());
-        parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
+        parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
         if (response.getStatus()==201) {
             record.setLastSyncDate(Instant.now());
-            // Need to set Uuid to keep it consistent with one set by cloudflare
+            // added new field providersideId for creation of new records as not possible to modify meveo uuid at creation
             JsonObject serverObj =  (JsonObject) new JsonParser().parse(value).getAsJsonObject().get("result");
-            record.setUuid(serverObj.get("id").getAsString());
+            record.setProviderSideId(serverObj.get("id").getAsString());
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, record);
             } catch (Exception e) {
