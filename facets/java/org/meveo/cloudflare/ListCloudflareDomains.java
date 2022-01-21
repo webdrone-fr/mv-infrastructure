@@ -51,7 +51,7 @@ public class ListCloudflareDomains extends Script {
             for (JsonElement element : rootArray) {
                 JsonObject serverObj = element.getAsJsonObject();
                 DomainName domainName = new DomainName();
-                domainName.setRegistar("CLOUDFLARE");
+                domainName.setRegistar("CLOUDFLARE"); // should be linked to server provider
                 domainName.setUuid(serverObj.get("id").getAsString());
                 domainName.setName(serverObj.get("name").getAsString());
                 // NormedName? - necessary?

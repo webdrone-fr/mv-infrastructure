@@ -62,13 +62,17 @@ public class ListCloudflareDnsRecords extends Script {
                     record.setLastSyncDate(Instant.now());
                     record.setUuid(serverObj.get("id").getAsString());
                     record.setProviderSideId(serverObj.get("id").getAsString()); // for creation of new records
+                    record.setProxied(serverObj.get("proxied").getAsBoolean());
                     logger.info("record :{} {} {}", record.getRecordType(),record.getName(),record.getValue());
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, record);
                     } catch (Exception e) {
                         logger.error("error creating record {} :{}", record.getUuid(), e.getMessage());
                     }
+                } else {
                     //TODO notify of non imported records
+                    // Should be put in an Object so that it is displayed as one msg, not multiple
+                    parameters.put(RESULT_GUI_MESSAGE, serverObj.get("name").getAsString()+ serverObj.get("type").getAsString() +": record not imported");
                 }
             }
         }

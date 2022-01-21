@@ -58,8 +58,10 @@ public class UpdateCloudflareDnsRecord extends Script {
             "name", record.getName(), 
             "content", record.getValue(),
             "ttl", String.valueOf(record.getTtl()));
+            // Optional setting
             // set default proxied value to true for A and CNAME records?
             // proxied: Whether the record is receiving the performance and security benefits of Cloudflare
+            // "proxied",record.getProxied();
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
         Response response = 
