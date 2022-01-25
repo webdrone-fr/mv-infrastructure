@@ -43,7 +43,7 @@ public class DeleteCloudflareDnsRecord extends Script {
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target(CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
 
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);

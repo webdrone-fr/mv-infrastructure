@@ -14,6 +14,8 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.DomainName;
+import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -29,9 +31,9 @@ public class ListCloudflareDomains extends Script {
 
     static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4";
 
-
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        ServiceProvider registrar = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
@@ -41,7 +43,7 @@ public class ListCloudflareDomains extends Script {
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         // Cloudflare Zone: A Zone is a domain name along with its subdomains and other identities
-        WebTarget target = client.target(CLOUDFLARE_URL+"/zones");
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones");
         Response response = CredentialHelperService.setCredential(target.request(), credential).get();
         String value = response.readEntity(String.class);
         logger.info("response : " + value);
@@ -52,9 +54,9 @@ public class ListCloudflareDomains extends Script {
                 JsonObject serverObj = element.getAsJsonObject();
                 DomainName domainName = new DomainName();
                 domainName.setRegistar("CLOUDFLARE"); // should be linked to server provider
+                domainName.setRegistrar(registrar);
                 domainName.setUuid(serverObj.get("id").getAsString());
                 domainName.setName(serverObj.get("name").getAsString());
-                // NormedName? - necessary?
                 domainName.setCreationDate(OffsetDateTime.parse(serverObj.get("created_on").getAsString()).toInstant());
                 domainName.setRegistrationDate(OffsetDateTime.parse(serverObj.get("activated_on").getAsString()).toInstant());
                 domainName.setLastUpdate(OffsetDateTime.parse(serverObj.get("modified_on").getAsString()).toInstant());

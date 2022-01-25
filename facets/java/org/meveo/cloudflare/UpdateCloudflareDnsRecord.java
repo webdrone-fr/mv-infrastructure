@@ -51,17 +51,17 @@ public class UpdateCloudflareDnsRecord extends Script {
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target(CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
 
         Map<String, Object> body = Map.of(
             "type", record.getRecordType(), 
             "name", record.getName(), 
             "content", record.getValue(),
-            "ttl", String.valueOf(record.getTtl()));
+            "ttl", String.valueOf(record.getTtl()),
             // Optional setting
             // set default proxied value to true for A and CNAME records?
             // proxied: Whether the record is receiving the performance and security benefits of Cloudflare
-            // "proxied",record.getProxied();
+            "proxied", record.getProxied());
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
         Response response = 

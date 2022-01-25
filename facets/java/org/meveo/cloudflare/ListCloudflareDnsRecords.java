@@ -1,6 +1,7 @@
 package org.meveo.cloudflare;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -15,6 +16,7 @@ import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.DnsRecord;
 import org.meveo.model.customEntities.DomainName;
 import org.meveo.model.persistence.CEIUtils;
+import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -42,9 +44,10 @@ public class ListCloudflareDnsRecords extends Script {
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target(CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records");
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records");
         Response response = CredentialHelperService.setCredential(target.request(), credential).get();
         String value = response.readEntity(String.class);
+        ArrayList<String> nonImportedRecords = new ArrayList<String>();
         logger.info("response :", value);
         logger.debug("response status : {}", response.getStatus());
         if (response.getStatus() < 300) {
@@ -71,10 +74,11 @@ public class ListCloudflareDnsRecords extends Script {
                     }
                 } else {
                     //TODO notify of non imported records
-                    // Should be put in an Object so that it is displayed as one msg, not multiple
-                    parameters.put(RESULT_GUI_MESSAGE, serverObj.get("name").getAsString()+ serverObj.get("type").getAsString() +": record not imported");
+                    nonImportedRecords.add(serverObj.get("name").getAsString()+ ": "+ serverObj.get("type").getAsString());
                 }
             }
+            // parameters.put(RESULT_GUI_MESSAGE, "Total Non-imported Records: " + nonImportedRecords.size());
+            parameters.put(RESULT_GUI_MESSAGE, "Non-imported Records: " + JacksonUtil.toStringPrettyPrinted(nonImportedRecords));
         }
     }
 }
