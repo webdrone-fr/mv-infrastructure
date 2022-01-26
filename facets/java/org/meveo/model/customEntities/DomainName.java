@@ -20,6 +20,8 @@ public class DomainName implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Instant lastUpdate;
+
     private Boolean autoRenew;
 
     private Instant creationDate;
@@ -39,6 +41,14 @@ public class DomainName implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public Boolean getAutoRenew() {
