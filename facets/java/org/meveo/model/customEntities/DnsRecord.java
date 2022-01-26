@@ -31,6 +31,8 @@ public class DnsRecord implements CustomEntity {
 
     private Long ttl;
 
+    private String value;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -86,6 +88,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setTtl(Long ttl) {
         this.ttl = ttl;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override()
