@@ -28,6 +28,8 @@ public class DomainName implements CustomEntity {
 
     private Boolean autoRenew;
 
+    private String registar;
+
     private Instant creationDate;
 
     @Override()
@@ -77,6 +79,14 @@ public class DomainName implements CustomEntity {
 
     public void setAutoRenew(Boolean autoRenew) {
         this.autoRenew = autoRenew;
+    }
+
+    public String getRegistar() {
+        return registar;
+    }
+
+    public void setRegistar(String registar) {
+        this.registar = registar;
     }
 
     public Instant getCreationDate() {
