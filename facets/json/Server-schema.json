@@ -114,6 +114,17 @@
             "id": "CE_Server_creationDate",
             "title": "Server.creationDate",
             "type": "string"
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_status",
+            "title": "Server.status",
+            "type": "string",
+            "maxLength": 50
         }
     }
 }
