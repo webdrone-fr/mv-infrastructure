@@ -5,15 +5,28 @@
     "id": "Server",
     "title": "Server",
     "type": "object",
-    "properties": {"creationDate": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "format": "date-time",
-        "description": "Creation date",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_Server_creationDate",
-        "title": "Server.creationDate",
-        "type": "string"
-    }}
+    "properties": {
+        "domainName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Domain name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_domainName",
+            "title": "Server.domainName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_creationDate",
+            "title": "Server.creationDate",
+            "type": "string"
+        }
+    }
 }
