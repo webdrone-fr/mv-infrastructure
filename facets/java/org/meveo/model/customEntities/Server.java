@@ -20,6 +20,8 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String image;
+
     private String domainName;
 
     private Instant creationDate;
@@ -39,6 +41,14 @@ public class Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getDomainName() {
