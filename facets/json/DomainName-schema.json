@@ -6,6 +6,17 @@
     "title": "Domain name",
     "type": "object",
     "properties": {
+        "normedName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Normalized name (ASCII)",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_normedName",
+            "title": "DomainName.normedName",
+            "type": "string",
+            "maxLength": 255
+        },
         "lastUpdate": {
             "storages": ["SQL"],
             "nullable": true,
