@@ -3,8 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.model.customEntities.ServiceProvider;
 import java.time.Instant;
+import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -25,7 +25,17 @@ public class Server implements CustomEntity {
 
     private String instanceName;
 
+    private String sergentUrl;
+
+    private String publicIp;
+
+    private Instant creationDate;
+
+    private String volumeSize;
+
     private ServiceProvider provider;
+
+    private String zone;
 
     private String domainName;
 
@@ -34,14 +44,6 @@ public class Server implements CustomEntity {
     private String organization;
 
     private String serverType;
-
-    private String sergentUrl;
-
-    private String publicIp;
-
-    private Instant creationDate;
-
-    private String volumeSize;
 
     private String status;
 
@@ -78,12 +80,52 @@ public class Server implements CustomEntity {
         this.instanceName = instanceName;
     }
 
+    public String getSergentUrl() {
+        return sergentUrl;
+    }
+
+    public void setSergentUrl(String sergentUrl) {
+        this.sergentUrl = sergentUrl;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getVolumeSize() {
+        return volumeSize;
+    }
+
+    public void setVolumeSize(String volumeSize) {
+        this.volumeSize = volumeSize;
+    }
+
     public ServiceProvider getProvider() {
         return provider;
     }
 
     public void setProvider(ServiceProvider provider) {
         this.provider = provider;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public String getDomainName() {
@@ -116,38 +158,6 @@ public class Server implements CustomEntity {
 
     public void setServerType(String serverType) {
         this.serverType = serverType;
-    }
-
-    public String getSergentUrl() {
-        return sergentUrl;
-    }
-
-    public void setSergentUrl(String sergentUrl) {
-        this.sergentUrl = sergentUrl;
-    }
-
-    public String getPublicIp() {
-        return publicIp;
-    }
-
-    public void setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public String getVolumeSize() {
-        return volumeSize;
-    }
-
-    public void setVolumeSize(String volumeSize) {
-        this.volumeSize = volumeSize;
     }
 
     public String getStatus() {
