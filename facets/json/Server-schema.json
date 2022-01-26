@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "instanceName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Instance name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_instanceName",
+            "title": "Server.instanceName",
+            "type": "string",
+            "maxLength": 255
+        },
         "domainName": {
             "storages": ["SQL"],
             "nullable": true,
