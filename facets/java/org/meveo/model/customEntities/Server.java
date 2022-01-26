@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.ServiceProvider;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +24,8 @@ public class Server implements CustomEntity {
     private String image;
 
     private String instanceName;
+
+    private ServiceProvider provider;
 
     private String domainName;
 
@@ -63,6 +66,14 @@ public class Server implements CustomEntity {
 
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
+    }
+
+    public ServiceProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(ServiceProvider provider) {
+        this.provider = provider;
     }
 
     public String getDomainName() {
