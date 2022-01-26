@@ -100,6 +100,31 @@
     "persisted" : true,
     "filter" : false,
     "unique" : false
+  }, {
+    "code" : "port",
+    "description" : "port",
+    "fieldType" : "LONG",
+    "accountLevel" : "CE_ApplicationInstance",
+    "appliesTo" : "CE_ApplicationInstance",
+    "useInheritedAsDefaultValue" : false,
+    "storageType" : "SINGLE",
+    "valueRequired" : false,
+    "versionable" : false,
+    "triggerEndPeriodEvent" : false,
+    "allowEdit" : true,
+    "hideOnNew" : false,
+    "contentTypes" : [ ],
+    "fileExtensions" : [ ],
+    "saveOnExplorer" : false,
+    "guiPosition" : "tab:Apps:0;field:2",
+    "identifier" : false,
+    "storages" : [ "SQL" ],
+    "samples" : [ ],
+    "summary" : true,
+    "audited" : false,
+    "persisted" : true,
+    "filter" : false,
+    "unique" : false
   } ],
   "actions" : [ ]
 }
