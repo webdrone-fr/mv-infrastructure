@@ -41,6 +41,8 @@ public class Server implements CustomEntity {
 
     private Instant creationDate;
 
+    private String status;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -136,6 +138,14 @@ public class Server implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override()
