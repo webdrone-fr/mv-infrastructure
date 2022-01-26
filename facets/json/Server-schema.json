@@ -50,6 +50,17 @@
             "title": "Server.lastUpdate",
             "type": "string"
         },
+        "organization": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Organization",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_organization",
+            "title": "Server.organization",
+            "type": "string",
+            "maxLength": 255
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
