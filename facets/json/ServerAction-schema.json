@@ -27,6 +27,16 @@
             "id": "CE_ServerAction_creationDate",
             "title": "ServerAction.creationDate",
             "type": "string"
+        },
+        "elapsedTimeMs": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Elapsed time ms",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_elapsedTimeMs",
+            "title": "ServerAction.elapsedTimeMs",
+            "type": "integer"
         }
     }
 }
