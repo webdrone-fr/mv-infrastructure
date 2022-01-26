@@ -23,6 +23,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String code;
 
+    private String description;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -54,6 +56,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override()
