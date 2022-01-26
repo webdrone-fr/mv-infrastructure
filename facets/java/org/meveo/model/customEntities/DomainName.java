@@ -20,6 +20,8 @@ public class DomainName implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String normedName;
+
     private Instant lastUpdate;
 
     private String name;
@@ -43,6 +45,14 @@ public class DomainName implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getNormedName() {
+        return normedName;
+    }
+
+    public void setNormedName(String normedName) {
+        this.normedName = normedName;
     }
 
     public Instant getLastUpdate() {
