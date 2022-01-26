@@ -64,6 +64,17 @@
             "id": "CE_ApplicationInstance_port",
             "title": "ApplicationInstance.port",
             "type": "integer"
+        },
+        "repoName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "name repository",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_repoName",
+            "title": "ApplicationInstance.repoName",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
