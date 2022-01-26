@@ -216,6 +216,32 @@
     "persisted" : true,
     "filter" : false,
     "unique" : false
+  }, {
+    "code" : "tld",
+    "description" : "Tld",
+    "fieldType" : "STRING",
+    "accountLevel" : "CE_DomainName",
+    "appliesTo" : "CE_DomainName",
+    "useInheritedAsDefaultValue" : false,
+    "storageType" : "SINGLE",
+    "valueRequired" : false,
+    "versionable" : false,
+    "triggerEndPeriodEvent" : false,
+    "allowEdit" : true,
+    "hideOnNew" : false,
+    "maxValue" : 20,
+    "contentTypes" : [ ],
+    "fileExtensions" : [ ],
+    "saveOnExplorer" : false,
+    "guiPosition" : "tab:Domain name:0;field:0",
+    "identifier" : false,
+    "storages" : [ "SQL" ],
+    "samples" : [ ],
+    "summary" : true,
+    "audited" : false,
+    "persisted" : true,
+    "filter" : true,
+    "unique" : false
   } ],
   "actions" : [ ]
 }
