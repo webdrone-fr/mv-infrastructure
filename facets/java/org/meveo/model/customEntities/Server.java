@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -19,6 +20,8 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Instant creationDate;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +37,14 @@ public class Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override()
