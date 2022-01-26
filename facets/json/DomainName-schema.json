@@ -17,6 +17,17 @@
             "title": "DomainName.lastUpdate",
             "type": "string"
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "domain name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_name",
+            "title": "DomainName.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "autoRenew": {
             "storages": ["SQL"],
             "default": "false",
