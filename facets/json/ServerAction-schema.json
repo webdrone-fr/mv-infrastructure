@@ -5,15 +5,28 @@
     "id": "ServerAction",
     "title": "Action on server",
     "type": "object",
-    "properties": {"action": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Action",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServerAction_action",
-        "title": "ServerAction.action",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "action": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Action",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_action",
+            "title": "ServerAction.action",
+            "type": "string",
+            "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_creationDate",
+            "title": "ServerAction.creationDate",
+            "type": "string"
+        }
+    }
 }
