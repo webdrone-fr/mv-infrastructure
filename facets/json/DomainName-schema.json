@@ -5,15 +5,28 @@
     "id": "DomainName",
     "title": "Domain name",
     "type": "object",
-    "properties": {"autoRenew": {
-        "storages": ["SQL"],
-        "default": "false",
-        "nullable": true,
-        "description": "Auto renew",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_DomainName_autoRenew",
-        "title": "DomainName.autoRenew",
-        "type": "string"
-    }}
+    "properties": {
+        "autoRenew": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Auto renew",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_autoRenew",
+            "title": "DomainName.autoRenew",
+            "type": "string"
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_creationDate",
+            "title": "DomainName.creationDate",
+            "type": "string"
+        }
+    }
 }
