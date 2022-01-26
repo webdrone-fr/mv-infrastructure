@@ -33,6 +33,8 @@ public class Server implements CustomEntity {
 
     private String organization;
 
+    private String publicIp;
+
     private Instant creationDate;
 
     @Override()
@@ -98,6 +100,14 @@ public class Server implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
     }
 
     public Instant getCreationDate() {
