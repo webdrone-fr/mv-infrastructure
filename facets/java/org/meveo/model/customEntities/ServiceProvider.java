@@ -3,6 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.Map;
+import java.util.HashMap;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServiceProvider implements CustomEntity {
@@ -20,6 +22,8 @@ public class ServiceProvider implements CustomEntity {
     private DBStorageType storages;
 
     private String apiBaseUrl;
+
+    private Map<String, String> image = new HashMap<>();
 
     private String code;
 
@@ -48,6 +52,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setApiBaseUrl(String apiBaseUrl) {
         this.apiBaseUrl = apiBaseUrl;
+    }
+
+    public Map<String, String> getImage() {
+        return image;
+    }
+
+    public void setImage(Map<String, String> image) {
+        this.image = image;
     }
 
     public String getCode() {
