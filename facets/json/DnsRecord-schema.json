@@ -51,6 +51,17 @@
             "id": "CE_DnsRecord_lastSyncDate",
             "title": "DnsRecord.lastSyncDate",
             "type": "string"
+        },
+        "ttl": {
+            "storages": ["SQL"],
+            "default": 10800,
+            "nullable": true,
+            "description": "Time to live",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_ttl",
+            "title": "DnsRecord.ttl",
+            "type": "integer"
         }
     }
 }
