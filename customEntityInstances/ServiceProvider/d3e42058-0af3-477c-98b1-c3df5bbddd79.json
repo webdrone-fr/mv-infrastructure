@@ -1,7 +1,5 @@
 {
-  "apiBaseUrl" : "api.scaleway.com",
-  "code" : "SCALEWAY",
-  "description" : "Scaleway",
+  "code" : "d3e42058-0af3-477c-98b1-c3df5bbddd79",
   "cetCode" : "ServiceProvider",
   "uuid" : "d3e42058-0af3-477c-98b1-c3df5bbddd79"
 }
