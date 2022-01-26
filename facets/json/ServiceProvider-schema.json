@@ -27,6 +27,17 @@
             "title": "ServiceProvider.code",
             "type": "string",
             "maxLength": 50
+        },
+        "description": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Description",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_description",
+            "title": "ServiceProvider.description",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
