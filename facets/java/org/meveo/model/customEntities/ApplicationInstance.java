@@ -28,6 +28,8 @@ public class ApplicationInstance implements CustomEntity {
 
     private Long port;
 
+    private String repoName;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -75,6 +77,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setPort(Long port) {
         this.port = port;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 
     @Override()
