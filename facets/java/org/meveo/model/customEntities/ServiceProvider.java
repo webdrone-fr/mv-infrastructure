@@ -28,6 +28,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String code;
 
+    private Map<String, String> zone = new HashMap<>();
+
     private Map<String, String> organization = new HashMap<>();
 
     private Map<String, String> serverType = new HashMap<>();
@@ -75,6 +77,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Map<String, String> getZone() {
+        return zone;
+    }
+
+    public void setZone(Map<String, String> zone) {
+        this.zone = zone;
     }
 
     public Map<String, String> getOrganization() {
