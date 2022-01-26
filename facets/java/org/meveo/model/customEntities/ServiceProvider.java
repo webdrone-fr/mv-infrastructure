@@ -19,6 +19,8 @@ public class ServiceProvider implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String apiBaseUrl;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getApiBaseUrl() {
+        return apiBaseUrl;
+    }
+
+    public void setApiBaseUrl(String apiBaseUrl) {
+        this.apiBaseUrl = apiBaseUrl;
     }
 
     @Override()
