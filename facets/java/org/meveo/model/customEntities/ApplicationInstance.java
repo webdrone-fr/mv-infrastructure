@@ -26,6 +26,8 @@ public class ApplicationInstance implements CustomEntity {
 
     private Boolean isStartServiceSource;
 
+    private Long port;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -65,6 +67,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setIsStartServiceSource(Boolean isStartServiceSource) {
         this.isStartServiceSource = isStartServiceSource;
+    }
+
+    public Long getPort() {
+        return port;
+    }
+
+    public void setPort(Long port) {
+        this.port = port;
     }
 
     @Override()
