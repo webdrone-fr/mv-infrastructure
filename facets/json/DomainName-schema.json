@@ -6,6 +6,17 @@
     "title": "Domain name",
     "type": "object",
     "properties": {
+        "lastUpdate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last update",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_lastUpdate",
+            "title": "DomainName.lastUpdate",
+            "type": "string"
+        },
         "autoRenew": {
             "storages": ["SQL"],
             "default": "false",
