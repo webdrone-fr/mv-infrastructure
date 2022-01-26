@@ -41,6 +41,8 @@ public class Server implements CustomEntity {
 
     private Instant creationDate;
 
+    private String volumeSize;
+
     private String status;
 
     @Override()
@@ -138,6 +140,14 @@ public class Server implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getVolumeSize() {
+        return volumeSize;
+    }
+
+    public void setVolumeSize(String volumeSize) {
+        this.volumeSize = volumeSize;
     }
 
     public String getStatus() {
