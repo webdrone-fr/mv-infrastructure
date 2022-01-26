@@ -22,6 +22,8 @@ public class Server implements CustomEntity {
 
     private String image;
 
+    private String instanceName;
+
     private String domainName;
 
     private Instant creationDate;
@@ -49,6 +51,14 @@ public class Server implements CustomEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
     }
 
     public String getDomainName() {
