@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "Server",
     "title": "Server",
-    "type": "object"
+    "type": "object",
+    "properties": {"creationDate": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "format": "date-time",
+        "description": "Creation date",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_Server_creationDate",
+        "title": "Server.creationDate",
+        "type": "string"
+    }}
 }
