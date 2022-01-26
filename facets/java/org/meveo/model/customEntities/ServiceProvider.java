@@ -21,6 +21,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String apiBaseUrl;
 
+    private String code;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -44,6 +46,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setApiBaseUrl(String apiBaseUrl) {
         this.apiBaseUrl = apiBaseUrl;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override()
