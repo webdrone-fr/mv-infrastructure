@@ -26,6 +26,8 @@ public class Server implements CustomEntity {
 
     private String domainName;
 
+    private Instant lastUpdate;
+
     private Instant creationDate;
 
     @Override()
@@ -67,6 +69,14 @@ public class Server implements CustomEntity {
 
     public void setDomainName(String domainName) {
         this.domainName = domainName;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public Instant getCreationDate() {
