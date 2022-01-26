@@ -20,6 +20,8 @@ public class ServerAction implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String response;
+
     private String action;
 
     private Instant creationDate;
@@ -41,6 +43,14 @@ public class ServerAction implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     public String getAction() {
