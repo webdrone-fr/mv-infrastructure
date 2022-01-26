@@ -62,6 +62,17 @@
             "id": "CE_DnsRecord_ttl",
             "title": "DnsRecord.ttl",
             "type": "integer"
+        },
+        "value": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Value",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_value",
+            "title": "DnsRecord.value",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
