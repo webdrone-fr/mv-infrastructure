@@ -6,6 +6,16 @@
     "title": "Action on server",
     "type": "object",
     "properties": {
+        "response": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Response",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_response",
+            "title": "ServerAction.response",
+            "type": "string"
+        },
         "action": {
             "storages": ["SQL"],
             "nullable": true,
