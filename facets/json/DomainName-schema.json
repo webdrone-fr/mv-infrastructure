@@ -50,6 +50,17 @@
             "title": "DomainName.autoRenew",
             "type": "string"
         },
+        "registar": {
+            "storages": ["SQL"],
+            "default": "GANDI",
+            "nullable": true,
+            "description": "Registar",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registar",
+            "title": "DomainName.registar",
+            "enum": ["GANDI"]
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
