@@ -29,6 +29,8 @@ public class DnsRecord implements CustomEntity {
 
     private Instant lastSyncDate;
 
+    private Long ttl;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -76,6 +78,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setLastSyncDate(Instant lastSyncDate) {
         this.lastSyncDate = lastSyncDate;
+    }
+
+    public Long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(Long ttl) {
+        this.ttl = ttl;
     }
 
     @Override()
