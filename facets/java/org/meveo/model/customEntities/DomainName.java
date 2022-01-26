@@ -22,6 +22,8 @@ public class DomainName implements CustomEntity {
 
     private Instant lastUpdate;
 
+    private String name;
+
     private Boolean autoRenew;
 
     private Instant creationDate;
@@ -49,6 +51,14 @@ public class DomainName implements CustomEntity {
 
     public void setLastUpdate(Instant lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Boolean getAutoRenew() {
