@@ -86,6 +86,23 @@
             "title": "ServiceProvider.description",
             "type": "string",
             "maxLength": 255
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_status",
+            "title": "ServiceProvider.status",
+            "type": "array",
+            "items": {
+                "id": "CE_ServiceProvider_status_item",
+                "title": "ServiceProvider.status item",
+                "type": "string",
+                "maxLength": 50
+            }
         }
     }
 }
