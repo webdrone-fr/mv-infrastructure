@@ -24,6 +24,8 @@ public class ServerAction implements CustomEntity {
 
     private Instant creationDate;
 
+    private Long elapsedTimeMs;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -55,6 +57,14 @@ public class ServerAction implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Long getElapsedTimeMs() {
+        return elapsedTimeMs;
+    }
+
+    public void setElapsedTimeMs(Long elapsedTimeMs) {
+        this.elapsedTimeMs = elapsedTimeMs;
     }
 
     @Override()
