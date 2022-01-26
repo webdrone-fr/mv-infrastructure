@@ -57,14 +57,15 @@ public class ListCloudflareDnsRecords extends Script {
                 DnsRecord record = new DnsRecord();
                 record.setDomainName(domainName);
                 String type = serverObj.get("type").getAsString();
-                if ("A".equals(type) || "CNAME".equals(type)) { // also has AAAA, see dev-meveo.webdrone.fr
+                String name = serverObj.get("name").getAsString();
+                if (("A".equals(type) || "CNAME".equals(type)) && name.startsWith("dev-")) { // also has AAAA, see dev-meveo.webdrone.fr
                     record.setRecordType(type);
                     record.setTtl(serverObj.get("ttl").getAsLong());
-                    record.setName(serverObj.get("name").getAsString());
+                    record.setName(name);
                     record.setValue(serverObj.get("content").getAsString());
                     record.setLastSyncDate(Instant.now());
                     record.setUuid(serverObj.get("id").getAsString());
-                    record.setProviderSideId(serverObj.get("id").getAsString()); // for creation of new records
+                    record.setProviderSideId(serverObj.get("id").getAsString());
                     record.setProxied(serverObj.get("proxied").getAsBoolean());
                     logger.info("record :{} {} {}", record.getRecordType(),record.getName(),record.getValue());
                     try {
@@ -74,7 +75,9 @@ public class ListCloudflareDnsRecords extends Script {
                     }
                 } else {
                     //TODO notify of non imported records
-                    nonImportedRecords.add(serverObj.get("name").getAsString()+ ": "+ serverObj.get("type").getAsString());
+                    if (name.startsWith("dev-")) {
+                        nonImportedRecords.add(name + ": "+ type);
+                    }
                 }
             }
             // parameters.put(RESULT_GUI_MESSAGE, "Total Non-imported Records: " + nonImportedRecords.size());

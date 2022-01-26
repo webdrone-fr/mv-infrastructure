@@ -65,8 +65,7 @@ public class UpdateCloudflareDnsRecord extends Script {
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
         Response response = 
-            CredentialHelperService.setCredential(target.request(), credential)
-                .header("Content-Type", "application/json")
+            CredentialHelperService.setCredential(target.request("application/json"), credential)
                 .put(Entity.json(resp));
         
         String value = response.readEntity(String.class);

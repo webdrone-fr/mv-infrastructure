@@ -33,7 +33,7 @@ public class ListCloudflareDomains extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        ServiceProvider registrar = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
+        ServiceProvider registrar = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "CLOUDFLARE").getResult();
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
@@ -53,14 +53,13 @@ public class ListCloudflareDomains extends Script {
             for (JsonElement element : rootArray) {
                 JsonObject serverObj = element.getAsJsonObject();
                 DomainName domainName = new DomainName();
-                domainName.setRegistar("CLOUDFLARE"); // should be linked to server provider
+                // domainName.setRegistar("CLOUDFLARE"); // should be linked to server provider (ServiceProvider.java)
                 domainName.setRegistrar(registrar);
                 domainName.setUuid(serverObj.get("id").getAsString());
                 domainName.setName(serverObj.get("name").getAsString());
                 domainName.setCreationDate(OffsetDateTime.parse(serverObj.get("created_on").getAsString()).toInstant());
                 domainName.setRegistrationDate(OffsetDateTime.parse(serverObj.get("activated_on").getAsString()).toInstant());
                 domainName.setLastUpdate(OffsetDateTime.parse(serverObj.get("modified_on").getAsString()).toInstant());
-                // Tld?
                 String tld = StringUtils.split(serverObj.get("name").getAsString(), ".")[1];
                 domainName.setTld(tld);
                 logger.info("domain name:{}", domainName.getName());

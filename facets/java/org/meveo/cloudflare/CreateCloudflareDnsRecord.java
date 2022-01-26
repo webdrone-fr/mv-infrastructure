@@ -12,6 +12,7 @@ import javax.ws.rs.core.Response;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import org.apache.commons.validator.routines.InetAddressValidator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -40,10 +41,19 @@ public class CreateCloudflareDnsRecord extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION);
         DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
-        if (record.getDomainName()==null || record.getRecordType()==null || record.getName()==null
-            || record.getName().isEmpty() || record.getValue()==null || record.getValue().isEmpty()) {
-            throw new BusinessException("invalid record");
+        InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+        if (record.getDomainName()==null) {
+            throw new BusinessException("Invalid Record Domain");
+        } else if (record.getRecordType()==null) {
+            throw new BusinessException("Invalid Record Type");
+        } else if (record.getName()==null || record.getName().isEmpty()) {
+            throw new BusinessException("Invalid Record Name");
+        } else if (record.getValue()==null || record.getValue().isEmpty()) {
+            throw new BusinessException("Invalid Record Value");
+        } else if (!ipValidator.isValidInet4Address(record.getValue())) {
+            throw new BusinessException("Invalid Record IP provided");
         }
+
         DomainName domainName = record.getDomainName();
         logger.info("action:{}, domain name uuid:{}", action, domainName.getUuid());
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
@@ -61,22 +71,20 @@ public class CreateCloudflareDnsRecord extends Script {
             "name", record.getName(), 
             "content", record.getValue(), // needs to be valid IPv4 address
             "ttl", String.valueOf(record.getTtl()),
-            // Optional setting 
-            // set default proxied value to true for A and CNAME records?
+            // Optional setting
             // proxied: Whether the record is receiving the performance and security benefits of Cloudflare
             "proxied", record.getProxied());
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
         Response response = 
-            CredentialHelperService.setCredential(target.request(), credential)
-                .header("Content-Type", "application/json")
+            CredentialHelperService.setCredential(target.request("application/json"), credential)
                 .post(Entity.json(resp));
 
         String value = response.readEntity(String.class);
         logger.info("response  :" + value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
-        if (response.getStatus()==201) {
+        if (response.getStatus()<300) {
             record.setLastSyncDate(Instant.now());
             // added new field providersideId for creation of new records as not possible to modify meveo uuid at creation
             JsonObject serverObj =  (JsonObject) new JsonParser().parse(value).getAsJsonObject().get("result");
