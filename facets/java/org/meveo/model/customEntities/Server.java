@@ -28,6 +28,8 @@ public class Server implements CustomEntity {
 
     private Instant lastUpdate;
 
+    private String organization;
+
     private Instant creationDate;
 
     @Override()
@@ -77,6 +79,14 @@ public class Server implements CustomEntity {
 
     public void setLastUpdate(Instant lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     public Instant getCreationDate() {
