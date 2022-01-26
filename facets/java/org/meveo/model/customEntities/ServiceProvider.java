@@ -27,6 +27,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String code;
 
+    private Map<String, String> organization = new HashMap<>();
+
     private String description;
 
     @Override()
@@ -68,6 +70,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Map<String, String> getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Map<String, String> organization) {
+        this.organization = organization;
     }
 
     public String getDescription() {
