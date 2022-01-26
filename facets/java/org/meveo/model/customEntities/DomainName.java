@@ -19,6 +19,8 @@ public class DomainName implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean autoRenew;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class DomainName implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getAutoRenew() {
+        return autoRenew;
+    }
+
+    public void setAutoRenew(Boolean autoRenew) {
+        this.autoRenew = autoRenew;
     }
 
     @Override()
