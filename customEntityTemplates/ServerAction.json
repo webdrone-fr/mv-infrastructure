@@ -86,6 +86,36 @@
     "filter" : true,
     "unique" : false
   }, {
+    "code" : "responseStatus",
+    "description" : "Response status",
+    "fieldType" : "LIST",
+    "accountLevel" : "CE_ServerAction",
+    "appliesTo" : "CE_ServerAction",
+    "useInheritedAsDefaultValue" : false,
+    "storageType" : "SINGLE",
+    "valueRequired" : false,
+    "versionable" : false,
+    "triggerEndPeriodEvent" : false,
+    "listValues" : {
+      "ERROR" : "Error",
+      "OK" : "Ok",
+      "TIMEOUT" : "Timeout"
+    },
+    "allowEdit" : true,
+    "hideOnNew" : false,
+    "contentTypes" : [ ],
+    "fileExtensions" : [ ],
+    "saveOnExplorer" : false,
+    "guiPosition" : "tab:Action on server:0;field:3",
+    "identifier" : false,
+    "storages" : [ "SQL" ],
+    "samples" : [ ],
+    "summary" : true,
+    "audited" : false,
+    "persisted" : true,
+    "filter" : true,
+    "unique" : false
+  }, {
     "code" : "elapsedTimeMs",
     "description" : "Elapsed time ms",
     "fieldType" : "LONG",
