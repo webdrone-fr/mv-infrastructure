@@ -28,6 +28,50 @@
             "type": "string",
             "maxLength": 255
         },
+        "sergentUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Sergent URL",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_sergentUrl",
+            "title": "Server.sergentUrl",
+            "type": "string",
+            "maxLength": 500
+        },
+        "publicIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Public IP",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_publicIp",
+            "title": "Server.publicIp",
+            "type": "string",
+            "maxLength": 100
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_creationDate",
+            "title": "Server.creationDate",
+            "type": "string"
+        },
+        "volumeSize": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Main volume size",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_volumeSize",
+            "title": "Server.volumeSize",
+            "type": "string",
+            "maxLength": 20
+        },
         "provider": {
             "storages": ["SQL"],
             "nullable": true,
@@ -37,6 +81,17 @@
             "id": "CE_Server_provider",
             "title": "Server.provider",
             "$ref": "#/definitions/ServiceProvider"
+        },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_zone",
+            "title": "Server.zone",
+            "type": "string",
+            "maxLength": 50
         },
         "domainName": {
             "storages": ["SQL"],
@@ -81,50 +136,6 @@
             "title": "Server.serverType",
             "type": "string",
             "maxLength": 255
-        },
-        "sergentUrl": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Sergent URL",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_sergentUrl",
-            "title": "Server.sergentUrl",
-            "type": "string",
-            "maxLength": 500
-        },
-        "publicIp": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Public IP",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_publicIp",
-            "title": "Server.publicIp",
-            "type": "string",
-            "maxLength": 100
-        },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Creation date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_creationDate",
-            "title": "Server.creationDate",
-            "type": "string"
-        },
-        "volumeSize": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Main volume size",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_volumeSize",
-            "title": "Server.volumeSize",
-            "type": "string",
-            "maxLength": 20
         },
         "status": {
             "storages": ["SQL"],
