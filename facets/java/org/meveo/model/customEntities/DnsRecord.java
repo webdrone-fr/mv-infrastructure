@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.DomainName;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DnsRecord implements CustomEntity {
@@ -21,6 +22,8 @@ public class DnsRecord implements CustomEntity {
     private DBStorageType storages;
 
     private DomainName domainName;
+
+    private Instant lastSyncDate;
 
     @Override()
     public String getUuid() {
@@ -45,6 +48,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setDomainName(DomainName domainName) {
         this.domainName = domainName;
+    }
+
+    public Instant getLastSyncDate() {
+        return lastSyncDate;
+    }
+
+    public void setLastSyncDate(Instant lastSyncDate) {
+        this.lastSyncDate = lastSyncDate;
     }
 
     @Override()
