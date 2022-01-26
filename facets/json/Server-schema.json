@@ -71,6 +71,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "publicIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Public IP",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_publicIp",
+            "title": "Server.publicIp",
+            "type": "string",
+            "maxLength": 100
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
