@@ -44,6 +44,22 @@
             "type": "string",
             "maxLength": 50
         },
+        "zone": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_zone_item",
+                "title": "ServiceProvider.zone item",
+                "type": "string",
+                "maxLength": 50
+            }},
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_zone",
+            "title": "ServiceProvider.zone",
+            "type": "object"
+        },
         "organization": {
             "storages": ["SQL"],
             "patternProperties": {"^.*$": {
