@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "DomainName",
     "title": "Domain name",
-    "type": "object"
+    "type": "object",
+    "properties": {"autoRenew": {
+        "storages": ["SQL"],
+        "default": "false",
+        "nullable": true,
+        "description": "Auto renew",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_DomainName_autoRenew",
+        "title": "DomainName.autoRenew",
+        "type": "string"
+    }}
 }
