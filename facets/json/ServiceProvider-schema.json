@@ -5,15 +5,28 @@
     "id": "ServiceProvider",
     "title": "Server provider",
     "type": "object",
-    "properties": {"apiBaseUrl": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "API base URL",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServiceProvider_apiBaseUrl",
-        "title": "ServiceProvider.apiBaseUrl",
-        "type": "string",
-        "maxLength": 1000
-    }}
+    "properties": {
+        "apiBaseUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "API base URL",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_apiBaseUrl",
+            "title": "ServiceProvider.apiBaseUrl",
+            "type": "string",
+            "maxLength": 1000
+        },
+        "code": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Code",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_code",
+            "title": "ServiceProvider.code",
+            "type": "string",
+            "maxLength": 50
+        }
+    }
 }
