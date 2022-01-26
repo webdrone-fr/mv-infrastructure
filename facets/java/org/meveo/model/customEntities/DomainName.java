@@ -22,6 +22,8 @@ public class DomainName implements CustomEntity {
 
     private String normedName;
 
+    private Instant registrationEndDate;
+
     private Instant lastUpdate;
 
     private String name;
@@ -57,6 +59,14 @@ public class DomainName implements CustomEntity {
 
     public void setNormedName(String normedName) {
         this.normedName = normedName;
+    }
+
+    public Instant getRegistrationEndDate() {
+        return registrationEndDate;
+    }
+
+    public void setRegistrationEndDate(Instant registrationEndDate) {
+        this.registrationEndDate = registrationEndDate;
     }
 
     public Instant getLastUpdate() {
