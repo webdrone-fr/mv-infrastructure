@@ -71,6 +71,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "serverType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_serverType",
+            "title": "Server.serverType",
+            "type": "string",
+            "maxLength": 255
+        },
         "sergentUrl": {
             "storages": ["SQL"],
             "nullable": true,
