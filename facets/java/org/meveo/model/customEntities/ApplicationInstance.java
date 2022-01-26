@@ -24,6 +24,8 @@ public class ApplicationInstance implements CustomEntity {
 
     private String application;
 
+    private Boolean isStartServiceSource;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -55,6 +57,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setApplication(String application) {
         this.application = application;
+    }
+
+    public Boolean getIsStartServiceSource() {
+        return isStartServiceSource;
+    }
+
+    public void setIsStartServiceSource(Boolean isStartServiceSource) {
+        this.isStartServiceSource = isStartServiceSource;
     }
 
     @Override()
