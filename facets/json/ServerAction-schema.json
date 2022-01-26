@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerAction",
     "title": "Action on server",
-    "type": "object"
+    "type": "object",
+    "properties": {"action": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Action",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ServerAction_action",
+        "title": "ServerAction.action",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
