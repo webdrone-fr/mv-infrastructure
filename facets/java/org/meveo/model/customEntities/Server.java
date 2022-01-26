@@ -33,6 +33,8 @@ public class Server implements CustomEntity {
 
     private String organization;
 
+    private String sergentUrl;
+
     private String publicIp;
 
     private Instant creationDate;
@@ -100,6 +102,14 @@ public class Server implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getSergentUrl() {
+        return sergentUrl;
+    }
+
+    public void setSergentUrl(String sergentUrl) {
+        this.sergentUrl = sergentUrl;
     }
 
     public String getPublicIp() {
