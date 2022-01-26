@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DomainName implements CustomEntity {
@@ -20,6 +21,8 @@ public class DomainName implements CustomEntity {
     private DBStorageType storages;
 
     private Boolean autoRenew;
+
+    private Instant creationDate;
 
     @Override()
     public String getUuid() {
@@ -44,6 +47,14 @@ public class DomainName implements CustomEntity {
 
     public void setAutoRenew(Boolean autoRenew) {
         this.autoRenew = autoRenew;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override()
