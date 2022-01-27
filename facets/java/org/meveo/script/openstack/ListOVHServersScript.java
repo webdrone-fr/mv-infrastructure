@@ -73,9 +73,9 @@ public class ListOVHServersScript extends Script {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
             Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json(Entity.json(body)));
+            log.info("BOOOOOOOOOo" + response.toString());
             String value = response.readEntity(String.class);
             log.info(value.toString());
-            log.info(response.toString());
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
                 for (JsonElement element : rootArray) {
