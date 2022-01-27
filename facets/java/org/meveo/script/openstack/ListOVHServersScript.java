@@ -69,7 +69,6 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
           	String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"PASSWORD\"}}}}}";
-            log.info(body);
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
