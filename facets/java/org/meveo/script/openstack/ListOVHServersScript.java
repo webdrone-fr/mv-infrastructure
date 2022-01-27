@@ -22,6 +22,7 @@ import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
+import javax.ws.rs.client.Entity;
 
 public class ListOVHServersScript extends Script {
 
@@ -67,11 +68,11 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-            log.info("Coucou je passe dans le reset du token");
+          	String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"3dc99e90ceae48ee9ed9e36c09a95db1\"}}}}}";
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-            Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+            Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json(Entity.json(body)));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
