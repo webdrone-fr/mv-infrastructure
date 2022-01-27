@@ -75,6 +75,7 @@ public class ListOVHServersScript extends Script {
             Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json(Entity.json(body)));
             String value = response.readEntity(String.class);
             log.info(value.toString());
+            log.info(response.toString());
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
                 for (JsonElement element : rootArray) {
