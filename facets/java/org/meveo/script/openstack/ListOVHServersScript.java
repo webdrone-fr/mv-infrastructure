@@ -68,7 +68,7 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-          	String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"yjkhNrpjaWaYkGZYbs6z3gmDa5V74R9Z\"}}}}}";
+          	String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"PASSWORD\"}}}}}";
             log.info(body);
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
