@@ -79,6 +79,7 @@ public class ListOVHServersScript extends Script {
                 for (JsonElement element : rootArray) {
                     JsonObject TokenObj = element.getAsJsonObject();
                     credential.setToken(TokenObj.get("X-Subject-Token").getAsString());
+                    credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
                 }
             }
             response.close();
