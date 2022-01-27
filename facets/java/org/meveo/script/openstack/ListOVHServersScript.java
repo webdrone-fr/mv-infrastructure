@@ -64,6 +64,8 @@ public class ListOVHServersScript extends Script {
             log.info("using credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
         // Verification of the token
+        OffsetDateTime currentDate = OffsetDateTime.now();
+        log.info(currentDate.toString());
         if (credential.getToken() == null) {
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
