@@ -65,7 +65,7 @@ public class ListOVHServersScript extends Script {
         }
         // Verification of the token
         OffsetDateTime currentDate = OffsetDateTime.now();
-        log.info(currentDate.toString());
+        OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (credential.getToken() == null) {
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
