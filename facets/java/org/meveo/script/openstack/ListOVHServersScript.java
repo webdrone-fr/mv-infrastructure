@@ -69,7 +69,6 @@ public class ListOVHServersScript extends Script {
         // Verification of the token
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
-        log.info(credential.getUsername() + " " + credential.getPasswordSecret());
         if (currentDate.isAfter(expireDate)) {
             HashMap<Object, Object> master = new HashMap<Object, Object>();
             HashMap<Object, Object> auth = new HashMap<Object, Object>();
@@ -80,7 +79,7 @@ public class ListOVHServersScript extends Script {
             ArrayList <String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
-            user.put("password", credential.getPasswordSecret());
+            user.put("password", "yjkhNrpjaWaYkGZYbs6z3gmDa5V74R9Z");
             user.put("domain", domain);
             user.put("name", credential.getUsername());
             password.put("user", user);
