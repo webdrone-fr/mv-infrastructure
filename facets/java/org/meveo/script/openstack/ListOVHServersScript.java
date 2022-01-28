@@ -91,7 +91,7 @@ public class ListOVHServersScript extends Script {
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-        	Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json(resp));
+        	Response response = target.request().post(Entity.json(resp));
             String value = response.readEntity(String.class);
             log.info(String.valueOf(response.getStatus()));
             if (response.getStatus() < 300) {
