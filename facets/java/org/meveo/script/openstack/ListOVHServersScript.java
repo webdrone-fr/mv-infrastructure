@@ -91,7 +91,7 @@ public class ListOVHServersScript extends Script {
             Map <String, String> test = Map.of(
               "Premier Stade", "pd"
             );
-            String resp = JacksonUtil.toStringPrettyPrinted(test);
+            String resp = JacksonUtil.toStringPrettyPrinted(Entity.json(test));
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
