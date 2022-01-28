@@ -69,6 +69,7 @@ public class ListOVHServersScript extends Script {
         // Verification of the token
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
+        log.info(credential.getUsername() + " " + credential.getPasswordSecret());
         if (currentDate.isAfter(expireDate)) {
             HashMap<Object, Object> master = new HashMap<Object, Object>();
             HashMap<Object, Object> auth = new HashMap<Object, Object>();
@@ -94,7 +95,6 @@ public class ListOVHServersScript extends Script {
         	Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json(resp));
             String value = response.readEntity(String.class);
             log.info(String.valueOf(response.getStatus()));
-            log.info(credential.getUsername() + " " + credential.getPasswordSecret());
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
                 for (JsonElement element : rootArray) {
