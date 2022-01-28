@@ -91,8 +91,8 @@ public class ListOVHServersScript extends Script {
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
-            WebTarget target = client.target("https://authpd." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-
+            WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
+			log.info(resp);
         	Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json(resp));
             String value = response.readEntity(String.class);
             log.info(value.toString());
