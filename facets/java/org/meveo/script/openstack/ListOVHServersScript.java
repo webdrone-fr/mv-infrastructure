@@ -23,6 +23,7 @@ import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import javax.ws.rs.client.Entity;
+import java.util.ArrayList; 
 
 public class ListOVHServersScript extends Script {
 
@@ -75,6 +76,8 @@ public class ListOVHServersScript extends Script {
             HashMap<Object, Object> password = new HashMap<Object, Object>();
             HashMap<Object, Object> user = new HashMap<Object, Object>();
             HashMap<Object, Object> domain = new HashMap<Object, Object>();
+            ArrayList <String> method = new ArrayList<String>();
+            method.add("password");
             domain.put("id", "default");
             user.put("name", "user-4J6N43NBW3ch");
             user.put("domain", domain);
