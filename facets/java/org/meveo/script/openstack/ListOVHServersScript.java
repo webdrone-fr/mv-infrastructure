@@ -83,7 +83,7 @@ public class ListOVHServersScript extends Script {
             user.put("domain", domain);
             user.put("password", "password");
             password.put("user", user);
-            //identity.put("methods", String["password"]);
+            identity.put("methods", method);
             identity.put("password", password);
             auth.put("identity", identity);
             master.put("auth", auth);
