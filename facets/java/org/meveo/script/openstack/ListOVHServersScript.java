@@ -81,7 +81,7 @@ public class ListOVHServersScript extends Script {
             domain.put("id", "default");
             user.put("password", credential.getPasswordSecret());
             user.put("domain", domain);
-            user.put("name", "user-4J6N43NBW3ch");
+            user.put("name", credential.getUsername());
             password.put("user", user);
             identity.put("methods", method);
             identity.put("password", password);
