@@ -23,7 +23,8 @@ import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import javax.ws.rs.client.Entity;
-import java.util.ArrayList; 
+import java.util.ArrayList;
+import org.meveo.model.persistence.JacksonUtil;
 
 public class ListOVHServersScript extends Script {
 
@@ -69,7 +70,7 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-          	String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"PASSWORD\"}}}}}";
+          	//String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"PASSWORD\"}}}}}";
             HashMap<Object, Object> master = new HashMap<Object, Object>();
             HashMap<Object, Object> auth = new HashMap<Object, Object>();
             HashMap<Object, Object> identity = new HashMap<Object, Object>();
@@ -87,10 +88,11 @@ public class ListOVHServersScript extends Script {
             identity.put("password", password);
             auth.put("identity", identity);
             master.put("auth", auth);
+            String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-            Response response = CredentialHelperService.setCredential(target.request(), credential).post(Entity.json(Entity.json(body)));
+            Response response = CredentialHelperService.setCredential(target.request(), credential).post(Entity.json(Entity.json(resp)));
             String value = response.readEntity(String.class);
             log.info(value.toString());
             if (response.getStatus() < 300) {
