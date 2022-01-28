@@ -79,7 +79,7 @@ public class ListOVHServersScript extends Script {
             ArrayList <String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
-            user.put("password", "yjkhNrpjaWaYkGZYbs6z3gmDa5V74R9Z");
+            user.put("password", credential.getPasswordSecret());
             user.put("domain", domain);
             user.put("name", "user-4J6N43NBW3ch");
             password.put("user", user);
