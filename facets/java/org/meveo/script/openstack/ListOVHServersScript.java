@@ -84,8 +84,8 @@ public class ListOVHServersScript extends Script {
             user.put("domain", domain);
             user.put("name", "user-4J6N43NBW3ch");
             password.put("user", user);
-            identity.put("password", password);
             identity.put("methods", method);
+            identity.put("password", password);
             auth.put("identity", identity);
             master.put("auth", auth);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
