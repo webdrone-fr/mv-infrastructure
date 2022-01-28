@@ -93,7 +93,7 @@ public class ListOVHServersScript extends Script {
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
         	Response response = target.request().post(Entity.json(resp));
             String value = response.readEntity(String.class);
-            log.info(String.valueOf(response.getStatus()));
+            log.info("Bonjour voici LA REPONSE !!!! => " + value);
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
                 for (JsonElement element : rootArray) {
