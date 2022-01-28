@@ -69,6 +69,21 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
           	String body = "{\"auth\": {\"identity\": {\"methods\": [\"password\"],\"password\": {\"user\": {\"name\": \"user-4J6N43NBW3ch\",\"domain\": {\"id\": \"default\"},\"password\": \"PASSWORD\"}}}}}";
+            HashMap<Object, Object> master = new HashMap<Object, Object>();
+            HashMap<Object, Object> auth = new HashMap<Object, Object>();
+            HashMap<Object, Object> identity = new HashMap<Object, Object>();
+            HashMap<Object, Object> password = new HashMap<Object, Object>();
+            HashMap<Object, Object> user = new HashMap<Object, Object>();
+            HashMap<Object, Object> domain = new HashMap<Object, Object>();
+            domain.put("id", "default");
+            user.put("name", "user-4J6N43NBW3ch");
+            user.put("domain", domain);
+            user.put("password", "password");
+            password.put("user", user);
+            //identity.put("methods", String["password"]);
+            identity.put("password", password);
+            auth.put("identity", identity);
+            master.put("auth", auth);
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
