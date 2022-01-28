@@ -78,20 +78,17 @@ public class ListOVHServersScript extends Script {
             HashMap<Object, Object> user = new HashMap<Object, Object>();
             HashMap<Object, Object> domain = new HashMap<Object, Object>();
             ArrayList <String> method = new ArrayList<String>();
-            //method.add("password");
-            //domain.put("id", "default");
-            //user.put("password", "password");
-            //user.put("domain", domain);
-            //user.put("name", "user-4J6N43NBW3ch");
-            //password.put("user", user);
-            //identity.put("password", password);
-            //identity.put("methods", method);
-            //auth.put("identity", identity);
-            //master.put("auth", auth);
-            Map <String, String> test = Map.of(
-              "Premier Stade", "pd"
-            );
-            String resp = JacksonUtil.toStringPrettyPrinted(Entity.json(test));
+            method.add("password");
+            domain.put("id", "default");
+            user.put("password", "password");
+            user.put("domain", domain);
+            user.put("name", "user-4J6N43NBW3ch");
+            password.put("user", user);
+            identity.put("password", password);
+            identity.put("methods", method);
+            auth.put("identity", identity);
+            master.put("auth", auth);
+            String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
