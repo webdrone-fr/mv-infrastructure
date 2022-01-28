@@ -88,7 +88,7 @@ public class ListOVHServersScript extends Script {
             //identity.put("methods", method);
             //auth.put("identity", identity);
             //master.put("auth", auth);
-            Map <String, Object> test = Map.of(
+            Map <String, String> test = Map.of(
               "Premier Stade", "pd"
             );
             String resp = JacksonUtil.toStringPrettyPrinted(test);
