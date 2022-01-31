@@ -3,12 +3,10 @@ package org.meveo.cloudflare;
 import java.time.Instant;
 import java.util.Map;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.validator.routines.InetAddressValidator;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -37,9 +35,17 @@ public class UpdateCloudflareDnsRecord extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION);
         DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
-        if (record.getDomainName()==null || record.getRecordType()==null || record.getName()==null
-        || record.getName().isEmpty() || record.getValue()==null || record.getValue().isEmpty()) {
-            throw new BusinessException("invalid record");
+        InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+        if (record.getDomainName()==null) {
+            throw new BusinessException("Invalid Record Domain");
+        } else if (record.getRecordType()==null) {
+            throw new BusinessException("Invalid Record Type");
+        } else if (record.getName()==null || record.getName().isEmpty()) {
+            throw new BusinessException("Invalid Record Name");
+        } else if (record.getValue()==null || record.getValue().isEmpty()) {
+            throw new BusinessException("Invalid Record Value");
+        } else if (!ipValidator.isValidInet4Address(record.getValue())) {
+            throw new BusinessException("Invalid Record IP provided");
         }
         DomainName domainName = record.getDomainName();
         logger.info("action:{}, domain name uuid:{}", action, domainName.getUuid());
@@ -72,12 +78,12 @@ public class UpdateCloudflareDnsRecord extends Script {
         logger.info("response  :" + value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
-        if (response.getStatus()==200) {
+        if (response.getStatus()<300) {
             record.setLastSyncDate(Instant.now());
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, record);
             } catch (Exception e) {
-                logger.error("error updating lastSyncDate record {} :{}", record.getUuid(), e.getMessage());
+                logger.error("error updating record {} :{}", record.getUuid(), e.getMessage());
             }
         }
     }

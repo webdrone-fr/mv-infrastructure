@@ -23,6 +23,8 @@ public class Server implements CustomEntity {
 
     private String image;
 
+    private String providerSideId;
+
     private String instanceName;
 
     private String sergentUrl;
@@ -32,6 +34,8 @@ public class Server implements CustomEntity {
     private Instant creationDate;
 
     private String volumeSize;
+
+    private String volume;
 
     private ServiceProvider provider;
 
@@ -72,6 +76,14 @@ public class Server implements CustomEntity {
         this.image = image;
     }
 
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
+    }
+
     public String getInstanceName() {
         return instanceName;
     }
@@ -110,6 +122,14 @@ public class Server implements CustomEntity {
 
     public void setVolumeSize(String volumeSize) {
         this.volumeSize = volumeSize;
+    }
+
+    public String getVolume() {
+        return volume;
+    }
+
+    public void setVolume(String volume) {
+        this.volume = volume;
     }
 
     public ServiceProvider getProvider() {

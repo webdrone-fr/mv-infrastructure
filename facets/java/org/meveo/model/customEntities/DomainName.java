@@ -34,6 +34,8 @@ public class DomainName implements CustomEntity {
 
     private String registar;
 
+    private ServiceProvider registrar;
+
     private Instant creationDate;
 
     private String tld;
@@ -109,6 +111,14 @@ public class DomainName implements CustomEntity {
 
     public void setRegistar(String registar) {
         this.registar = registar;
+    }
+
+    public ServiceProvider getRegistrar() {
+        return registrar;
+    }
+
+    public void setRegistrar(ServiceProvider registrar) {
+        this.registrar = registrar;
     }
 
     public Instant getCreationDate() {

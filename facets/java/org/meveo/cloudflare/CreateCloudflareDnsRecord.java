@@ -3,10 +3,7 @@ package org.meveo.cloudflare;
 import java.time.Instant;
 import java.util.Map;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.JsonObject;
@@ -55,7 +52,7 @@ public class CreateCloudflareDnsRecord extends Script {
         }
 
         DomainName domainName = record.getDomainName();
-        logger.info("action:{}, domain name uuid:{}", action, domainName.getUuid());
+        logger.info("action : {}, domain name uuid : {}", action, domainName.getUuid());
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
@@ -92,7 +89,7 @@ public class CreateCloudflareDnsRecord extends Script {
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, record);
             } catch (Exception e) {
-                logger.error("error updating lastSyncDate record {} :{}", record.getUuid(), e.getMessage());
+                logger.error("error updating record {} :{}", record.getUuid(), e.getMessage());
             }
         }
     }

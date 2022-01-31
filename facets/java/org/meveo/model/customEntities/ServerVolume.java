@@ -4,7 +4,6 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
-import org.meveo.model.customEntities.Server;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerVolume implements CustomEntity {
@@ -25,7 +24,7 @@ public class ServerVolume implements CustomEntity {
 
     private String providerSideId;
 
-    private Server server;
+    private String server;
 
     private String volumeType;
 
@@ -72,11 +71,11 @@ public class ServerVolume implements CustomEntity {
         this.providerSideId = providerSideId;
     }
 
-    public Server getServer() {
+    public String getServer() {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(String server) {
         this.server = server;
     }
 

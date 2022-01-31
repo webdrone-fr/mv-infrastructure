@@ -1,4 +1,4 @@
-package org.meveo.cloudflare;
+package org.meveo.scaleway;
 
 import java.time.Instant;
 import java.util.Map;
@@ -10,8 +10,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
-import org.meveo.model.customEntities.DnsRecord;
-import org.meveo.model.customEntities.DomainName;
+import org.meveo.model.customEntities.Server;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -19,44 +18,51 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DeleteCloudflareDnsRecord extends Script {
+public class DeleteScalewayServer extends Script{
     
-    private static final Logger logger = LoggerFactory.getLogger(DeleteCloudflareDnsRecord.class);
+
+    private static final Logger logger = LoggerFactory.getLogger(DeleteScalewayServer.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
-    static final private String CLOUDFLARE_URL = "api.cloudflare.com/client/v4";
+    static final private  String SCALEWAY_URL = "api.scaleway.com";
 
     @Override
-    public void execute(Map<String, Object> parameters) throws BusinessException {
+    public void execute(Map<String, Object>parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION);
-        DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
-
-        DomainName domainName = record.getDomainName();
-        logger.info("action : {}, domain name uuid : {}", action, domainName.getUuid());
-        Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
+        Server server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
+        if (server.getZone()==null) { //Required
+            throw new BusinessException("Invalid Server Zone");
+        } else if(server.getProviderSideId()==null) { //Required
+            throw new BusinessException("Invalid Server Provider-side ID");
+        }
+        // INPUT
+        String zone_id = server.getZone();
+        String server_id = server.getProviderSideId();
+        logger.info("action : {}, server uuid : {}", action, server_id);
+        Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
-            throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
+            throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
             logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername()); //Need to verify username
         }
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
+        WebTarget target = client.target("https://" +SCALEWAY_URL+"/zones/"+zone_id+"/servers/"+server_id);
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         if (response.getStatus()<300) {
-            record.setLastSyncDate(Instant.now()); //TBC - record of when deleted?
-            logger.info("record {} deleted at: {}", record.getUuid(), record.getLastSyncDate());
+            server.setLastUpdate(Instant.now());
+            logger.info("server {} deleted at: {}", server.getUuid(), server.getLastUpdate());
             try {
-                crossStorageApi.remove(defaultRepo, record.getUuid(), record.getCetCode()); //TBC 
+                crossStorageApi.remove(defaultRepo, server.getUuid(), server.getCetCode());
             } catch (Exception e) {
-                logger.error("error deleting record {} :{}", record.getUuid(), e.getMessage());
+                logger.error("error deleting record {} :{}", server.getUuid(), e.getMessage());
             }
         }
-    }
+    } 
 }

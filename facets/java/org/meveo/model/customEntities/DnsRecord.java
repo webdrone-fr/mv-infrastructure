@@ -33,6 +33,10 @@ public class DnsRecord implements CustomEntity {
 
     private String value;
 
+    private String providerSideId;
+
+    private Boolean proxied;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -96,6 +100,22 @@ public class DnsRecord implements CustomEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
+    }
+
+    public Boolean getProxied() {
+        return proxied;
+    }
+
+    public void setProxied(Boolean proxied) {
+        this.proxied = proxied;
     }
 
     @Override()

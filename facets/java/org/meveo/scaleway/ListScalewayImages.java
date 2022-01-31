@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
@@ -12,9 +12,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
-import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServerImage;
-import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -32,7 +30,6 @@ public class ListScalewayImages extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
         // INPUT
         String zone_id = parameters.get("zone").toString();// Select from list
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -54,6 +51,7 @@ public class ListScalewayImages extends Script{
                 JsonObject imageObj = element.getAsJsonObject();
                 ServerImage serverImage = new ServerImage();
                 serverImage.setName(imageObj.get("name").getAsString());
+                serverImage.setUuid(imageObj.get("id").getAsString());
                 serverImage.setProviderSideId(imageObj.get("id").getAsString());
                 serverImage.setCreationDate(OffsetDateTime.parse(imageObj.get("creation_date").getAsString()).toInstant());
                 serverImage.setLastUpdated(OffsetDateTime.parse(imageObj.get("modification_date").getAsString()).toInstant());

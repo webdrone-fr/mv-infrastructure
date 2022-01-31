@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
@@ -13,9 +13,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
-import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServerVolume;
-import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -33,7 +31,6 @@ public class ListScalewayVolumes extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
         // INPUT
         String zone_id = parameters.get("zone").toString();// Select from list
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -60,8 +57,9 @@ public class ListScalewayVolumes extends Script{
                 }
                 if (serverName.startsWith("dev-")){
                     serverVolume.setName(volumeObj.get("name").getAsString());
+                    serverVolume.setUuid(volumeObj.get("id").getAsString());
                     serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
-                    serverVolume.setServer(crossStorageApi.find(defaultRepo, Server.class).by("instanceName", serverName).getResult());
+                    serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
                     serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
                     serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
                     serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
