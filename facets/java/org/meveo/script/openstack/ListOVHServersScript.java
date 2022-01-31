@@ -93,16 +93,8 @@ public class ListOVHServersScript extends Script {
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
         	Response response = target.request().post(Entity.json(resp));
-            String value = response.readEntity(String.class);
-            log.info("Bonjour voici LA REPONSE !!!! => " + response.getHeaderString("X-Subject-Token"));
-            if (response.getStatus() < 300) {
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
-                for (JsonElement element : rootArray) {
-                    JsonObject TokenObj = element.getAsJsonObject();
-                    credential.setToken(TokenObj.get("X-Subject-Token").getAsString());
-                    credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
-                }
-            }
+            credential.setToken(response.getHeaderString("X-Subject-Token"));
+     		credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
             response.close();
         }
         // Call every region to list server
