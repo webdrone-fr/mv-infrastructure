@@ -89,7 +89,6 @@ public class ListOVHServersScript extends Script {
             master.put("auth", auth);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Creation of the identity token
-            log.info(credential.getPasswordSecret().getClass().getName());
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
         	Response response = target.request().post(Entity.json(resp));
