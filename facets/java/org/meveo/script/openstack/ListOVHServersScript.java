@@ -36,6 +36,8 @@ public class ListOVHServersScript extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
+  
+    private CheckToken checkToken = getCDIBean(CheckToken.class);
 
     private ServiceProvider getProvider(String code) {
         return crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", code).getResult();
@@ -69,7 +71,7 @@ public class ListOVHServersScript extends Script {
         }
         
         //CheckToken
-        //String token = CheckToken.checkNewTokenOVH();
+        String token = checkToken.checkNewTokenOVH();
       
         // Call every region to list server
         Map<String, String> zones = new HashMap<String, String>();
