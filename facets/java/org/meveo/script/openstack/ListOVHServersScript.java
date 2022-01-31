@@ -114,6 +114,7 @@ public class ListOVHServersScript extends Script {
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
+                log.info(rootArray.toString());
                 for (JsonElement element : rootArray) {
                     JsonObject serverObj = element.getAsJsonObject();
                     // Create new servers
