@@ -22,6 +22,7 @@ import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
+import org.meveo.script.openstack.CheckToken;
 import javax.ws.rs.client.Entity;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
@@ -66,44 +67,10 @@ public class ListOVHServersScript extends Script {
         } else {
             log.info("using credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
-        // Verification of the token
-        OffsetDateTime currentDate = OffsetDateTime.now();
-        OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
-        if (currentDate.isAfter(expireDate)) {
-            HashMap<Object, Object> master = new HashMap<Object, Object>();
-            HashMap<Object, Object> auth = new HashMap<Object, Object>();
-            HashMap<Object, Object> identity = new HashMap<Object, Object>();
-            HashMap<Object, Object> password = new HashMap<Object, Object>();
-            HashMap<Object, Object> user = new HashMap<Object, Object>();
-            HashMap<Object, Object> domain = new HashMap<Object, Object>();
-            ArrayList <String> method = new ArrayList<String>();
-            method.add("password");
-            domain.put("id", "default");
-            user.put("password", "yjkhNrpjaWaYkGZYbs6z3gmDa5V74R9Z");
-            user.put("domain", domain);
-            user.put("name", credential.getUsername());
-            password.put("user", user);
-            identity.put("methods", method);
-            identity.put("password", password);
-            auth.put("identity", identity);
-            master.put("auth", auth);
-            String resp = JacksonUtil.toStringPrettyPrinted(master);
-            // Creation of the identity token
-            Client client = ClientBuilder.newClient();
-            WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-        	Response response = target.request().post(Entity.json(resp));
-            String value = response.readEntity(String.class);
-            log.info("Bonjour voici LA REPONSE !!!! => " + response.toString());
-            if (response.getStatus() < 300) {
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
-                for (JsonElement element : rootArray) {
-                    JsonObject TokenObj = element.getAsJsonObject();
-                    credential.setToken(TokenObj.get("X-Subject-Token").getAsString());
-                    credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
-                }
-            }
-            response.close();
-        }
+        
+        //CheckToken
+        //String token = CheckToken.checkNewTokenOVH();
+      
         // Call every region to list server
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
