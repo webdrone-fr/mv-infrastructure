@@ -75,6 +75,7 @@ public class ListOVHServersScript extends Script {
             String stringToDecrypt = credential.getPasswordSecret();
             String salt = PasswordUtils.getSalt(stringToDecrypt);
             String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
+            log.info(stringToDecrypt + " VS " + decryptedString);
 
             //Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
