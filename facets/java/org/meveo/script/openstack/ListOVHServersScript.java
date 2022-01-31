@@ -25,6 +25,7 @@ import org.meveo.credentials.CredentialHelperService;
 import javax.ws.rs.client.Entity;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
+import org.meveo.security.PasswordUtils;
 
 public class ListOVHServersScript extends Script {
 
@@ -70,6 +71,12 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
+            //Dechiffrement du mot de passe
+            String stringToDecrypt = credential.getPasswordSecret();
+            String salt = PasswordUtils.getSalt(stringToDecrypt);
+            String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
+
+            //Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
             HashMap<String, Object> identity = new HashMap<String, Object>();
