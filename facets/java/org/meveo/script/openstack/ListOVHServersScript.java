@@ -73,7 +73,7 @@ public class ListOVHServersScript extends Script {
         if (currentDate.isAfter(expireDate)) {
             //Dechiffrement du mot de passe
             String stringToDecrypt = credential.getPasswordSecret();
-            String salt = PasswordUtils.getSalt("AES");
+            String salt = PasswordUtils.getSalt(credential.getUuid());
             String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
             log.info(stringToDecrypt + " VS " + decryptedString);
 
@@ -109,64 +109,53 @@ public class ListOVHServersScript extends Script {
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
             Client clientListServers = ClientBuilder.newClient();
-            WebTarget targetListServer = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers");
+            WebTarget targetListServer = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers/detail");
             Response response = targetListServer.request().header("X-Auth-Token", credential.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
                 for (JsonElement element : rootArray) {
-                    JsonObject serverList = element.getAsJsonObject();
-                    Client clientServer = ClientBuilder.newClient();
-                    WebTarget targetServer = clientServer.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers/" + serverList.get("id").getAsString());
-                    Response responseServer = targetServer.request().header("X-Auth-Token", credential.getToken()).get();
-                    String valueServer = responseServer.readEntity(String.class);
-                    if (responseServer.getStatus() < 300) {
-                      	JsonParser parser = new JsonParser();
-                        JsonElement jsonE = parser.parse(valueServer);
-                        JsonObject serverObj = jsonE.getAsJsonObject();
-                        serverObj = serverObj.get("server").getAsJsonObject();
-                        // Create new servers
-                        Server server = new Server();
-                        //UUID
-                        server.setUuid(serverObj.get("id").getAsString());
-                        //server name
-                        server.setInstanceName(serverObj.get("name").getAsString());
-                        //tenant
-                        server.setOrganization(serverObj.get("tenant_id").getAsString());
-                        //image
-                        server.setImage(serverObj.get("image").getAsJsonObject().get("id").getAsString());
-                        //Set the creation & updated date
-                        server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
-                        server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
-                        //zone
-                        server.setZone(zone);
-                        //public IP
-                        JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
-                        for (JsonElement ip : publicIpArray) {
-                           JsonObject ipElement = ip.getAsJsonObject();
-                           if (ipElement.get("version").getAsInt() == 4) {
-                             server.setPublicIp(ipElement.get("addr").getAsString());
-                           }
-                        }
-                        //status
-                        server.setStatus(serverObj.get("status").getAsString());
-                        //provider
-                        server.setProvider(openstack);
-                        //flavor
-                        server.setServerType(serverObj.get("flavor").getAsJsonObject().get("id").getAsString());
-                        //volume
-                        JsonArray volumeArray = serverObj.get("os-extended-volumes:volumes_attached").getAsJsonArray();
-                        for (JsonElement volume : volumeArray) {
-                          JsonObject volumeElement = volume.getAsJsonObject();
-                          server.setVolumeSize(volumeElement.get("id").getAsString());
-                        }
-                        try {
-                            crossStorageApi.createOrUpdate(defaultRepo, server);
-                        } catch (Exception ex) {
-                            log.error("error creating server {} :{}", server.getUuid(), ex.getMessage());
-                        }
+                    JsonObject serverObj = element.getAsJsonObject();
+                    // Create new servers
+                    Server server = new Server();
+                    //UUID
+                    server.setUuid(serverObj.get("id").getAsString());
+                    //server name
+                    server.setInstanceName(serverObj.get("name").getAsString());
+                    //tenant
+                    server.setOrganization(serverObj.get("tenant_id").getAsString());
+                    //image
+                    server.setImage(serverObj.get("image").getAsJsonObject().get("id").getAsString());
+                    //Set the creation & updated date
+                    server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
+                    server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
+                    //zone
+                    server.setZone(zone);
+                    //public IP
+                    JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
+                    for (JsonElement ip : publicIpArray) {
+                       JsonObject ipElement = ip.getAsJsonObject();
+                       if (ipElement.get("version").getAsInt() == 4) {
+                         server.setPublicIp(ipElement.get("addr").getAsString());
+                       }
                     }
-                    responseServer.close();
+                    //status
+                    server.setStatus(serverObj.get("status").getAsString());
+                    //provider
+                    server.setProvider(openstack);
+                    //flavor
+                    server.setServerType(serverObj.get("flavor").getAsJsonObject().get("id").getAsString());
+                    //volume
+                    JsonArray volumeArray = serverObj.get("os-extended-volumes:volumes_attached").getAsJsonArray();
+                    for (JsonElement volume : volumeArray) {
+                      JsonObject volumeElement = volume.getAsJsonObject();
+                      server.setVolumeSize(volumeElement.get("id").getAsString());
+                    }
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, server);
+                    } catch (Exception ex) {
+                        log.error("error creating server {} :{}", server.getUuid(), ex.getMessage());
+                    }
                 }
             }
             response.close();
