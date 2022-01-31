@@ -70,12 +70,12 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-            HashMap<Object, Object> master = new HashMap<Object, Object>();
-            HashMap<Object, Object> auth = new HashMap<Object, Object>();
-            HashMap<Object, Object> identity = new HashMap<Object, Object>();
-            HashMap<Object, Object> password = new HashMap<Object, Object>();
-            HashMap<Object, Object> user = new HashMap<Object, Object>();
-            HashMap<Object, Object> domain = new HashMap<Object, Object>();
+            HashMap<String, Object> master = new HashMap<String, Object>();
+            HashMap<String, Object> auth = new HashMap<String, Object>();
+            HashMap<String, Object> identity = new HashMap<String, Object>();
+            HashMap<String, Object> password = new HashMap<String, Object>();
+            HashMap<String, Object> user = new HashMap<String, Object>();
+            HashMap<String, Object> domain = new HashMap<String, Object>();
             ArrayList <String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
@@ -94,7 +94,7 @@ public class ListOVHServersScript extends Script {
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
         	Response response = target.request().post(Entity.json(resp));
             String value = response.readEntity(String.class);
-            log.info("Bonjour voici LA REPONSE !!!! => " + response.toString());
+            log.info("Bonjour voici LA REPONSE !!!! => " + response.getHeaders());
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("Headers");
                 for (JsonElement element : rootArray) {
