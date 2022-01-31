@@ -50,7 +50,7 @@
                 "id": "CE_ServiceProvider_zone_item",
                 "title": "ServiceProvider.zone item",
                 "type": "string",
-                "maxLength": 50
+                "maxLength": 255
             }},
             "nullable": true,
             "description": "Zone",
