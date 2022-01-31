@@ -73,8 +73,8 @@ public class ListOVHServersScript extends Script {
         if (currentDate.isAfter(expireDate)) {
             //Dechiffrement du mot de passe
             String stringToDecrypt = credential.getPasswordSecret();
-            //String salt = PasswordUtils.getSalt("SHA-256");
-            String decryptedString = PasswordUtils.decrypt(stringToDecrypt, stringToDecrypt);
+            String salt = PasswordUtils.getSalt("AES");
+            String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
             log.info(stringToDecrypt + " VS " + decryptedString);
 
             //Creation du body
