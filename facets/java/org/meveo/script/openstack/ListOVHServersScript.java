@@ -151,11 +151,11 @@ public class ListOVHServersScript extends Script {
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
                     if (response.getStatus() < 300) {
-                        JsonArray flavorRootArray = new JsonParser().parse(flavorValue).getAsJsonObject().getAsJsonArray("flavor");
-                        for (JsonElement flavorElement : flavorRootArray) {
-                          JsonObject flavorObj = flavorElement.getAsJsonObject();
-                          server.setVolumeSize(flavorObj.get("disk").getAsString());
-                        }
+                      	JsonParser parser = new JsonParser();
+                        JsonElement jsonE = parser.parse(flavorValue);
+                        JsonObject flavorObj = jsonE.getAsJsonObject();
+                        flavorObj = flavorObj.get("flavor").getAsJsonObject();
+                        server.setVolumeSize(flavorObj.get("disk").getAsString());
                     }
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, server);
