@@ -148,11 +148,11 @@ public class ListOVHServersScript extends Script {
                     //flavor
                     server.setServerType(serverObj.get("flavor").getAsJsonObject().get("id").getAsString());
                     //volume
-                    JsonArray volumeArray = serverObj.get("os-extended-volumes:volumes_attached").getAsJsonArray();
-                    for (JsonElement volume : volumeArray) {
-                      JsonObject volumeElement = volume.getAsJsonObject();
-                      server.setVolumeSize(volumeElement.get("id").getAsString());
-                    }
+                    //JsonArray volumeArray = serverObj.get("os-extended-volumes:volumes_attached").getAsJsonArray();
+                    //for (JsonElement volume : volumeArray) {
+                    //  JsonObject volumeElement = volume.getAsJsonObject();
+                    //  server.setVolumeSize(volumeElement.get("id").getAsString());
+                    //}
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, server);
                     } catch (Exception ex) {
