@@ -114,7 +114,7 @@ public class ListOVHServersScript extends Script {
             String value = response.readEntity(String.class);
             log.info(String.valueOf(response.getStatus()));
             log.info(value);
-            /*if (response.getStatus() < 300) {
+            if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
                 for (JsonElement element : rootArray) {
                     JsonObject serverObj = element.getAsJsonObject();
@@ -160,7 +160,7 @@ public class ListOVHServersScript extends Script {
                     }
                 }
             }
-            response.close();*/
+            response.close();
         }
     }
 }
