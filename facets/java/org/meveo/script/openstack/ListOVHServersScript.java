@@ -170,7 +170,7 @@ public class ListOVHServersScript extends Script {
                         //flavor
                         server.setServerType(flavorObj.get("name").getAsString());
                         //volume
-                        server.setVolumeSize(flavorObj.get("disk").getAsString() + "GiB");
+                        server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, server);
