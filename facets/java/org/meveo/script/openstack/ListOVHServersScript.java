@@ -121,7 +121,7 @@ public class ListOVHServersScript extends Script {
                     // Create new servers
                     Server server = new Server();
                     //UUID
-                    //server.setUuid(serverObj.get("id").getAsString());
+                    server.setUuid(serverObj.get("id").getAsString());
                     //server name
                     server.setInstanceName(serverObj.get("name").getAsString());
                     //tenant
