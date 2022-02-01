@@ -112,7 +112,8 @@ public class ListOVHServersScript extends Script {
             WebTarget targetListServer = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers/detail");
             Response response = targetListServer.request().header("X-Auth-Token", credential.getToken()).get();
             String value = response.readEntity(String.class);
-            log.info("CC => " + value);
+            log.info(String.valueOf(response.getStatus()));
+            log.info(value);
             /*if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
                 for (JsonElement element : rootArray) {
