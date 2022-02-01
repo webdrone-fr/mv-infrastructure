@@ -123,7 +123,7 @@ public class ListOVHServersScript extends Script {
                     //server name
                     server.setInstanceName(serverObj.get("name").getAsString());
                     //domain name
-                    server.setDomainName(serverObj.get("name").getAsString() + ".webdrone.fr/");
+                    server.setDomainName(serverObj.get("name").getAsString().toLowerCase() + ".webdrone.fr/");
                     //tenant
                     server.setOrganization(serverObj.get("tenant_id").getAsString());
                     //image
