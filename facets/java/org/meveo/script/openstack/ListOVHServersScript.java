@@ -143,10 +143,8 @@ public class ListOVHServersScript extends Script {
                     server.setStatus(serverObj.get("status").getAsString());
                     //provider
                     server.setProvider(openstack);
-                    //flavor
-                    server.setServerType(serverObj.get("flavor").getAsJsonObject().get("id").getAsString());
+                    //volume & flavor
                     String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
-                    //volume
                     WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/"+idFlavor);
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
@@ -155,6 +153,9 @@ public class ListOVHServersScript extends Script {
                         JsonElement jsonE = parser.parse(flavorValue);
                         JsonObject flavorObj = jsonE.getAsJsonObject();
                         flavorObj = flavorObj.get("flavor").getAsJsonObject();
+                        //flavor
+                        server.setServerType(flavorObj.get("Name").getAsString());
+                        //volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString());
                     }
                     try {
