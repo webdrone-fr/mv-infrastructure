@@ -133,6 +133,7 @@ public class ListOVHServersScript extends Script {
                       	JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(ImageValue);
                         JsonObject ImageObj = jsonE.getAsJsonObject();
+                        log.info(ImageObj.toString());
                         ImageObj = ImageObj.get("image").getAsJsonObject();
                         server.setImage(ImageObj.get("name").getAsString());
                     }
