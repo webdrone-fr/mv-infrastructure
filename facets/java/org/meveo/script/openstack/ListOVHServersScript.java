@@ -154,7 +154,7 @@ public class ListOVHServersScript extends Script {
                         JsonObject flavorObj = jsonE.getAsJsonObject();
                         flavorObj = flavorObj.get("flavor").getAsJsonObject();
                         //flavor
-                        server.setServerType(flavorObj.get("Name").getAsString());
+                        server.setServerType(flavorObj.get("name").getAsString());
                         //volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString());
                     }
