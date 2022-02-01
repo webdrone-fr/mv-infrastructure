@@ -32,46 +32,50 @@ public class ListScalewayVolumes extends Script{
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         // INPUT
-        String zone_id = parameters.get("zone").toString();// Select from list
+        // String zone_id = parameters.get("zone").toString();// Select from list
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
+
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone_id+"/volumes");
-        Response response = CredentialHelperService.setCredential(target.request(), credential).get();
-        String value = response.readEntity(String.class);
-        logger.info("response : " + value);
-        logger.debug("response status : {}", response.getStatus());
-        if (response.getStatus() < 300) {
-            JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
-            for (JsonElement element : rootArray) {
-                JsonObject volumeObj = element.getAsJsonObject();
-                ServerVolume serverVolume = new ServerVolume();
-                String serverName = "";
-                if (!volumeObj.get("server").isJsonNull()) {
-                    serverName = volumeObj.get("server").getAsJsonObject().get("name").getAsString();
-                }
-                if (serverName.startsWith("dev-")){
-                    serverVolume.setName(volumeObj.get("name").getAsString());
-                    serverVolume.setUuid(volumeObj.get("id").getAsString());
-                    serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
-                    serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
-                    serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
-                    serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-                    serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
-                    serverVolume.setSize(FileUtils.byteCountToDisplaySize(volumeObj.get("size").getAsLong()));
-                    serverVolume.setZone(volumeObj.get("zone").getAsString());
-                    serverVolume.setState(volumeObj.get("state").getAsString());
-                    logger.info("Server Volume Name: {}", serverVolume.getName());
-                    try {
-                        crossStorageApi.createOrUpdate(defaultRepo, serverVolume);
-                    } catch (Exception e) {
-                        logger.error("Error creating Server Volume {} : {}", serverVolume.getName(), e.getMessage());
+        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        for (String zone : zones) {
+            WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/volumes");
+            Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+            String value = response.readEntity(String.class);
+            logger.info("response : " + value);
+            logger.debug("response status : {}", response.getStatus());
+            if (response.getStatus() < 300) {
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
+                for (JsonElement element : rootArray) {
+                    JsonObject volumeObj = element.getAsJsonObject();
+                    ServerVolume serverVolume = new ServerVolume();
+                    String serverName = "";
+                    if (!volumeObj.get("server").isJsonNull()) {
+                        serverName = volumeObj.get("server").getAsJsonObject().get("name").getAsString();
                     }
+                    // if (serverName.startsWith("dev-")){
+                        serverVolume.setUuid(volumeObj.get("id").getAsString());
+                        serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
+                        serverVolume.setName(volumeObj.get("name").getAsString());
+                        serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
+                        serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
+                        serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
+                        serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
+                        serverVolume.setSize(FileUtils.byteCountToDisplaySize(volumeObj.get("size").getAsLong()));
+                        serverVolume.setZone(volumeObj.get("zone").getAsString());
+                        serverVolume.setState(volumeObj.get("state").getAsString());
+                        logger.info("Server Volume Name: {}", serverVolume.getName());
+                        try {
+                            crossStorageApi.createOrUpdate(defaultRepo, serverVolume);
+                        } catch (Exception e) {
+                            logger.error("Error creating Server Volume {} : {}", serverVolume.getProviderSideId(), e.getMessage());
+                        }
+                    // }
                 }
             }
         }

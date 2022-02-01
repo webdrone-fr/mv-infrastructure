@@ -19,6 +19,7 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class UpdateScalewayServer extends Script {
     
 
@@ -68,7 +69,7 @@ public class UpdateScalewayServer extends Script {
         );
         String resp = JacksonUtil.toStringPrettyPrinted(body);
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential)
-            .put(Entity.json(resp)); // To be changed, needs a patch method
+            .method("PATCH", Entity.json(resp)); // To be changed, needs a patch method
         String value = response.readEntity(String.class);
         logger.info("response : " + value);
         logger.debug("response status : {}", response.getStatus());

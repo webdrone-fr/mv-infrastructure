@@ -31,37 +31,41 @@ public class ListScalewayImages extends Script{
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         // INPUT
-        String zone_id = parameters.get("zone").toString();// Select from list
+        // String zone_id = parameters.get("zone").toString();// Select from list
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
+
+        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone_id+"/images");
-        Response response = CredentialHelperService.setCredential(target.request(), credential).get();
-        String value = response.readEntity(String.class);
-        logger.info("response : " + value);
-        logger.debug("response status : {}", response.getStatus());
-        if (response.getStatus() < 300) {
-            JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("images").getAsJsonArray();
-            for (JsonElement element : rootArray) {
-                JsonObject imageObj = element.getAsJsonObject();
-                ServerImage serverImage = new ServerImage();
-                serverImage.setName(imageObj.get("name").getAsString());
-                serverImage.setUuid(imageObj.get("id").getAsString());
-                serverImage.setProviderSideId(imageObj.get("id").getAsString());
-                serverImage.setCreationDate(OffsetDateTime.parse(imageObj.get("creation_date").getAsString()).toInstant());
-                serverImage.setLastUpdated(OffsetDateTime.parse(imageObj.get("modification_date").getAsString()).toInstant());
-                serverImage.setZone(imageObj.get("zone").getAsString());
-                serverImage.setState(imageObj.get("state").getAsString());
-                logger.info("Server Image Name: {}", serverImage.getName());
-                try {
-                    crossStorageApi.createOrUpdate(defaultRepo, serverImage);
-                } catch (Exception e) {
-                    logger.error("Error creating Server Image {} : {}", serverImage.getName(), e.getMessage());
+        for (String zone : zones) {
+            WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/images");
+            Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+            String value = response.readEntity(String.class);
+            logger.info("response : " + value);
+            logger.debug("response status : {}", response.getStatus());
+            if (response.getStatus() < 300) {
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("images").getAsJsonArray();
+                for (JsonElement element : rootArray) {
+                    JsonObject imageObj = element.getAsJsonObject();
+                    ServerImage serverImage = new ServerImage();
+                    serverImage.setName(imageObj.get("name").getAsString());
+                    serverImage.setUuid(imageObj.get("id").getAsString());
+                    serverImage.setProviderSideId(imageObj.get("id").getAsString());
+                    serverImage.setCreationDate(OffsetDateTime.parse(imageObj.get("creation_date").getAsString()).toInstant());
+                    serverImage.setLastUpdated(OffsetDateTime.parse(imageObj.get("modification_date").getAsString()).toInstant());
+                    serverImage.setZone(imageObj.get("zone").getAsString());
+                    serverImage.setState(imageObj.get("state").getAsString());
+                    logger.info("Server Image Name: {}", serverImage.getName());
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, serverImage);
+                    } catch (Exception e) {
+                        logger.error("Error creating Server Image {} : {}", serverImage.getName(), e.getMessage());
+                    }
                 }
             }
         }

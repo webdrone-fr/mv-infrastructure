@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
 import org.meveo.model.customEntities.ServiceProvider;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -48,6 +49,8 @@ public class Server implements CustomEntity {
     private String organization;
 
     private String serverType;
+
+    private List<String> serverActions = new ArrayList<>();
 
     private String status;
 
@@ -178,6 +181,14 @@ public class Server implements CustomEntity {
 
     public void setServerType(String serverType) {
         this.serverType = serverType;
+    }
+
+    public List<String> getServerActions() {
+        return serverActions;
+    }
+
+    public void setServerActions(List<String> serverActions) {
+        this.serverActions = serverActions;
     }
 
     public String getStatus() {

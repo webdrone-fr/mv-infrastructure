@@ -1,6 +1,8 @@
 package org.meveo.scaleway;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -8,9 +10,11 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
+import org.apache.commons.io.FileUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -56,29 +60,94 @@ public class ListScalewayServers extends Script {
                 for (JsonElement element : rootArray) {
                     JsonObject serverObj = element.getAsJsonObject();
                     Server server = new Server();
-                    server.setProvider(provider);
-                    String type = serverObj.get("commercial_type").getAsString();
-                    String name = serverObj.get("name").getAsString();
-                    if (type.startsWith("DEV") && name.startsWith("dev-")) { //type necessary?
-                        server.setServerType(type);
-                        server.setInstanceName(name);
+                    String type = serverObj.get("commercial_type").getAsString(); // used for check
+                    String name = serverObj.get("name").getAsString(); // used for check
+                    if (name.startsWith("dev-")) { // type necessary?
+                        // Image
+                        JsonObject image = serverObj.get("image").getAsJsonObject();
+
+                        // Root Volume
+                        JsonObject rootVolume = serverObj.get("image").getAsJsonObject().get("root_volume").getAsJsonObject();
+
+                        // Additional Volumes
+                        JsonObject volumes = serverObj.get("volumes").getAsJsonObject();
+                        Map<String, Object> additionalVolumes = new HashMap<>();
+                        for (Map.Entry<String, JsonElement> volume : volumes.entrySet()) {
+                            additionalVolumes.put(volume.getKey(), volume.getValue());
+                        }
+
+                        // Server Actions
+                        ArrayList<String> actions = new ArrayList<String>();
+                        JsonArray serverActionsArr = serverObj.get("allowed_actions").getAsJsonArray();
+                        for (JsonElement action : serverActionsArr) {
+                            actions.add(action.getAsString());
+                        }
+
+                        // Location
+                        // includes zone_id, platform_id, cluster_id, hypervisor_id, node_id
+                        JsonObject location = serverObj.get("location").getAsJsonObject();
+
+                        // Bootscript
+                        String bootscriptId = serverObj.get("bootscript").getAsJsonObject().get("id").getAsString();
+                        Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
+
+                        // Maintenances
+                        ArrayList<String> maintenances = new ArrayList<String>();
+                        JsonArray maintenancesArr = serverObj.get("maintenances").getAsJsonArray();
+                        for (JsonElement maintenance : maintenancesArr) {
+                            maintenances.add(maintenance.getAsString()); // could be Objects
+                        }
+                        // Security Group
+                        // Could be CET or List(hardcoded) of existing groups as unlikely to change often
+                        // includes id and name
+                        String securityGroup = serverObj.get("security_group").getAsJsonObject().get("name").getAsString();
+
+                        // Private NICs
+                        // CET? or List of Ids
+                        JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
+                        ArrayList<String> nicIds = new ArrayList<String>();
+                        for (JsonElement nic : nicsArr) {
+                            JsonObject privateNic = nic.getAsJsonObject();
+                            nicIds.add(privateNic.get("id").getAsString());
+                        }
+
+                        // Setting Server Values
+                        // Default server values
                         server.setUuid(serverObj.get("id").getAsString());
+                        server.setInstanceName(name);
+                        server.setServerType(type);
+                        server.setProvider(provider);
                         server.setProviderSideId(serverObj.get("id").getAsString());
-                        server.setImage(serverObj.get("image").getAsJsonObject().get("id").getAsString()); // To be changed  as reference to CET
+                        server.setImage(image.get("id").getAsString()); // To be changed  as reference to CET
                         server.setOrganization(serverObj.get("organization").getAsString());
                         server.setZone(serverObj.get("zone").getAsString());
                         server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
-                        server.setDomainName(serverObj.get("hostname").getAsString());
-                        server.setVolume(serverObj.get("volumes")
-                            .getAsJsonObject().get("0")
-                            .getAsJsonObject().get("id").getAsString());
-                        server.setVolumeSize(serverObj.get("volumes")
-                            .getAsJsonObject().get("0") // Check if boot volume - Image could have boot volume; check if > 1 volume
-                            .getAsJsonObject().get("size").getAsString());
+                        server.setVolume(rootVolume.get("id").getAsString()); // should be root volume
+                        server.setVolumeSize(FileUtils.byteCountToDisplaySize(rootVolume.get("size").getAsLong()));
                         server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
                         server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
+                        server.setServerActions(actions);
                         server.setStatus(serverObj.get("state").getAsString());
-                        logger.info("Server Name: {}", server.getInstanceName());
+
+                        // Scaleway-specific Server Values
+                        // server.setDynamicIpRequired(serverObj.get("dynamic_ip_required").getAsBoolean());
+                        // server.setEnableIPvSix(serverObj.get("enable_ipv6").getAsBoolean());
+                        // server.setHostname(serverObj.get("hostname").getAsString()); hostname != domain name
+                        // server.setProtected(serverObj.get("protected").getAsBoolean());
+                        // server.setPrivateIp(serverObj.get("private_ip").getAsString());
+                        // server.setStateDetail(serverObj.get("state_detail").getAsString()); // necessary?
+                        // location server.setLocation(serverObj.get("location").getAsString()); // CET? necessary ?
+                        // server.setIpvSix(serverObj.get("ipv6").getAsString());
+                        // server.setBootscript(bootscript); // Reference to CET
+                        // server.setBootType(serverObj.get("boot_type").getAsString());
+                        // server.setSecurityGroup(serverObj.get("security_group").getAsJsonObject()); // CET?
+                        // maintenances server.setMaintenances(serverObj.get("maintenances").getAsString()); // Array
+                        // server.setArch(serverObj.get("arch").getAsString());
+                        // server.setPlacementGroup(serverObj.get("placement_group").getAsString()); // nullable necessary?
+                        // privateNics server.setPrivateNics(serverObj.get("private_nics").getAsString()); // Array
+                        // server.setProject(serverObj.get("project").getAsString());
+                        // server.setAdditionalVolumes(additionalVolumes) // Should be list of IDs of volumes
+                        logger.info("Server Name : {}", server.getInstanceName());
                         try {
                             crossStorageApi.createOrUpdate(defaultRepo, server);
                         } catch (Exception e) {

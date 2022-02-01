@@ -37,7 +37,7 @@ public class CreateScalewayServer extends Script {
         String action = (String)parameters.get(CONTEXT_ACTION);
         Server server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
         // INPUT
-        String zone_id = parameters.get("zone").toString();
+        String zone_id = server.getZone(); // Required before creation is possible
 
         if(server.getInstanceName() == null) {
             throw new BusinessException("Invalid Server Instance Name");
