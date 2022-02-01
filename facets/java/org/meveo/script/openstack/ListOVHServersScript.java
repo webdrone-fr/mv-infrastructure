@@ -129,13 +129,16 @@ public class ListOVHServersScript extends Script {
                   	WebTarget targetImage = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/images/"+idImage);
                     Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     String ImageValue = responseImage.readEntity(String.class);
-                    log.info(String.valueOf(response.getStatus()));
                     if (response.getStatus() < 300) {
                       	JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(ImageValue);
                         JsonObject ImageObj = jsonE.getAsJsonObject();
-                        ImageObj = ImageObj.get("image").getAsJsonObject();
-                        server.setImage(ImageObj.get("name").getAsString());
+                        if (ImageObj.get("image").getAsJsonObject() != null) {
+                          ImageObj = ImageObj.get("image").getAsJsonObject();
+                          server.setImage(ImageObj.get("name").getAsString());
+                        } else {
+                          server.setImage("Image not found");
+                        }
                     }
                     //Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
