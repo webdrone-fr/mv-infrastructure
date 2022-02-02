@@ -133,6 +133,7 @@ public class ListOVHServersScript extends Script {
                     String ImageValue = responseImage.readEntity(String.class);
                     if (response.getStatus() < 300) {
                       	JsonParser parser = new JsonParser();
+                        log.info("CC => " + ImageValue);
                         JsonElement jsonE = parser.parse(ImageValue);
                         JsonObject ImageObj = jsonE.getAsJsonObject();
                         if (ImageObj != null) {
