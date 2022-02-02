@@ -128,15 +128,14 @@ public class ListOVHServersScript extends Script {
                     server.setOrganization(serverObj.get("tenant_id").getAsString());
                     //image
                     String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                  	WebTarget targetImage = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/images/"+idImage);
+                  	WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/"+idImage);
                     Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     String ImageValue = responseImage.readEntity(String.class);
                     if (response.getStatus() < 300) {
                       	JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(ImageValue);
                         JsonObject ImageObj = jsonE.getAsJsonObject();
-                        if (ImageObj.get("image") != null) {
-                          ImageObj = ImageObj.get("image").getAsJsonObject();
+                        if (ImageObj != null) {
                           server.setImage(ImageObj.get("name").getAsString());
                         } else {
                           server.setImage("Image not found");
