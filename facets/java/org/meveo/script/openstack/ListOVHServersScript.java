@@ -26,6 +26,7 @@ import javax.ws.rs.client.Entity;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
+import org.meveo.model.persistence.CEIUtils;
 
 public class ListOVHServersScript extends Script {
 
