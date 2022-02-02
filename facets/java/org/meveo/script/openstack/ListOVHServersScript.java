@@ -131,9 +131,9 @@ public class ListOVHServersScript extends Script {
                   	WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/"+idImage);
                     Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     String ImageValue = responseImage.readEntity(String.class);
+                    log.info(String.valueOf(response.getStatus()));
                     if (response.getStatus() < 300) {
                       	JsonParser parser = new JsonParser();
-                        log.info("CC => " + ImageValue);
                         JsonElement jsonE = parser.parse(ImageValue);
                         JsonObject ImageObj = jsonE.getAsJsonObject();
                         if (ImageObj != null) {
