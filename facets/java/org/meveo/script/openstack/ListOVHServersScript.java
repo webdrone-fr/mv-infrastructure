@@ -73,10 +73,9 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
             //Dechiffrement du mot de passe
-            String stringToDecrypt = credential.getPasswordSecret();
-            String salt = PasswordUtils.getSalt(credential.getUuid());
-            String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
-            log.info(stringToDecrypt + " VS " + decryptedString);
+            //String stringToDecrypt = credential.getPasswordSecret();
+            //String hash = CEIUtils.getHash(null, null);
+            //String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
 
             //Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
