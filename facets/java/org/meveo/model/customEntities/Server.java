@@ -3,6 +3,11 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.ServerImage;
+import java.util.Map;
+import org.meveo.model.customEntities.ServerVolume;
+import java.util.HashMap;
+import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
 import org.meveo.model.customEntities.ServiceProvider;
 import java.util.ArrayList;
@@ -22,21 +27,25 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String image;
+    private ServerImage image;
 
     private String providerSideId;
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
     private String instanceName;
 
     private String sergentUrl;
 
+    private String locationDefinition;
+
     private String publicIp;
+
+    private SecurityGroup securityGroup;
 
     private Instant creationDate;
 
     private String volumeSize;
-
-    private String volume;
 
     private ServiceProvider provider;
 
@@ -51,6 +60,10 @@ public class Server implements CustomEntity {
     private String serverType;
 
     private List<String> serverActions = new ArrayList<>();
+
+    private ServerVolume rootVolume;
+
+    private String location;
 
     private String status;
 
@@ -71,11 +84,11 @@ public class Server implements CustomEntity {
         this.storages = storages;
     }
 
-    public String getImage() {
+    public ServerImage getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(ServerImage image) {
         this.image = image;
     }
 
@@ -85,6 +98,14 @@ public class Server implements CustomEntity {
 
     public void setProviderSideId(String providerSideId) {
         this.providerSideId = providerSideId;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
     }
 
     public String getInstanceName() {
@@ -103,12 +124,28 @@ public class Server implements CustomEntity {
         this.sergentUrl = sergentUrl;
     }
 
+    public String getLocationDefinition() {
+        return locationDefinition;
+    }
+
+    public void setLocationDefinition(String locationDefinition) {
+        this.locationDefinition = locationDefinition;
+    }
+
     public String getPublicIp() {
         return publicIp;
     }
 
     public void setPublicIp(String publicIp) {
         this.publicIp = publicIp;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
     }
 
     public Instant getCreationDate() {
@@ -125,14 +162,6 @@ public class Server implements CustomEntity {
 
     public void setVolumeSize(String volumeSize) {
         this.volumeSize = volumeSize;
-    }
-
-    public String getVolume() {
-        return volume;
-    }
-
-    public void setVolume(String volume) {
-        this.volume = volume;
     }
 
     public ServiceProvider getProvider() {
@@ -189,6 +218,22 @@ public class Server implements CustomEntity {
 
     public void setServerActions(List<String> serverActions) {
         this.serverActions = serverActions;
+    }
+
+    public ServerVolume getRootVolume() {
+        return rootVolume;
+    }
+
+    public void setRootVolume(ServerVolume rootVolume) {
+        this.rootVolume = rootVolume;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getStatus() {

@@ -54,15 +54,18 @@ public class ListScalewayVolumes extends Script{
                 for (JsonElement element : rootArray) {
                     JsonObject volumeObj = element.getAsJsonObject();
                     ServerVolume serverVolume = new ServerVolume();
-                    String serverName = "";
-                    if (!volumeObj.get("server").isJsonNull()) {
-                        serverName = volumeObj.get("server").getAsJsonObject().get("name").getAsString();
-                    }
+                    // String serverName = "";
+                    // if (!volumeObj.get("server").isJsonNull()) {
+                    //     serverName = volumeObj.get("server").getAsJsonObject().get("name").getAsString();
+                    // }
                     // if (serverName.startsWith("dev-")){
+
                         serverVolume.setUuid(volumeObj.get("id").getAsString());
                         serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
                         serverVolume.setName(volumeObj.get("name").getAsString());
-                        serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
+                        if (!volumeObj.get("server").isJsonNull()) {
+                            serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
+                        }
                         serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
                         serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
                         serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());

@@ -45,7 +45,7 @@ public class CreateScalewayServer extends Script {
             throw new BusinessException("Invalid Server Type");
         } else if (server.getImage() == null) {
             throw new BusinessException("Invalid Server Image"); // TBC
-        } else if (server.getVolume() == null) { // Need to change to CET Volume
+        } else if (server.getRootVolume() == null) { // Need to change to CET Volume
             throw new BusinessException("Invalid Server Volume"); // TBC
         } else if(server.getZone() == null) {
             throw new BusinessException("Invalid Server Zone"); //TBC

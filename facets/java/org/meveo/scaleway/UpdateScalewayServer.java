@@ -58,7 +58,7 @@ public class UpdateScalewayServer extends Script {
             "name", server.getInstanceName(), //nullable
             // "boot_type", server.getBootType(),
             // "tags", server.getTags(), //nullable
-            "volumes", server.getVolume()
+            "volumes", server.getRootVolume()
             // "bootscript", server.getBootScript(), //nullable
             // "dynamic_ip_required", //nullable
             // "enable_ipv6", //nullable
