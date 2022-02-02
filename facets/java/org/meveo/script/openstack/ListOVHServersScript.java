@@ -72,19 +72,18 @@ public class ListOVHServersScript extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-            //Dechiffrement du mot de passe
-            //String stringToDecrypt = credential.getPasswordSecret();
-            //String hash = CEIUtils.getHash(null, null);
-            //String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
-
-            //Creation du body
+            // Dechiffrement du mot de passe
+            // String stringToDecrypt = credential.getPasswordSecret();
+            // String hash = CEIUtils.getHash(null, null);
+            // String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
+            // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
             HashMap<String, Object> identity = new HashMap<String, Object>();
             HashMap<String, Object> password = new HashMap<String, Object>();
             HashMap<String, Object> user = new HashMap<String, Object>();
             HashMap<String, Object> domain = new HashMap<String, Object>();
-            ArrayList <String> method = new ArrayList<String>();
+            ArrayList<String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
             user.put("password", "yjkhNrpjaWaYkGZYbs6z3gmDa5V74R9Z");
@@ -99,9 +98,9 @@ public class ListOVHServersScript extends Script {
             // Creation of the identity token
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-        	Response response = target.request().post(Entity.json(resp));
+            Response response = target.request().post(Entity.json(resp));
             credential.setToken(response.getHeaderString("X-Subject-Token"));
-     		credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
+            credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
             response.close();
         }
         // Call every region to list server
@@ -118,59 +117,59 @@ public class ListOVHServersScript extends Script {
                     JsonObject serverObj = element.getAsJsonObject();
                     // Create new servers
                     Server server = new Server();
-                    //UUID
+                    // UUID
                     server.setUuid(serverObj.get("id").getAsString());
-                    //server name
+                    // server name
                     server.setInstanceName(serverObj.get("name").getAsString());
-                    //domain name
+                    // domain name
                     server.setDomainName(serverObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
-                    //tenant
+                    // tenant
                     server.setOrganization(serverObj.get("tenant_id").getAsString());
-                    //image
+                    // image
                     String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                  	WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/"+idImage);
+                    WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
                     Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     String ImageValue = responseImage.readEntity(String.class);
                     if ((response.getStatus() < 300) && !(ImageValue.startsWith("404"))) {
-                      	JsonParser parser = new JsonParser();
+                        JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(ImageValue);
                         JsonObject ImageObj = jsonE.getAsJsonObject();
                         if (ImageObj != null) {
-                          server.setImage(ImageObj.get("name").getAsString());
-                        } else {
-                          server.setImage("Image not found");
+                            server.setImage(ImageObj.get("name").getAsString());
                         }
+                    } else {
+                        server.setImage("Image not found");
                     }
-                    //Set the creation & updated date
+                    // Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
                     server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
-                    //zone
+                    // zone
                     server.setZone(zone);
-                    //public IP
+                    // public IP
                     JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
                     for (JsonElement ip : publicIpArray) {
-                       JsonObject ipElement = ip.getAsJsonObject();
-                       if (ipElement.get("version").getAsInt() == 4) {
-                         server.setPublicIp(ipElement.get("addr").getAsString());
-                       }
+                        JsonObject ipElement = ip.getAsJsonObject();
+                        if (ipElement.get("version").getAsInt() == 4) {
+                            server.setPublicIp(ipElement.get("addr").getAsString());
+                        }
                     }
-                    //status
+                    // status
                     server.setStatus(serverObj.get("status").getAsString());
-                    //provider
+                    // provider
                     server.setProvider(openstack);
-                    //volume & flavor
+                    // volume & flavor
                     String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
-                    WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/"+idFlavor);
+                    WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
                     if (response.getStatus() < 300) {
-                      	JsonParser parser = new JsonParser();
+                        JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(flavorValue);
                         JsonObject flavorObj = jsonE.getAsJsonObject();
                         flavorObj = flavorObj.get("flavor").getAsJsonObject();
-                        //flavor
+                        // flavor
                         server.setServerType(flavorObj.get("name").getAsString());
-                        //volume
+                        // volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
                     try {
