@@ -139,7 +139,7 @@ public class ListOVHServersScript extends Script {
                         }
                     } else {
                         server.setImage("Image not found");
-                        log.error("Image with id : " + idImage + " cannot be found with the URL : https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
+                        log.error("Image with id : " + idImage + " cannot be found for the server : " + serverObj.get("name").getAsString());
                     }
                     // Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
