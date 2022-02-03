@@ -38,6 +38,8 @@ public class ServerVolume implements CustomEntity {
 
     private Instant creationDate;
 
+    private Boolean isBoot;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -125,6 +127,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Boolean getIsBoot() {
+        return isBoot;
+    }
+
+    public void setIsBoot(Boolean isBoot) {
+        this.isBoot = isBoot;
     }
 
     @Override()

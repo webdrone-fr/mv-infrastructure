@@ -1,6 +1,8 @@
 package org.meveo.scaleway;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -12,7 +14,8 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ScalewayServer;
+import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
@@ -35,53 +38,106 @@ public class CreateScalewayServer extends Script {
     @Override
     public void execute(Map<String, Object>parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION);
-        Server server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
-        // INPUT
-        String zone_id = server.getZone(); // Required before creation is possible
-
-        if(server.getInstanceName() == null) {
+        ScalewayServer server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
+        
+        if(server.getInstanceName() == null) { // required
             throw new BusinessException("Invalid Server Instance Name");
-        } else if (server.getServerType() == null) {
-            throw new BusinessException("Invalid Server Type");
-        } else if (server.getImage() == null) {
-            throw new BusinessException("Invalid Server Image"); // TBC
-        } else if (server.getRootVolume() == null) { // Need to change to CET Volume
-            throw new BusinessException("Invalid Server Volume"); // TBC
+        } else if (server.getServerType() == null) { // required
+            throw new BusinessException("Invalid Server Type, Valid Types are: l_ssd and b_ssd");
         } else if(server.getZone() == null) {
-            throw new BusinessException("Invalid Server Zone"); //TBC
-        } else if (server.getDomainName() == null) {
-            throw new BusinessException("Invalid Server Domain");
+            throw new BusinessException("Invalid Server Zone");
         }
 
+        // INPUT
+        String zone = server.getZone(); // Required for path
         ServiceProvider serviceProvider = server.getProvider();
-        logger.info("action : {}, provider uuid : {}", action, serviceProvider.getUuid());
+        logger.info("action : {}, Server Uuid : {}, Provider Uuid : {}", action, server.getUuid(), serviceProvider.getUuid());
+
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
             logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername());
         }
+
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone_id+"/servers");
+        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers");
 
         Map<String, Object> body = Map.of(
-            "name", server.getInstanceName(),
-            // "dynamic_ip_required", 
-            "commercial_type", server.getServerType()
-            // "image", server.getImage(), // .getProviderSideId() reference to CET
-            // "volumes", server.getVolume(), // .getVolume().getproviderSideId() Need to add volume key(iterate through)
-            // "enable_ipv6"
-            // "public_ip", server.getPublicIp()
-            // "boot_type",
-            // "bootscript",
-            // "project",
-            // "tags",
-            // "security_group", //nullable
+            "name", server.getInstanceName(), // required
+            "dynamic_ip_required", server.getDynamicIpRequired(), // nullable, default to false
+            "commercial_type", server.getServerType(), // required
+            "enable_ipv6", server.getEnableIPvSix(), // default to true
+            "boot_type", server.getBootType() // From List of values, includes local, bootscript, rescue -> default is local
+            // "bootscript", // nullable
             // "placement_group" //nullable
         );
-        String resp = JacksonUtil.toStringPrettyPrinted(body);
 
+        // Public IP
+        // cannot be null so not included in request to avoid error if no value at creation
+        if (server.getPublicIp() != null) {
+            body.put("public_ip", server.getPublicIp());
+        }
+
+        // Project
+        // Webdrone ID = 6a0c2ca8-917a-418a-90a3-05949b55a7ae
+        String projectId = "6a0c2ca8-917a-418a-90a3-05949b55a7ae";
+        if (server.getProject() != null) {
+            projectId = server.getProject();
+        }
+        body.put("project", projectId);
+
+        // Image
+        String imageId = null;
+        if (server.getImage() != null) {
+            imageId = server.getImage().getProviderSideId();
+            body.put("image", imageId);
+        }
+
+        // Volumes attached to Server
+        Map<String, Object> volumes = new HashMap<String, Object>();
+        // Root Volume
+        JsonObject rootVolume = new JsonObject();
+        if (server.getRootVolume() != null) {
+            rootVolume.addProperty("id", server.getRootVolume().getProviderSideId());
+            rootVolume.addProperty("boot", server.getRootVolume().getIsBoot());
+            rootVolume.addProperty("name", server.getRootVolume().getName());
+            rootVolume.addProperty("size", Long.parseLong(server.getRootVolume().getSize()));
+            rootVolume.addProperty("volume_type", server.getRootVolume().getVolumeType()); // need to check = l_ssd OR b_ssd at volume creation
+            volumes.put("0", rootVolume);
+        }
+        // Additional Volumes
+        Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+        if (serverAdditionalVolumes.size() > 0) {
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
+                JsonObject additionalVolume = new JsonObject();
+                additionalVolume.addProperty("id", serverAdditionalVolume.getValue().getProviderSideId());
+                additionalVolume.addProperty("name", serverAdditionalVolume.getValue().getName());
+                additionalVolume.addProperty("size", Long.parseLong(serverAdditionalVolume.getValue().getSize()));
+                additionalVolume.addProperty("volume_type", serverAdditionalVolume.getValue().getVolumeType());
+                volumes.put(serverAdditionalVolume.getKey(), additionalVolume); // keys should be 1, 2, 3...
+            }
+        }
+        body.put("volumes", volumes);
+
+        // Security Group
+        // nullable - if null, defaults to "Default security group"
+        if (server.getSecurityGroup() != null) {
+            body.put("security_group", server.getSecurityGroup().getProviderSideId());
+        }
+
+        // Tags
+        // currently not used
+        ArrayList<String> tags = new ArrayList<String>();
+        // if (server.getTags().length() > 1) {
+        //     for (String tag : (server.getTags())) {
+        //         tags.add(tag);
+        //     }
+        // }
+        body.put("tags", tags);
+        
+        String resp = JacksonUtil.toStringPrettyPrinted(body);
         Response response = 
             CredentialHelperService.setCredential(target.request("application/json"), credential)
                 .post(Entity.json(resp));
@@ -93,7 +149,7 @@ public class CreateScalewayServer extends Script {
         if (response.getStatus()<300) {
             server.setCreationDate(Instant.now());
             server.setLastUpdate(Instant.now());
-            JsonObject serverObj = (JsonObject) new JsonParser().parse(value).getAsJsonObject().get("server");
+            JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
             server.setProviderSideId(serverObj.get("id").getAsString());
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, server);

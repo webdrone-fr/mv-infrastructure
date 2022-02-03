@@ -64,6 +64,7 @@ public class ListScalewayVolumes extends Script{
                         serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
                         serverVolume.setName(volumeObj.get("name").getAsString());
                         if (!volumeObj.get("server").isJsonNull()) {
+                            // need to check if is used for Boot of server - not part of response for volumes list
                             serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
                         }
                         serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());

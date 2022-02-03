@@ -94,6 +94,7 @@ public class ListScalewayServers extends Script {
                             String rootVolumeId = serverObj.get("volumes").getAsJsonObject().get("0").getAsJsonObject().get("id").getAsString();
                             ServerVolume rootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult();
                             if (rootVolume != null) {
+                                rootVolume.setIsBoot(serverObj.get("volumes").getAsJsonObject().get("0").getAsJsonObject().get("boot").getAsBoolean());
                                 String rootVolumeSize = rootVolume.getSize();
                                 server.setRootVolume(rootVolume); 
                                 server.setVolumeSize(rootVolumeSize);// could be changed to rootVolumeSize for clarity

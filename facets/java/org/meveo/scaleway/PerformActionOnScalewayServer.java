@@ -3,6 +3,7 @@ package org.meveo.scaleway;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -14,7 +15,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerAction;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
@@ -37,7 +38,8 @@ public class PerformActionOnScalewayServer extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION); // needs to be changed to get selected action from list - default is poweron
-        Server server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
+        ScalewayServer server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
+        List<String> allowedServerActions = server.getServerActions();
 
         if (server.getZone()==null) { //Required
             throw new BusinessException("Invalid Server Zone");
@@ -45,12 +47,15 @@ public class PerformActionOnScalewayServer extends Script {
             throw new BusinessException("Invalid Server Provider-side ID");
         } else if (server.getServerActions().get(0) == null) { // need to change
             throw new BusinessException("Invalid Server Action selected");
+        } else if (!allowedServerActions.contains(action)) {
+            throw new BusinessException("Action "+action+" not allowed on Server "+server.getUuid());
         }
-        // additional field is name - refers to name of backup to be created, only possible if action = backup; nullable
+
         //INPUT
-        String zone_id = server.getZone();
-        String server_id = server.getProviderSideId();
-        logger.info("Performing {} on server with uuid : {}", action,  server_id);
+        String zone = server.getZone();
+        String serverId = server.getProviderSideId();
+        logger.info("Performing {} on server with uuid : {}", action,  serverId);
+
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
@@ -60,18 +65,18 @@ public class PerformActionOnScalewayServer extends Script {
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone_id+"/servers/"+server_id+"/action");
-
-        //If action is backup - check for name of Image to be created
-        String imageName = null;
-        // if (action == "backup") {
-        //     imageName = server.getBackupName();
-        // }
+        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers/"+serverId+"/action");
 
         Map<String, Object> body = Map.of(
-            "action", action, // to to ensure is correct action, see above for action
-            "name", imageName
+            "action", action // to to ensure is correct action, see above for action
         );
+
+        //If action is backup - check for name of Image to be created
+        // if (action == "backup") {
+        //      String imageName = server.getBackupName();
+        //      body.put("name", imageName);
+        // }
+        
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json((resp)));
@@ -85,10 +90,11 @@ public class PerformActionOnScalewayServer extends Script {
             ServerAction serverAction = new ServerAction();
             serverAction.setServer(server);
             serverAction.setUuid(serverActionObj.get("id").getAsString());
+            // Need to add providersideId
             serverAction.setCreationDate(OffsetDateTime.parse(serverActionObj.get("started_at").getAsString()).toInstant());
             Duration timeElapsed = Duration.between(
                 OffsetDateTime.parse(serverActionObj.get("creation_date").getAsString()).toInstant(),
-                OffsetDateTime.parse(serverActionObj.get("terminated_at").getAsString()).toInstant());
+                OffsetDateTime.parse(serverActionObj.get("terminated_at").getAsString()).toInstant()); //will need to be updated with job until terminated
             serverAction.setElapsedTimeMs(timeElapsed.toMillis());
             serverAction.setResponse(String.valueOf(response.getStatus()));
             serverAction.setResponseStatus(serverActionObj.get("status").getAsString());

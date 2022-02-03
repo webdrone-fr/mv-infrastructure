@@ -10,6 +10,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.Server;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
@@ -31,25 +32,38 @@ public class DeleteScalewayServer extends Script{
     @Override
     public void execute(Map<String, Object>parameters) throws BusinessException {
         String action = (String)parameters.get(CONTEXT_ACTION);
-        Server server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
+        ScalewayServer server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
+        
         if (server.getZone()==null) { //Required
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
         }
+
         // INPUT
-        String zone_id = server.getZone();
-        String server_id = server.getProviderSideId();
-        logger.info("action : {}, server uuid : {}", action, server_id);
+        String zone = server.getZone();
+        String serverId = server.getProviderSideId();
+        logger.info("action : {}, server uuid : {}", action, serverId);
+
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
             logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername()); //Need to verify username
         }
+
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://" +SCALEWAY_URL+"/zones/"+zone_id+"/servers/"+server_id);
+        WebTarget target = client.target("https://"+SCALEWAY_URL+"/zones/"+zone+"/servers/"+serverId);
+
+        // check if Server has Image/ Backup
+            // check if Image is recent?/ Any changes have been made between Image and current state of server ?
+            // Ask if User wants to make a backup of Server
+            
+        // check if Server still has Volumes attached
+            // Ask if user wants to make snapshot of Volume(s) (Snapshot to implement)
+            // Detach Volume(s)
+
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
