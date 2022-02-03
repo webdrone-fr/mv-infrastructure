@@ -3,16 +3,12 @@ package org.meveo.script.openstack;
 import java.util.Map;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
-import org.meveo.api.exception.BusinessApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.meveo.model.customEntities.CustomEntityInstance;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 import com.google.gson.*;
-import java.math.BigInteger;
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -21,12 +17,9 @@ import org.meveo.model.customEntities.Credential;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
-import org.meveo.credentials.CredentialHelperService;
-import javax.ws.rs.client.Entity;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
-import org.meveo.model.persistence.CEIUtils;
 
 public class ListOVHServersScript extends Script {
 
