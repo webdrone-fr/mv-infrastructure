@@ -70,6 +70,7 @@ public class ListOVHServersScript extends Script {
             // String hash = CEIUtils.getHash(null, null);
             // String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
             // Creation du body
+            log.info("PASSAGE ICI");
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
             HashMap<String, Object> identity = new HashMap<String, Object>();
