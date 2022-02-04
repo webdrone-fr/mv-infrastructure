@@ -20,7 +20,6 @@ import org.meveo.api.persistence.CrossStorageApi;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
-import org.meveo.script.openstack.DefaultScript;
 
 public class ListOVHServersScript extends Script {
 
@@ -31,8 +30,6 @@ public class ListOVHServersScript extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
-  
-    private DefaultScript defaultScript = new DefaultScript();
 
     private ServiceProvider getProvider(String code) {
         return crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", code).getResult();
@@ -182,7 +179,6 @@ public class ListOVHServersScript extends Script {
                 }
             }
             response.close();
-            defaultScript.function("une bonne execution");
         }
     }
 }
