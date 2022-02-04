@@ -20,6 +20,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
+import org.meveo.script.openstack.CheckOVHToken;
 
 public class ListOVHServersScript extends Script {
 
@@ -30,6 +31,8 @@ public class ListOVHServersScript extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
+  
+    private CheckOVHToken checkOVHToken = new CheckOVHToken();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -38,6 +41,8 @@ public class ListOVHServersScript extends Script {
 
     public void callOVH(Credential credential, ServiceProvider openstack) {
         log.info("calling ListOVHServersScript");
+        //Check the token
+        checkOVHToken.checkOVHToken(credential, openstack);
         // Call every region to list server
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
