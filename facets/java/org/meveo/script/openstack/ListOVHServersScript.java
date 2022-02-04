@@ -33,10 +33,11 @@ public class ListOVHServersScript extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        log.info("calling ListOVHServersScript");
+        super.execute(parameters);
     }
 
     public void callOVH(Credential credential, ServiceProvider openstack) {
+        log.info("calling ListOVHServersScript");
         // Call every region to list server
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
