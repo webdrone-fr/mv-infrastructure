@@ -54,15 +54,15 @@ public class CallCreation extends Script {
         }
         switch(credential.getDomainName()) {
           case "cloud.ovh.net":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Creation done for OVH servers"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Creation for OVH servers"));
             //createOVHServersScript.createServer(credential, openstack, server);
             break;
           case "api.scaleway.com":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Creation done for scaleway servers"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Creation for scaleway servers"));
             //create
             break;
           case "api.gandi.net/v5/":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Creation done for gandi servers"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Creation for gandi servers"));
             //create
             break;
           default:
