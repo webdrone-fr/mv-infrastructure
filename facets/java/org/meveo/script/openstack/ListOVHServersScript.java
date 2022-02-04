@@ -32,7 +32,7 @@ public class ListOVHServersScript extends Script {
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
-    private DefaultScript defaultScript = getCDIBean(DefaultScript.class);
+    private DefaultScript defaultScript = new DefaultScript();
 
     private ServiceProvider getProvider(String code) {
         return crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", code).getResult();
