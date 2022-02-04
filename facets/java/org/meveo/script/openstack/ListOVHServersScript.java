@@ -182,6 +182,7 @@ public class ListOVHServersScript extends Script {
                 }
             }
             response.close();
+            defaultScript.function("une bonne execution");
         }
     }
 }
