@@ -65,6 +65,8 @@ public class Server implements CustomEntity {
 
     private String location;
 
+    private String backupName;
+
     private String status;
 
     @Override()
@@ -234,6 +236,14 @@ public class Server implements CustomEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getBackupName() {
+        return backupName;
+    }
+
+    public void setBackupName(String backupName) {
+        this.backupName = backupName;
     }
 
     public String getStatus() {

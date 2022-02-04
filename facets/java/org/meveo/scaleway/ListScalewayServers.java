@@ -83,7 +83,6 @@ public class ListScalewayServers extends Script {
 
                         // Image
                         if(!serverObj.get("image").isJsonNull()) {
-                            // Image
                             String imageId = serverObj.get("image").getAsJsonObject().get("id").getAsString();
                             ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
                             server.setImage(image);
@@ -166,18 +165,6 @@ public class ListScalewayServers extends Script {
                             SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
                             server.setSecurityGroup(securityGroup);
                        }
-
-                        // Private NICs
-                        // CET? or List of Ids
-                       if (serverObj.get("private_nics").isJsonNull()) {
-                            JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
-                            ArrayList<String> nicIds = new ArrayList<String>();
-                            for (JsonElement nic : nicsArr) {
-                                JsonObject privateNic = nic.getAsJsonObject();
-                                nicIds.add(privateNic.get("id").getAsString());
-                            }
-                            // server.setPrivateNics(serverObj.get("private_nics").getAsString()); // Array
-                       }
                         
                         // Scaleway-specific Server Values
                         server.setDynamicIpRequired(serverObj.get("dynamic_ip_required").getAsBoolean());
@@ -191,6 +178,17 @@ public class ListScalewayServers extends Script {
                         server.setEnableIPvSix(serverObj.get("enable_ipv6").getAsBoolean());
                         if(server.getEnableIPvSix()) {
                             server.setIpVSix(serverObj.get("ipv6").getAsJsonObject().get("address").getAsString());
+                        }
+
+                        // Private NICs
+                        if (serverObj.get("private_nics").isJsonNull()) {
+                            JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
+                            ArrayList<String> nicIds = new ArrayList<String>();
+                            for (JsonElement nic : nicsArr) {
+                                JsonObject privateNic = nic.getAsJsonObject();
+                                nicIds.add(privateNic.get("id").getAsString());
+                            }
+                            server.setPrivateNics(nicIds);
                         }
 
                         logger.info("Server Name : {}", server.getInstanceName());

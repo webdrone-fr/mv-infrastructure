@@ -46,7 +46,7 @@ public class UpdateScalewayServer extends Script {
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
         }
-        //INPUT
+        
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
         logger.info("action : {}, server uuid : {}", action, serverId);
@@ -73,16 +73,6 @@ public class UpdateScalewayServer extends Script {
         if (server.getInstanceName() != null) {
             body.put("name", server.getInstanceName());
         }
-
-        // Tags
-        // currently not used
-        ArrayList<String> tags = new ArrayList<String>();
-        // if (server.getTags().length() > 1) {
-        //     for (String tag : (server.getTags())) {
-        //         tags.add(tag);
-        //     }
-        // }
-        body.put("tags", tags);
 
         // Volumes
         Map<String, Object> volumes = new HashMap<String, Object>();

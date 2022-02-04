@@ -37,7 +37,8 @@ public class PerformActionOnScalewayServer extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION); // needs to be changed to get selected action from list - default is poweron
+        // String action = (String)parameters.get(CONTEXT_ACTION); // needs to be changed to get selected action from list - default is poweron
+        String action = parameters.get("action").toString(); // Possible values include poweron, backup, stop_in_place, poweroff, terminate and reboot
         ScalewayServer server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
         List<String> allowedServerActions = server.getServerActions();
 
@@ -45,13 +46,10 @@ public class PerformActionOnScalewayServer extends Script {
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
-        } else if (server.getServerActions().get(0) == null) { // need to change
-            throw new BusinessException("Invalid Server Action selected");
         } else if (!allowedServerActions.contains(action)) {
             throw new BusinessException("Action "+action+" not allowed on Server "+server.getUuid());
         }
 
-        //INPUT
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
         logger.info("Performing {} on server with uuid : {}", action,  serverId);
@@ -67,15 +65,29 @@ public class PerformActionOnScalewayServer extends Script {
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers/"+serverId+"/action");
 
+        // Action Conditions
+        // String serverStatus = server.getStatus(); // possible values include running, stopped, stopped in place, starting, stopping and locked
+        if (action == "terminate") {
+            // when terminating a server, all the attached volumes (local and block storage) are deleted
+            if (server.getRootVolume() != null || !server.getAdditionalVolumes().isEmpty()) {
+                // TODO make an alert + check for confirmation 
+                // Alternative is to detach volumes prior to termination
+                // for local volumes, use archive action
+                // for block volumes, volumes must be detached before Server termination
+                parameters.put(RESULT_GUI_MESSAGE, "All Volumes for Server "+serverId+"will be deleted, are you sure wou wish to proceed?");
+            }
+        }
+        // Need to wait for task to be completed?
+
         Map<String, Object> body = Map.of(
             "action", action // to to ensure is correct action, see above for action
         );
 
         //If action is backup - check for name of Image to be created
-        // if (action == "backup") {
-        //      String imageName = server.getBackupName();
-        //      body.put("name", imageName);
-        // }
+        if (action == "backup") {
+             String imageName = server.getBackupName();
+             body.put("name", imageName);
+        }
         
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 

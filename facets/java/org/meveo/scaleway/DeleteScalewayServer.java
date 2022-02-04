@@ -75,7 +75,7 @@ public class DeleteScalewayServer extends Script{
             try {
                 crossStorageApi.remove(defaultRepo, server.getUuid(), server.getCetCode());
             } catch (Exception e) {
-                logger.error("error deleting record {} :{}", server.getUuid(), e.getMessage());
+                logger.error("error deleting server {} :{}", server.getUuid(), e.getMessage());
             }
         }
     } 
