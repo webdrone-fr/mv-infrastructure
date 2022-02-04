@@ -94,8 +94,11 @@ public class ListOVHServersScript extends Script {
             Response response = target.request().post(Entity.json(resp));
             credential.setToken(response.getHeaderString("X-Subject-Token"));
             credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
-            log.info("Token utilisateur " + response.getHeaderString("X-Subject-Token"));
-            log.info("Token expiration " + currentDate.plusDays(1).toInstant().toString());
+            try {
+              crossStorageApi.createOrUpdate(defaultRepo, credential);
+            } catch (Exception ex) {
+              log.error("error update credentials {} :{}", credential.getUuid(), ex.getMessage());
+            }
             response.close();
         }
         // Call every region to list server
