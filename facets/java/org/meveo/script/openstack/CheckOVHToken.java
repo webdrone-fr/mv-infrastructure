@@ -52,6 +52,7 @@ public class CheckOVHToken extends Script {
                 }
             });
             var hash = PasswordUtils.getSalt(objectsToHash.toArray());
+            log.info(stringToDecrypt);
             String decryptedString = PasswordUtils.decrypt(hash, stringToDecrypt);
             log.info(stringToDecrypt + " converted to " + decryptedString);
             // Creation du body
