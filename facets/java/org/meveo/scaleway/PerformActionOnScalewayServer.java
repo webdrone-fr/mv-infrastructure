@@ -3,8 +3,10 @@ package org.meveo.scaleway;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -17,6 +19,7 @@ import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerAction;
+import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
@@ -34,12 +37,12 @@ public class PerformActionOnScalewayServer extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     static final private String SCALEWAY_URL = "api.scaleway.com";
+    static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        // String action = (String)parameters.get(CONTEXT_ACTION); // needs to be changed to get selected action from list - default is poweron
-        String action = parameters.get("action").toString(); // Possible values include poweron, backup, stop_in_place, poweroff, terminate and reboot
-        ScalewayServer server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
+        String action = parameters.get("action").toString(); // Possible values include poweron, backup, stop_in_place, poweroff, terminate and reboot - default is poweron
+        ScalewayServer server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
         List<String> allowedServerActions = server.getServerActions();
 
         if (server.getZone()==null) { //Required
@@ -63,30 +66,59 @@ public class PerformActionOnScalewayServer extends Script {
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers/"+serverId+"/action");
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/action");
+
+        Map <String, Object> body = new HashMap<String, Object>();
+        // Get latest server details
+        // Boolean actionComplete = false;
+
+        // do {
+        //     // request server details
+        //     // check if status == expected outcome of action
+        //     // wait delay
+        //     // change actionCompleted to true
+        // }
+        // while (actionComplete == false);
 
         // Action Conditions
         // String serverStatus = server.getStatus(); // possible values include running, stopped, stopped in place, starting, stopping and locked
+
+        // Block volumes are only available for DEV1, GP1 and RENDER offers
         if (action == "terminate") {
             // when terminating a server, all the attached volumes (local and block storage) are deleted
-            if (server.getRootVolume() != null || !server.getAdditionalVolumes().isEmpty()) {
+            parameters.put(RESULT_GUI_MESSAGE, "All Volumes for Server : "+serverId+" will be deleted, are you sure wou wish to proceed or select volumes to detach?");
+            // check if user wants to keep volumes or delete them
+            // if keep volumes selected
+            if (!server.getAdditionalVolumes().isEmpty()) {
                 // TODO make an alert + check for confirmation 
                 // Alternative is to detach volumes prior to termination
                 // for local volumes, use archive action
                 // for block volumes, volumes must be detached before Server termination
-                parameters.put(RESULT_GUI_MESSAGE, "All Volumes for Server "+serverId+"will be deleted, are you sure wou wish to proceed?");
-            }
+                
+                Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
+                for (Map.Entry<String, ServerVolume> additionalVolume : additionalVolumes.entrySet()) {
+                    if (additionalVolume.getValue().getVolumeType() == "l_ssd") {
+                        // perform archive action
+                    } else {
+                        // detach volume from server
+                        // involves updating server
+                    }
+                }
+            } 
+            // check if backup of rootVolume exists/ is recent?
+            // need to update server to detach rootVolume
+            // else if delete volumes, normal action call
+        } else if (action == "poweroff") {
+        // When a server is powered off, only its volumes and any reserved flexible IP address are billed.
+        // Check if volumes still attached to server
+        // Notify of billing condition
         }
-        // Need to wait for task to be completed?
 
-        Map<String, Object> body = Map.of(
-            "action", action // to to ensure is correct action, see above for action
-        );
-
-        //If action is backup - check for name of Image to be created
-        if (action == "backup") {
-             String imageName = server.getBackupName();
-             body.put("name", imageName);
+        body.put("action", action);
+        //If action is backup - check for name of Backup to be created
+        if (action == "backup" && server.getBackupName() != null) {
+            String imageName = server.getBackupName();
+            body.put("name", imageName);
         }
         
         String resp = JacksonUtil.toStringPrettyPrinted(body);
@@ -108,8 +140,8 @@ public class PerformActionOnScalewayServer extends Script {
                 OffsetDateTime.parse(serverActionObj.get("creation_date").getAsString()).toInstant(),
                 OffsetDateTime.parse(serverActionObj.get("terminated_at").getAsString()).toInstant()); //will need to be updated with job until terminated
             serverAction.setElapsedTimeMs(timeElapsed.toMillis());
-            serverAction.setResponse(String.valueOf(response.getStatus()));
-            serverAction.setResponseStatus(serverActionObj.get("status").getAsString());
+            serverAction.setResponse(serverActionObj.get("status").getAsString());
+            serverAction.setResponseStatus(String.valueOf(response.getStatus()));
             serverAction.setAction(action);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, serverAction);

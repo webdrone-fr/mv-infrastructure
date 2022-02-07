@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -56,13 +57,30 @@ public class DeleteScalewayServer extends Script{
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+"/zones/"+zone+"/servers/"+serverId);
 
+        Instant currentInstant = Instant.now();
         // check if Server has Image/ Backup
             // check if Image is recent?/ Any changes have been made between Image and current state of server ?
             // Ask if User wants to make a backup of Server
+        if (server.getImage() == null) {
+            // ask if backup
+        } else {
+            Instant serverImageLastUpdated = server.getImage().getLastUpdated();
+            Duration timeSinceImageLastUpdate = Duration.between(serverImageLastUpdated, currentInstant);
+            if (timeSinceImageLastUpdate.toDays() > 2) { // Max Time TBC
+                // ask if backup
+            }
+        }
             
         // check if Server still has Volumes attached
-            // Ask if user wants to make snapshot of Volume(s) (Snapshot to implement)
             // Detach Volume(s)
+        if (!server.getAdditionalVolumes().isEmpty()) {
+            // Ask if detach volumes ie to keep
+        }
+        Instant serverRootVolumeLastModified = server.getRootVolume().getLastUpdated();
+        Duration timeSinceRootVolumeLastUpdated = Duration.between(serverRootVolumeLastModified, currentInstant);
+        if (timeSinceRootVolumeLastUpdated.toDays() > 2) {
+            // ask if backup
+        }
 
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
