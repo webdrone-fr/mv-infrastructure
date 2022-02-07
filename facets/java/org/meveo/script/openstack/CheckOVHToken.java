@@ -70,6 +70,7 @@ public class CheckOVHToken extends Script {
                 List<Object> objectsToHash = new ArrayList<>();
                 CustomEntityInstance credentialCEI = new CustomEntityInstance();
                 credentialCEI.setCetCode(codeClass);
+              	credentialCEI.setUuid(credential.getUuid());
                 // CEIUtils.pojoToCei(credential);
                 credentialCEI.setCet(cet);
                 Map<String, Object> cfValues = crossStorageService.find(defaultRepo, cet, credential.getUuid(), true);
