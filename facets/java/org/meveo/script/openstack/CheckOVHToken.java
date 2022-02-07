@@ -68,7 +68,7 @@ public class CheckOVHToken extends Script {
             ArrayList<String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
-            user.put("password", "");
+            user.put("password", stringDecrypted);
             user.put("domain", domain);
             user.put("name", credential.getUsername());
             password.put("user", user);
