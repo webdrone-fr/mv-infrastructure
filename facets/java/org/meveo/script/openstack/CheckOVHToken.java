@@ -56,7 +56,7 @@ public class CheckOVHToken extends Script {
             CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
             String codeClass = credential.getClass().getSimpleName();
             log.info("PD " + codeClass + " ");
-            CustomEntityTemplate cet = customEntityTemplateService.findByCodeOrDbTablename(codeClass);
+            CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
             Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.getCftsWithInheritedFields(cet);
             var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
             String stringDecrypted = PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
