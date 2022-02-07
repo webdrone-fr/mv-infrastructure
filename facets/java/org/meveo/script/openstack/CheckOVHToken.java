@@ -42,19 +42,10 @@ public class CheckOVHToken extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-            // Dechiffrement du mot de passe
+            // Dechiffrement du mot de passe (moche mais temporaire)
             String stringToDecrypt = credential.getPasswordSecret();
             List<Object> objectsToHash = new ArrayList<>();
-            CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
-            credentialCEI.getCfValuesAsValues().forEach((key, value) -> {
-                if(value != null) {
-                    objectsToHash.add(value);
-                }
-            });
-            var hash = PasswordUtils.getSalt(objectsToHash.toArray());
-            log.info(hash.toString());
-            String decryptedString = PasswordUtils.decrypt(hash, stringToDecrypt);
-            log.info(stringToDecrypt + " converted to " + decryptedString);
+            var temp = (credential.getUuid() != null ? credential.getUuid() : null);
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
@@ -65,7 +56,7 @@ public class CheckOVHToken extends Script {
             ArrayList<String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
-            user.put("password", decryptedString);
+            user.put("password", "");
             user.put("domain", domain);
             user.put("name", credential.getUsername());
             password.put("user", user);
