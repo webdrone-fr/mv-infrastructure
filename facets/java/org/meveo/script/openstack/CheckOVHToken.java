@@ -45,6 +45,11 @@ public class CheckOVHToken extends Script {
             String stringToDecrypt = credential.getPasswordSecret();
             List<Object> objectsToHash = new ArrayList<>();
             CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
+            credentialCEI.getCfValuesAsValues().forEach((key, value) -> {
+                if(value != null) {
+                    objectsToHash.add(value);
+                }
+            });
             //String hashPw = CEIUtils.getHash(credentialCEI, 
             // String hash = CEIUtils.getHash(null, null);
             // String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
