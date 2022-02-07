@@ -19,6 +19,7 @@ import org.meveo.service.storage.RepositoryService;
 import java.util.List;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.customEntities.CustomEntityInstance;
+import org.meveo.security.PasswordUtils;
 
 public class CheckOVHToken extends Script {
 
@@ -50,9 +51,9 @@ public class CheckOVHToken extends Script {
                     objectsToHash.add(value);
                 }
             });
-            //String hashPw = CEIUtils.getHash(credentialCEI, 
-            // String hash = CEIUtils.getHash(null, null);
-            // String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
+            var hash = PasswordUtils.getSalt(objectsToHash.toArray());
+            String decryptedString = PasswordUtils.decrypt(hash, stringToDecrypt);
+            log.info(stringToDecrypt + " converted to " + decryptedString);
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
@@ -63,7 +64,7 @@ public class CheckOVHToken extends Script {
             ArrayList<String> method = new ArrayList<String>();
             method.add("password");
             domain.put("id", "default");
-            user.put("password", "yjkhNrpjaWaYkGZYbs6z3gmDa5V74R9Z");
+            user.put("password", decryptedString);
             user.put("domain", domain);
             user.put("name", credential.getUsername());
             password.put("user", user);
