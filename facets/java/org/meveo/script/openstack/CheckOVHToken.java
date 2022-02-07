@@ -19,6 +19,8 @@ import org.meveo.service.storage.RepositoryService;
 import java.util.List;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.customEntities.CustomEntityInstance;
+import org.meveo.service.custom.CustomEntityTemplateService;
+import org.meveo.model.customEntities.CustomEntityTemplate;
 
 public class CheckOVHToken extends Script {
 
@@ -45,6 +47,7 @@ public class CheckOVHToken extends Script {
             String stringToDecrypt = credential.getPasswordSecret();
             List<Object> objectsToHash = new ArrayList<>();
             CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
+            
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
