@@ -3,6 +3,7 @@ package org.meveo.script.openstack;
 import java.util.Map;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
+import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -22,8 +23,13 @@ import org.meveo.model.customEntities.CustomEntityInstance;
 import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.service.crm.impl.CustomFieldTemplateService;
 import org.meveo.model.customEntities.CustomEntityTemplate;
+import org.meveo.service.custom.CustomEntityInstanceService;
+import org.meveo.service.crm.impl.CustomFieldInstanceService;
+import org.meveo.persistence.CrossStorageService;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.security.PasswordUtils;
+import org.meveo.model.crm.custom.CustomFieldValues;
+import org.apache.commons.lang3.SerializationUtils;
 
 public class CheckOVHToken extends Script {
 
@@ -38,6 +44,14 @@ public class CheckOVHToken extends Script {
     private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
   
     private CustomFieldTemplateService customFieldTemplateService = getCDIBean(CustomFieldTemplateService.class);
+  
+    private CustomFieldValues customFieldValues = getCDIBean(CustomFieldValues.class);
+  
+    private CustomEntityInstanceService customEntityInstanceService = getCDIBean(CustomEntityInstanceService.class);
+  
+    private CustomFieldInstanceService customFieldInstanceService = getCDIBean(CustomFieldInstanceService.class);
+  
+    private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -50,47 +64,57 @@ public class CheckOVHToken extends Script {
         OffsetDateTime currentDate = OffsetDateTime.now();
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
-            // Dechiffrement du mot de passe (moche mais temporaire)
-            String stringToDecrypt = credential.getPasswordSecret();
-            List<Object> objectsToHash = new ArrayList<>();
-            CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
-            String codeClass = credential.getClass().getSimpleName();
-            log.info("PD " + codeClass + " ");
-            CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
-            Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.findByAppliesTo(cet.getAppliesTo());
-            var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
-            String stringDecrypted = PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
-            // Creation du body
-            HashMap<String, Object> master = new HashMap<String, Object>();
-            HashMap<String, Object> auth = new HashMap<String, Object>();
-            HashMap<String, Object> identity = new HashMap<String, Object>();
-            HashMap<String, Object> password = new HashMap<String, Object>();
-            HashMap<String, Object> user = new HashMap<String, Object>();
-            HashMap<String, Object> domain = new HashMap<String, Object>();
-            ArrayList<String> method = new ArrayList<String>();
-            method.add("password");
-            domain.put("id", "default");
-            user.put("password", stringDecrypted);
-            user.put("domain", domain);
-            user.put("name", credential.getUsername());
-            password.put("user", user);
-            identity.put("methods", method);
-            identity.put("password", password);
-            auth.put("identity", identity);
-            master.put("auth", auth);
-            String resp = JacksonUtil.toStringPrettyPrinted(master);
-            // Creation of the identity token
-            Client client = ClientBuilder.newClient();
-            WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
-            Response response = target.request().post(Entity.json(resp));
-            credential.setToken(response.getHeaderString("X-Subject-Token"));
-            credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
             try {
-                crossStorageApi.createOrUpdate(defaultRepo, credential);
+              // Dechiffrement du mot de passe
+              String stringToDecrypt = credential.getPasswordSecret();
+              String codeClass = credential.getClass().getSimpleName();
+              CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
+              List<Object> objectsToHash = new ArrayList<>();
+              CustomEntityInstance credentialCEI = new CustomEntityInstance();
+              credentialCEI.setCetCode(codeClass);
+              credentialCEI.setCet(cet);//CEIUtils.pojoToCei(credential);
+              Map<String, Object> cfValues = crossStorageService.find(defaultRepo, cet, credential.getUuid(), true);
+              credentialCEI.setCode((String) cfValues.get("code"));
+              credentialCEI.setDescription((String) cfValues.get("description"));
+              customFieldInstanceService.setCfValues(credentialCEI, codeClass, cfValues);
+              credentialCEI.setCfValuesOld((CustomFieldValues) SerializationUtils.clone(credentialCEI.getCfValues()));
+              Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.findByAppliesTo(cet.getAppliesTo());
+              var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
+              String stringDecrypted = PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
+              // Creation du body
+              HashMap<String, Object> master = new HashMap<String, Object>();
+              HashMap<String, Object> auth = new HashMap<String, Object>();
+              HashMap<String, Object> identity = new HashMap<String, Object>();
+              HashMap<String, Object> password = new HashMap<String, Object>();
+              HashMap<String, Object> user = new HashMap<String, Object>();
+              HashMap<String, Object> domain = new HashMap<String, Object>();
+              ArrayList<String> method = new ArrayList<String>();
+              method.add("password");
+              domain.put("id", "default");
+              user.put("password", stringDecrypted);
+              user.put("domain", domain);
+              user.put("name", credential.getUsername());
+              password.put("user", user);
+              identity.put("methods", method);
+              identity.put("password", password);
+              auth.put("identity", identity);
+              master.put("auth", auth);
+              String resp = JacksonUtil.toStringPrettyPrinted(master);
+              // Creation of the identity token
+              Client client = ClientBuilder.newClient();
+              WebTarget target = client.target("https://auth." + openstack.getApiBaseUrl() + "/v3/auth/tokens");
+              Response response = target.request().post(Entity.json(resp));
+              credential.setToken(response.getHeaderString("X-Subject-Token"));
+              credential.setTokenExpiry(currentDate.plusDays(1).toInstant());
+              try {
+                  crossStorageApi.createOrUpdate(defaultRepo, credential);
+              } catch (Exception ex) {
+                  log.error("error update credentials {} :{}", credential.getUuid(), ex.getMessage());
+              }
+              response.close();
             } catch (Exception ex) {
-                log.error("error update credentials {} :{}", credential.getUuid(), ex.getMessage());
+              	log.error(ex.getMessage());
             }
-            response.close();
         }
     }
 }
