@@ -45,8 +45,6 @@ public class CheckOVHToken extends Script {
   
     private CustomFieldTemplateService customFieldTemplateService = getCDIBean(CustomFieldTemplateService.class);
   
-    private CustomFieldValues customFieldValues = getCDIBean(CustomFieldValues.class);
-  
     private CustomEntityInstanceService customEntityInstanceService = getCDIBean(CustomEntityInstanceService.class);
   
     private CustomFieldInstanceService customFieldInstanceService = getCDIBean(CustomFieldInstanceService.class);
