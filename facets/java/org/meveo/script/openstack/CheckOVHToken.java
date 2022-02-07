@@ -16,7 +16,9 @@ import javax.ws.rs.core.*;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.storage.RepositoryService;
-
+import java.util.List;
+import org.meveo.model.persistence.CEIUtils;
+import org.meveo.model.customEntities.CustomEntityInstance;
 
 public class CheckOVHToken extends Script {
 
@@ -40,7 +42,10 @@ public class CheckOVHToken extends Script {
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
             // Dechiffrement du mot de passe
-            // String stringToDecrypt = credential.getPasswordSecret();
+            String stringToDecrypt = credential.getPasswordSecret();
+            List<Object> objectsToHash = new ArrayList<>();
+            CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
+            //String hashPw = CEIUtils.getHash(credentialCEI, 
             // String hash = CEIUtils.getHash(null, null);
             // String decryptedString = PasswordUtils.decrypt(salt, stringToDecrypt);
             // Creation du body
