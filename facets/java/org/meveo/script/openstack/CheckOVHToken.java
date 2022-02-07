@@ -46,11 +46,10 @@ public class CheckOVHToken extends Script {
         OffsetDateTime expireDate = OffsetDateTime.parse(credential.getTokenExpiry().toString());
         if (currentDate.isAfter(expireDate)) {
             // Dechiffrement du mot de passe (moche mais temporaire)
-            log.info(credential.getClass().getSimpleName());
             String stringToDecrypt = credential.getPasswordSecret();
             List<Object> objectsToHash = new ArrayList<>();
             CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
-            CustomEntityTemplate customEntityTemplate = customEntityTemplateService.findByCodeOrDbTablename("Credential");
+            CustomEntityTemplate customEntityTemplate = customEntityTemplateService.findByCodeOrDbTablename(credential.getClass().getSimpleName());
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
