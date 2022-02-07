@@ -57,7 +57,7 @@ public class CheckOVHToken extends Script {
             CustomEntityTemplate cet = customEntityTemplateService.findByCodeOrDbTablename(credential.getClass().getSimpleName());
             Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.getCftsWithInheritedFields(cet);
             var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
-            PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
+            String stringDecrypted = PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
