@@ -68,16 +68,18 @@ public class CheckOVHToken extends Script {
                 String codeClass = credential.getClass().getSimpleName();
                 CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
                 List<Object> objectsToHash = new ArrayList<>();
-                CustomEntityInstance credentialCEI = new CustomEntityInstance();
+              
+               /* CustomEntityInstance credentialCEI = new CustomEntityInstance();
                 credentialCEI.setCetCode(codeClass);
               	credentialCEI.setUuid(credential.getUuid());
-                // CEIUtils.pojoToCei(credential);
-                credentialCEI.setCet(cet);
+                redentialCEI.setCet(cet); 
                 Map<String, Object> cfValues = crossStorageService.find(defaultRepo, cet, credential.getUuid(), true);
                 credentialCEI.setCode((String) cfValues.get("code"));
                 credentialCEI.setDescription((String) cfValues.get("description"));
                 customFieldInstanceService.setCfValues(credentialCEI, codeClass, cfValues);
-                credentialCEI.setCfValuesOld((CustomFieldValues) SerializationUtils.clone(credentialCEI.getCfValues()));
+                credentialCEI.setCfValuesOld((CustomFieldValues) SerializationUtils.clone(credentialCEI.getCfValues())); */
+              
+              	CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
                 Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.findByAppliesTo(cet.getAppliesTo());
                 var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
                 String stringDecrypted = PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
