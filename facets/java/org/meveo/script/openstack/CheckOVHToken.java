@@ -23,6 +23,7 @@ import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.service.crm.impl.CustomFieldTemplateService;
 import org.meveo.model.customEntities.CustomEntityTemplate;
 import org.meveo.model.crm.CustomFieldTemplate;
+import org.meveo.security.PasswordUtils;
 
 public class CheckOVHToken extends Script {
 
@@ -55,6 +56,8 @@ public class CheckOVHToken extends Script {
             CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
             CustomEntityTemplate cet = customEntityTemplateService.findByCodeOrDbTablename(credential.getClass().getSimpleName());
             Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.getCftsWithInheritedFields(cet);
+            var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
+            PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
