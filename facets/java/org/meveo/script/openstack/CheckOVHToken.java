@@ -20,7 +20,9 @@ import java.util.List;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.customEntities.CustomEntityInstance;
 import org.meveo.service.custom.CustomEntityTemplateService;
+import org.meveo.service.crm.impl.CustomFieldTemplateService;
 import org.meveo.model.customEntities.CustomEntityTemplate;
+import org.meveo.model.crm.CustomFieldTemplate;
 
 public class CheckOVHToken extends Script {
 
@@ -33,6 +35,8 @@ public class CheckOVHToken extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
     private CustomEntityTemplateService customEntityTemplateService = new CustomEntityTemplateService();
+  
+    private CustomFieldTemplateService customFieldTemplateService = new CustomFieldTemplateService();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -49,7 +53,8 @@ public class CheckOVHToken extends Script {
             String stringToDecrypt = credential.getPasswordSecret();
             List<Object> objectsToHash = new ArrayList<>();
             CustomEntityInstance credentialCEI = CEIUtils.pojoToCei(credential);
-            CustomEntityTemplate customEntityTemplate = customEntityTemplateService.findByCodeOrDbTablename(credential.getClass().getSimpleName());
+            CustomEntityTemplate cet = customEntityTemplateService.findByCodeOrDbTablename(credential.getClass().getSimpleName());
+            Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.getCftsWithInheritedFields(cet);
             // Creation du body
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> auth = new HashMap<String, Object>();
