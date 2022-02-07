@@ -31,6 +31,8 @@ public class CheckOVHToken extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
   
     private Repository defaultRepo = repositoryService.findDefaultRepository();
+  
+    private CustomEntityTemplateService customEntityTemplateService = new CustomEntityTemplateService();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
