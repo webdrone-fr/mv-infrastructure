@@ -72,7 +72,7 @@ public class CheckOVHToken extends Script {
                 credentialCEI.setCetCode(codeClass);
                 // CEIUtils.pojoToCei(credential);
                 credentialCEI.setCet(cet);
-                Map<String, Object> cfValues = crossStorageService.find(defaultRepo, cet, openstack.getUuid(), true);
+                Map<String, Object> cfValues = crossStorageService.find(defaultRepo, cet, credential.getUuid(), true);
                 credentialCEI.setCode((String) cfValues.get("code"));
                 credentialCEI.setDescription((String) cfValues.get("description"));
                 customFieldInstanceService.setCfValues(credentialCEI, codeClass, cfValues);
