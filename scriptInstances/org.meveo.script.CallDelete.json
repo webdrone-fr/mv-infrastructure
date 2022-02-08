@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.CallDelete",
+  "description" : "Delete server generic",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
