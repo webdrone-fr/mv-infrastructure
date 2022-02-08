@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.openstack.CheckOVHToken",
+  "description" : "Check the openstack user token and create a new one if needed",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
