@@ -49,20 +49,17 @@ public class CreateOVHServersScript extends Script {
         if (server.getInstanceName() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Instance name not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing instance name) for uuid : " + server.getUuid());
-        } else if (server.getImage() == null) {
+        } else if (server.getImageRef() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Image id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing image id) for uuid : " + server.getUuid());
-        } else if (/*server.getFlavor() == null*/
-        true) {
+        } else if (server.getFlavorRef() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Flavor id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing flavor id) for uuid : " + server.getUuid());
-        } else if (/*server.getNetwork() == null*/
-        false) {
+        } else if (server.getNetworks() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Network id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing network id) for uuid : " + server.getUuid());
-        } else if (/*server.getKeyPair() == null*/
-        false) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Key pair id not found for server: " + server.getUuid()));
+        } else if (server.getKeyName() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Key Name id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing key pair id) for uuid : " + server.getUuid());
         } else {
             // Build the request
