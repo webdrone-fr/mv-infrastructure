@@ -123,7 +123,7 @@ public class UpdateScalewayServer extends Script {
         logger.info("response : " + value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
-        if(response.getStatus()>300) {
+        if(response.getStatus() < 300) {
             JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
 
             // Default Server Values
@@ -163,7 +163,7 @@ public class UpdateScalewayServer extends Script {
                 }
                 server.setAdditionalVolumes(serverAdditionalVolumes);
             }
-            server.setVolumeSize(FileUtils.byteCountToDisplaySize(serverTotalVolumeSize));
+            server.setVolumeSize(String.valueOf(serverTotalVolumeSize));
 
             // Location
             JsonObject serverLocationObj = serverObj.get("location").getAsJsonObject();

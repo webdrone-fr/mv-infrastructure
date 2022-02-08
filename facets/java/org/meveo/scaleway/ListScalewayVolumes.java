@@ -70,7 +70,7 @@ public class ListScalewayVolumes extends Script{
                         serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
                         serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
                         serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
-                        serverVolume.setSize(FileUtils.byteCountToDisplaySize(volumeObj.get("size").getAsLong()));
+                        serverVolume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
                         serverVolume.setZone(volumeObj.get("zone").getAsString());
                         serverVolume.setState(volumeObj.get("state").getAsString());
                         logger.info("Server Volume Name: {}", serverVolume.getName());

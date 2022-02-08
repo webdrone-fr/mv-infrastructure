@@ -79,8 +79,12 @@ public class ListScalewayServers extends Script {
                         server.setStatus(serverObj.get("state").getAsString());
                         server.setDomainName(serverObj.get("hostname").getAsString());
                         server.setSergentUrl(server.getDomainName() + ":8001/sergent");
-                        server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
 
+                        // If Server is powered off => no Ip assigned
+                        if(!serverObj.get("public_ip").isJsonNull()) {
+                            server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
+                        }
+                        
                         // Image
                         if(!serverObj.get("image").isJsonNull()) {
                             String imageId = serverObj.get("image").getAsJsonObject().get("id").getAsString();
@@ -91,25 +95,26 @@ public class ListScalewayServers extends Script {
                         // Volumes
                         JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
                         Long serverTotalVolumeSize = 0L;
-                        // Root Volume
-                        String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
-                        ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-                        server.setRootVolume(serverRootVolume);
-                        serverTotalVolumeSize = serverVolumesObj.get("0").getAsJsonObject().get("size").getAsLong();
-                        
-                        // Additional Volumes
-                        if (serverVolumesObj.entrySet().size() > 1) {
-                            Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-                            for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                                String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsString();
-                                ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                                serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                                serverTotalVolumeSize = serverTotalVolumeSize + serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("size").getAsLong();
+                        if (serverVolumesObj.entrySet().size() >= 1) {
+                            // Root Volume
+                            String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
+                            ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
+                            server.setRootVolume(serverRootVolume);
+                            serverTotalVolumeSize = serverVolumesObj.get("0").getAsJsonObject().get("size").getAsLong();
+                            // Additional Volumes
+                            if (serverVolumesObj.entrySet().size() > 1) {
+                                Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
+                                for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
+                                    String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsString();
+                                    ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+                                    serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
+                                    serverTotalVolumeSize = serverTotalVolumeSize + serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("size").getAsLong();
+                                }
+                                server.setAdditionalVolumes(serverAdditionalVolumes);
                             }
-                            server.setAdditionalVolumes(serverAdditionalVolumes);
+                            // Volume size
+                            server.setVolumeSize(String.valueOf(serverTotalVolumeSize));
                         }
-                        // Volume size
-                        server.setVolumeSize(FileUtils.byteCountToDisplaySize(serverTotalVolumeSize));
 
                         // Server Actions
                         if (!serverObj.get("allowed_actions").isJsonNull()) {
@@ -155,10 +160,14 @@ public class ListScalewayServers extends Script {
                         // Scaleway-specific Server Values
                         server.setDynamicIpRequired(serverObj.get("dynamic_ip_required").getAsBoolean());
                         server.setIsProtected(serverObj.get("protected").getAsBoolean());
-                        server.setPrivateIp(serverObj.get("private_ip").getAsString());
                         server.setArch(serverObj.get("arch").getAsString());
                         server.setProject(serverObj.get("project").getAsString());
                         server.setBootType(serverObj.get("boot_type").getAsString());
+
+                        // Private IP
+                        if (!serverObj.get("private_ip").isJsonNull()) {
+                            server.setPrivateIp(serverObj.get("private_ip").getAsString());
+                        }
 
                         // Placement Group
                         if (!serverObj.get("placement_group").isJsonNull()) {
@@ -167,7 +176,7 @@ public class ListScalewayServers extends Script {
                         
                         // Ipv6
                         server.setEnableIPvSix(serverObj.get("enable_ipv6").getAsBoolean());
-                        if(server.getEnableIPvSix()) {
+                        if(server.getEnableIPvSix() && !serverObj.get("ipv6").isJsonNull()) {
                             server.setIpVSix(serverObj.get("ipv6").getAsJsonObject().get("address").getAsString());
                         }
 

@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
-import org.apache.commons.io.FileUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -49,8 +48,6 @@ public class CreateScalewayServer extends Script {
             throw new BusinessException("Invalid Server Type");
         } else if(server.getZone() == null) {
             throw new BusinessException("Invalid Server Zone");
-        } else if (server.getRootVolume() == null) {
-            throw new BusinessException("Root Volume cannot be empty");
         }
 
         String zone = server.getZone(); // Required for path
@@ -68,21 +65,21 @@ public class CreateScalewayServer extends Script {
         client.register(new CredentialHelperService.LoggingFilter());
 
         // Server Type Constraints Check
-        String serverType = server.getServerType();
+        // String serverType = server.getServerType();
         // Add up sizes of root volume + all additional volumes
-        Long serverTotalVolumesSizes = calcServerTotalVolumesSizes(server);
+        // Long serverTotalVolumesSizes = calcServerTotalVolumesSizes(server);
 
         // Get server type constraints
         // minimum size requirement for sum of all volumes for server type
-        Long serverMinVolumeSizeReq = getServerTypeMinVolumeSizeRequirement(server, credential);
+        // Long serverMinVolumeSizeReq = getServerTypeMinVolumeSizeRequirement(server, credential);
 
         // Check if available size meets requirements for server type
-        if (serverTotalVolumesSizes < serverMinVolumeSizeReq) {
-            String serverTotalVolumesSizesStr = Long.toString(serverTotalVolumesSizes);
-            String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
-            logger.debug("Current available volume size : {}, Volume size required for server type {} : {}", serverTotalVolumesSizesStr , serverType, serverMinVolumeSizeReqStr);
-            throw new BusinessException("Current total volume size is too small for selected server type");
-        }
+        // if (serverTotalVolumesSizes < serverMinVolumeSizeReq) {
+        //     String serverTotalVolumesSizesStr = Long.toString(serverTotalVolumesSizes);
+        //     String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
+        //     logger.debug("Current available volume size : {}, Volume size required for server type {} : {}", serverTotalVolumesSizesStr , serverType, serverMinVolumeSizeReqStr);
+        //     throw new BusinessException("Current total volume size is too small for selected server type");
+        // }
 
         // Server Creation
         WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers");
@@ -108,34 +105,33 @@ public class CreateScalewayServer extends Script {
         body.put("project", projectId);
 
         // Image
-        String imageId = null;
         if (server.getImage() != null) {
-            imageId = server.getImage().getProviderSideId();
+            String imageId = server.getImage().getProviderSideId();
             body.put("image", imageId);
         }
 
-        // Volumes attached to Server
+        // // Volumes attached to Server => Empty dictionary at creation => unless has image included so will have volumes from image
         Map<String, Object> volumes = new HashMap<String, Object>();
-        // Root Volume
-        JsonObject rootVolume = new JsonObject();
-        rootVolume.addProperty("id", server.getRootVolume().getProviderSideId());
-        rootVolume.addProperty("boot", server.getRootVolume().getIsBoot());
-        rootVolume.addProperty("name", server.getRootVolume().getName());
-        rootVolume.addProperty("size", server.getRootVolume().getSize());
-        rootVolume.addProperty("volume_type", server.getRootVolume().getVolumeType()); // need to check == l_ssd OR b_ssd at volume creation
-        volumes.put("0", rootVolume);
-        // Additional Volumes
-        if (!server.getAdditionalVolumes().isEmpty()) {
-            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : server.getAdditionalVolumes().entrySet()) {
-                JsonObject additionalVolume = new JsonObject();
-                Long serverAdditionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
-                additionalVolume.addProperty("id", serverAdditionalVolume.getValue().getProviderSideId());
-                additionalVolume.addProperty("name", serverAdditionalVolume.getValue().getName());
-                additionalVolume.addProperty("size", serverAdditionalVolumeSize);
-                additionalVolume.addProperty("volume_type", serverAdditionalVolume.getValue().getVolumeType());
-                volumes.put(serverAdditionalVolume.getKey(), additionalVolume); // keys should be 1, 2, 3...
-            }
-        }
+        // // Root Volume
+        // Map<String, Object> rootVolume = new HashMap<String, Object>();
+        // rootVolume.put("id", server.getRootVolume().getProviderSideId());
+        // rootVolume.put("boot", server.getRootVolume().getIsBoot());
+        // rootVolume.put("name", server.getRootVolume().getName());
+        // rootVolume.put("size", Long.parseLong(server.getRootVolume().getSize()));
+        // rootVolume.put("volume_type", server.getRootVolume().getVolumeType()); // need to check == l_ssd OR b_ssd at volume creation
+        // volumes.put("0", rootVolume);
+        // // Additional Volumes
+        // if (server.getAdditionalVolumes() != null) {
+        //     for (Map.Entry<String, ServerVolume> serverAdditionalVolume : server.getAdditionalVolumes().entrySet()) {
+        //         Map<String, Object> additionalVolume = new HashMap<String, Object>();
+        //         Long serverAdditionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
+        //         additionalVolume.put("id", serverAdditionalVolume.getValue().getProviderSideId());
+        //         additionalVolume.put("name", serverAdditionalVolume.getValue().getName());
+        //         additionalVolume.put("size", serverAdditionalVolumeSize);
+        //         additionalVolume.put("volume_type", serverAdditionalVolume.getValue().getVolumeType());
+        //         volumes.put(serverAdditionalVolume.getKey(), additionalVolume); // keys should be 1, 2, 3...
+        //     }
+        // }
         body.put("volumes", volumes);
 
         // Security Group
@@ -169,7 +165,7 @@ public class CreateScalewayServer extends Script {
             server.setStatus(serverObj.get("state").getAsString());
             server.setDomainName(serverObj.get("hostname").getAsString());
             server.setSergentUrl(server.getDomainName() + ":8001/sergent");
-            server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
+            // server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
 
             // Image
             if (!serverObj.get("image").isJsonNull()) {
@@ -178,37 +174,40 @@ public class CreateScalewayServer extends Script {
                 server.setImage(serverImage);
             }
 
-            // Volumes
-            JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
-            Long serverTotalVolumeSize = 0L;
-            // Root Volume
-            String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
-            ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-            server.setRootVolume(serverRootVolume);
-            serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
+            // // Volumes
+            // JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
+            // Long serverTotalVolumeSize = 0L;
+            // // Root Volume
+            // String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
+            // ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
+            // server.setRootVolume(serverRootVolume);
+            // serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
 
-            // Additional Volumes
-            if (serverVolumesObj.entrySet().size() > 1) {
-                Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-                for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                    String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsString();
-                    ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                    serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                    serverTotalVolumeSize += Long.parseLong(serverAdditionalVolume.getSize()) ;
-                }
-                server.setAdditionalVolumes(serverAdditionalVolumes);
-            }
-            server.setVolumeSize(FileUtils.byteCountToDisplaySize(serverTotalVolumeSize));
+            // // Additional Volumes
+            // if (serverVolumesObj.entrySet().size() > 1) {
+            //     Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
+            //     for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
+            //         String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsString();
+            //         ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+            //         serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
+            //         serverTotalVolumeSize += Long.parseLong(serverAdditionalVolume.getSize()) ;
+            //     }
+            //     server.setAdditionalVolumes(serverAdditionalVolumes);
+            // }
+            // server.setVolumeSize(String.valueOf(serverTotalVolumeSize));
 
             // Location
-            JsonObject serverLocationObj = serverObj.get("location").getAsJsonObject();
-            String serverLocation = 
-                serverLocationObj.get("zone_id")+"/"+
-                serverLocationObj.get("platform_id")+"/"+
-                serverLocationObj.get("cluster_id")+"/"+
-                serverLocationObj.get("hypervisor_id")+"/"+
-                serverLocationObj.get("node_id");
-            server.setLocation(serverLocation);
+            if (!serverObj.get("location").isJsonNull()) {
+                JsonObject serverLocationObj = serverObj.get("location").getAsJsonObject();
+                String serverLocation = 
+                    serverLocationObj.get("zone_id")+"/"+
+                    serverLocationObj.get("platform_id")+"/"+
+                    serverLocationObj.get("cluster_id")+"/"+
+                    serverLocationObj.get("hypervisor_id")+"/"+
+                    serverLocationObj.get("node_id");
+                server.setLocation(serverLocation);
+            }
+            // Location Definition
             String locationDefinition = "zone_id/platform_id/cluster_id/hypervisor_id/node_id";
             server.setLocationDefinition(locationDefinition);
 
@@ -232,11 +231,11 @@ public class CreateScalewayServer extends Script {
             server.setProject(serverObj.get("project").getAsString());
             server.setBootType(serverObj.get("boot_type").getAsString());
             server.setIsProtected(serverObj.get("protected").getAsBoolean());
-            server.setPrivateIp(serverObj.get("private_ip").getAsString());
-            server.setIpVSix(serverObj.get("ipv6").getAsJsonObject().get("address").getAsString());
+            // server.setPrivateIp(serverObj.get("private_ip").getAsString());
+            // server.setIpVSix(serverObj.get("ipv6").getAsJsonObject().get("address").getAsString());
             
             // Private NICs
-            if (serverObj.get("private_nics").isJsonNull()) {
+            if (!serverObj.get("private_nics").isJsonNull()) {
                 JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
                 ArrayList<String> nicIds = new ArrayList<String>();
                 for (JsonElement nic : nicsArr) {
@@ -255,42 +254,42 @@ public class CreateScalewayServer extends Script {
         }
     }
 
-    public static Long getServerTypeMinVolumeSizeRequirement(ScalewayServer server, Credential credential) throws BusinessException {
-        Client client = ClientBuilder.newClient();
-        client.register(new CredentialHelperService.LoggingFilter());
+    // public static Long getServerTypeMinVolumeSizeRequirement(ScalewayServer server, Credential credential) throws BusinessException {
+    //     Client client = ClientBuilder.newClient();
+    //     client.register(new CredentialHelperService.LoggingFilter());
 
-        String zone = server.getZone();
-        String serverType = server.getServerType();
-        Long serverMinVolumeSizeReq = 0L;
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/products/servers");
-        Response response = CredentialHelperService.setCredential(target.request(), credential).get();
-        String value =response.readEntity(String.class);
-        if (response.getStatus()<300) {
-            JsonObject serversObj = 
-                new JsonParser().parse(value).getAsJsonObject()
-                .get("servers").getAsJsonObject();
-            JsonObject serverConstraints = serversObj.get(serverType).getAsJsonObject();
-            serverMinVolumeSizeReq = serverConstraints.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
-        }
-        return serverMinVolumeSizeReq;
-    }
+    //     String zone = server.getZone();
+    //     String serverType = server.getServerType();
+    //     Long serverMinVolumeSizeReq = 0L;
+    //     WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/products/servers");
+    //     Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+    //     String value =response.readEntity(String.class);
+    //     if (response.getStatus()<300) {
+    //         JsonObject serversObj = 
+    //             new JsonParser().parse(value).getAsJsonObject()
+    //             .get("servers").getAsJsonObject();
+    //         JsonObject serverConstraints = serversObj.get(serverType).getAsJsonObject();
+    //         serverMinVolumeSizeReq = serverConstraints.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
+    //     }
+    //     return serverMinVolumeSizeReq;
+    // }
 
-    public static Long calcServerTotalVolumesSizes(ScalewayServer server){
-        Long serverTotalVolumesSizes = 0L;
-        ArrayList<Long> allVolumesSizes = new ArrayList<Long>();
-        Long rootVolumeSize = Long.parseLong(server.getRootVolume().getSize());
+    // public static Long calcServerTotalVolumesSizes(ScalewayServer server){
+    //     Long serverTotalVolumesSizes = 0L;
+    //     ArrayList<Long> allVolumesSizes = new ArrayList<Long>();
+    //     Long rootVolumeSize = Long.parseLong(server.getRootVolume().getSize());
 
-        allVolumesSizes.add(rootVolumeSize);
-        Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
-        if (!serverAdditionalVolumes.isEmpty()) {
-            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
-                Long additionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
-                allVolumesSizes.add(additionalVolumeSize);
-            }
-        }
-        for (Long volumeSize : allVolumesSizes) {
-            serverTotalVolumesSizes = serverTotalVolumesSizes+volumeSize;
-        }
-        return serverTotalVolumesSizes;
-    }
+    //     allVolumesSizes.add(rootVolumeSize);
+    //     if (server.getAdditionalVolumes() != null){
+    //         Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+    //         for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
+    //             Long additionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
+    //             allVolumesSizes.add(additionalVolumeSize);
+    //         }
+    //     }
+    //     for (Long volumeSize : allVolumesSizes) {
+    //         serverTotalVolumesSizes = serverTotalVolumesSizes+volumeSize;
+    //     }
+    //     return serverTotalVolumesSizes;
+    // }
 }

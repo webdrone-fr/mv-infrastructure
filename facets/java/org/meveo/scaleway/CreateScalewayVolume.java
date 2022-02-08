@@ -114,7 +114,7 @@ public class CreateScalewayVolume extends Script{
             JsonObject volumeObj = new JsonParser().parse(value).getAsJsonObject().get("volume").getAsJsonObject();
             volume.setProviderSideId(volumeObj.get("id").getAsString());
             volume.setState(volumeObj.get("state").getAsString());
-            volume.setSize(FileUtils.byteCountToDisplaySize(volumeObj.get("size").getAsLong()));
+            volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, volume);
             } catch (Exception e) {
