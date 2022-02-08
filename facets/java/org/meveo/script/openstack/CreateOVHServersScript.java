@@ -73,7 +73,7 @@ public class CreateOVHServersScript extends Script {
             List<String> networksList = new ArrayList<>();
             networksList = server.getNetworks();
             networksList.forEach((net) -> {
-                
+                network.put("uuid", net);
             });
             /*
             network.put("uuid", server.getNetwork());
