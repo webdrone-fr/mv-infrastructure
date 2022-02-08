@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.CallCreation",
+  "description" : "Create server generic",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
