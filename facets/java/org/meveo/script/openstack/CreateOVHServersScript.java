@@ -17,6 +17,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 import org.meveo.model.persistence.JacksonUtil;
@@ -69,6 +70,8 @@ public class CreateOVHServersScript extends Script {
             HashMap<String, Object> newServer = new HashMap<String, Object>();
             ArrayList<HashMap> networks = new ArrayList<HashMap>();
             HashMap<String, String> network = network = new HashMap<String, String>();
+            List<String> networksList = new ArrayList<>();
+            networksList = server.getNetworks();
             /*
             network.put("uuid", server.getNetwork());
             networks.add(network);
