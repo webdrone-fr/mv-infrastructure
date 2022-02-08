@@ -73,15 +73,12 @@ public class CreateOVHServersScript extends Script {
             List<String> networksList = new ArrayList<>();
             networksList = server.getNetworks();
             networksList.forEach((net) -> network.put("uuid", net));
-            /*
-            network.put("uuid", server.getNetwork());
             networks.add(network);
             newServer.put("key_name", server.getKeyName());
             newServer.put("networks", networks);
             newServer.put("flavorRef", server.getFlavorRef());
             newServer.put("ImageRef", server.getImageRef());
             newServer.put("name", server.getName());
-            */
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Request
