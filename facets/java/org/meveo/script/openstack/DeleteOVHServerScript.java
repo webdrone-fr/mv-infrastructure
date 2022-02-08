@@ -38,6 +38,8 @@ public class DeleteOVHServerScript extends Script {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "server id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot delete server");
         }
+        boolean smt = server.getInstanceName().startsWith("dev-");
+        log.info("condition to delete {}", smt);
         if (server.getInstanceName().startsWith("dev-")) {
             Client client = ClientBuilder.newClient();
             log.info("uuid used {}", server.getUuid());
