@@ -1,7 +1,6 @@
 package org.meveo.script.openstack;
 
 import java.util.Map;
-
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 import org.slf4j.Logger;
@@ -18,22 +17,22 @@ import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 
 public class DeleteOVHServerScript extends Script {
-  
+
     private static final Logger log = LoggerFactory.getLogger(ListOVHServersScript.class);
-  
+
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
 
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
-  
+
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
-	
-	@Override
-	public void execute(Map<String, Object> parameters) throws BusinessException {
-		super.execute(parameters);
-	}
-  
+
+    @Override
+    public void execute(Map<String, Object> parameters) throws BusinessException {
+        super.execute(parameters);
+    }
+
     public void DeleteServer(Credential credential, ServiceProvider openstack, Server server) throws BusinessException {
         if (server.getUuid() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "server id not found for server: " + server.getUuid()));
@@ -41,11 +40,11 @@ public class DeleteOVHServerScript extends Script {
         }
         if (server.getInstanceName().startsWith("dev-")) {
             Client client = ClientBuilder.newClient();
+            log.info("uuid used {}", server.getUuid());
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
             Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "The server you're trying to delete is not a dev server : " + server.getInstanceName()));
         }
     }
-	
 }
