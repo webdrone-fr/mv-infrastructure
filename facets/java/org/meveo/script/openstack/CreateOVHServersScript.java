@@ -72,9 +72,7 @@ public class CreateOVHServersScript extends Script {
             HashMap<String, String> network = new HashMap<String, String>();
             List<String> networksList = new ArrayList<>();
             networksList = server.getNetworks();
-            networksList.forEach((net) -> {
-                network.put("uuid", net);
-            });
+            networksList.forEach((net) -> network.put("uuid", net));
             /*
             network.put("uuid", server.getNetwork());
             networks.add(network);
