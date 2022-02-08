@@ -17,6 +17,7 @@ import java.util.List;
 import org.meveo.api.persistence.CrossStorageApi;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.meveo.script.openstack.DeleteOVHServerScript;
 
 public class CallDelete extends Script {
   
@@ -28,7 +29,7 @@ public class CallDelete extends Script {
   
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
-    // private DeleteOVHServersScript deleteOVHServersScript = new DeleteOVHServersScript();
+    private DeleteOVHServerScript deleteOVHServerScript = new DeleteOVHServerScript();
   
     private Credential getCredential(String domain) {
         List<Credential> matchigCredentials = crossStorageApi.find(defaultRepo, Credential.class).by("domainName", domain).getResults();
@@ -54,7 +55,7 @@ public class CallDelete extends Script {
         switch(credential.getDomainName()) {
           case "cloud.ovh.net":
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Deletion for OVH servers"));
-            //deleteOVHServersScript.createServer(credential, openstack, server);
+            deleteOVHServerScript.DeleteServer(credential, openstack, server);
             break;
           case "api.scaleway.com":
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Deletion for scaleway servers"));
