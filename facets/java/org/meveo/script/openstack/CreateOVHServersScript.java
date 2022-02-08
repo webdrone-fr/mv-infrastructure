@@ -69,11 +69,11 @@ public class CreateOVHServersScript extends Script {
             HashMap<String, Object> master = new HashMap<String, Object>();
             HashMap<String, Object> newServer = new HashMap<String, Object>();
             ArrayList<HashMap> networks = new ArrayList<HashMap>();
-            HashMap<String, String> network = network = new HashMap<String, String>();
+            HashMap<String, String> network = new HashMap<String, String>();
             List<String> networksList = new ArrayList<>();
             networksList = server.getNetworks();
             networksList.forEach((net) -> {
-                log.info("cc");
+                
             });
             /*
             network.put("uuid", server.getNetwork());
