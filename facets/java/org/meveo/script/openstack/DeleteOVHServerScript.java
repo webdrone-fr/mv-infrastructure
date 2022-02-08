@@ -45,6 +45,9 @@ public class DeleteOVHServerScript extends Script {
             log.info("uuid used {}", server.getUuid());
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
             Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
+            if (response.getStatus() < 300) {
+                server.setStatus("DELETED");
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "The server you're trying to delete is not a dev server : " + server.getInstanceName()));
         }
