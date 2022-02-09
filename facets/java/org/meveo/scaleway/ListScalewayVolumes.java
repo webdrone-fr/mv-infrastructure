@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
-import org.apache.commons.io.FileUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -28,6 +27,7 @@ public class ListScalewayVolumes extends Script{
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     static final private  String SCALEWAY_URL = "api.scaleway.com";
+    static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -44,7 +44,7 @@ public class ListScalewayVolumes extends Script{
         client.register(new CredentialHelperService.LoggingFilter());
         String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         for (String zone : zones) {
-            WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/volumes");
+            WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/volumes");
             Response response = CredentialHelperService.setCredential(target.request(), credential).get();
             String value = response.readEntity(String.class);
             logger.info("response : " + value);
@@ -53,13 +53,8 @@ public class ListScalewayVolumes extends Script{
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
                 for (JsonElement element : rootArray) {
                     JsonObject volumeObj = element.getAsJsonObject();
-                    ServerVolume serverVolume = new ServerVolume();
-                    // String serverName = "";
-                    // if (!volumeObj.get("server").isJsonNull()) {
-                    //     serverName = volumeObj.get("server").getAsJsonObject().get("name").getAsString();
-                    // }
-                    // if (serverName.startsWith("dev-")){
-
+                    if (volumeObj.get("name").getAsString().startsWith("dev-")) {
+                        ServerVolume serverVolume = new ServerVolume();
                         serverVolume.setUuid(volumeObj.get("id").getAsString());
                         serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
                         serverVolume.setName(volumeObj.get("name").getAsString());
@@ -79,9 +74,10 @@ public class ListScalewayVolumes extends Script{
                         } catch (Exception e) {
                             logger.error("Error creating Server Volume {} : {}", serverVolume.getProviderSideId(), e.getMessage());
                         }
-                    // }
+                    }
                 }
             }
+            response.close();
         }
     }
 }

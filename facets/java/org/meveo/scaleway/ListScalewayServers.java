@@ -10,7 +10,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
-import org.apache.commons.io.FileUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -36,6 +35,7 @@ public class ListScalewayServers extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     static final private String SCALEWAY_URL = "api.scaleway.com";
+    static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -52,7 +52,7 @@ public class ListScalewayServers extends Script {
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
-            WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers");
+            WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers");
             Response response = CredentialHelperService.setCredential(target.request(), credential).get();
             String value = response.readEntity(String.class);
             logger.info("response : " + value);
@@ -117,15 +117,13 @@ public class ListScalewayServers extends Script {
                         }
 
                         // Server Actions
-                        if (!serverObj.get("allowed_actions").isJsonNull()) {
-                            ArrayList<String> actions = new ArrayList<String>();
-                            JsonArray serverActionsArr = serverObj.get("allowed_actions").getAsJsonArray();
-                            for (JsonElement action : serverActionsArr) {
-                                actions.add(action.getAsString());
-                            }
-                            server.setServerActions(actions);
+                        ArrayList<String> actions = new ArrayList<String>();
+                        JsonArray serverActionsArr = serverObj.get("allowed_actions").getAsJsonArray();
+                        for (JsonElement action : serverActionsArr) {
+                            actions.add(action.getAsString());
                         }
-
+                        server.setServerActions(actions);
+                        
                         // Location Definition
                         String locationDefinition = "zone_id/platform_id/cluster_id/hypervisor_id/node_id";
                         server.setLocationDefinition(locationDefinition);
@@ -176,7 +174,7 @@ public class ListScalewayServers extends Script {
                         
                         // Ipv6
                         server.setEnableIPvSix(serverObj.get("enable_ipv6").getAsBoolean());
-                        if(server.getEnableIPvSix() && !serverObj.get("ipv6").isJsonNull()) {
+                        if(!serverObj.get("ipv6").isJsonNull()) {
                             server.setIpVSix(serverObj.get("ipv6").getAsJsonObject().get("address").getAsString());
                         }
 
@@ -191,7 +189,7 @@ public class ListScalewayServers extends Script {
                         }
 
                         // Private NICs
-                        if (serverObj.get("private_nics").isJsonNull()) {
+                        if (!serverObj.get("private_nics").isJsonNull()) {
                             JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
                             ArrayList<String> nicIds = new ArrayList<String>();
                             for (JsonElement nic : nicsArr) {
@@ -209,6 +207,7 @@ public class ListScalewayServers extends Script {
                     }
                 }
             }
+            response.close();
         }
     }
 }

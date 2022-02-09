@@ -9,7 +9,6 @@ import javax.ws.rs.core.Response;
 
 import com.google.gson.*;
 
-import org.apache.commons.io.FileUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
@@ -32,10 +31,11 @@ public class CreateScalewayVolume extends Script{
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     static final private  String SCALEWAY_URL = "api.scaleway.com";
+    static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION);
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ServerVolume volume =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServerVolume.class);
 
         if (volume.getName() == null) {
@@ -67,7 +67,7 @@ public class CreateScalewayVolume extends Script{
         Long volumeTypeMinSize = 0L;
         Long volumeTypeMaxSize = 1L;
 
-        WebTarget volumesTarget = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/products/volumes");
+        WebTarget volumesTarget = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/volumes");
         Response volumesResponse = CredentialHelperService.setCredential(volumesTarget.request(), credential).get();
         String volumesValue = volumesResponse.readEntity(String.class);
         if (volumesResponse.getStatus()<300) {
@@ -78,7 +78,7 @@ public class CreateScalewayVolume extends Script{
         }
 
         // Volume Creation
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/volumes");
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/volumes");
         Map<String, Object> body = new HashMap<>();
         body.put("name", volume.getName());
         body.put("volume_type", volumeType);
@@ -121,5 +121,6 @@ public class CreateScalewayVolume extends Script{
                 logger.error("error creating volume {} : {}", volume.getUuid(), e.getMessage());
             }
         }
+        response.close();
     }
 }

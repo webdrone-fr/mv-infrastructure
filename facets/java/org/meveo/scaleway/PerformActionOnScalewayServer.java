@@ -3,6 +3,7 @@ package org.meveo.scaleway;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class PerformActionOnScalewayServer extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = parameters.get("action").toString(); // Possible values include poweron, backup, stop_in_place, poweroff, terminate and reboot - default is poweron
+        logger.debug("ACTION TO PERFORM : "+action);
         ScalewayServer server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
         List<String> allowedServerActions = server.getServerActions();
 
@@ -80,49 +82,89 @@ public class PerformActionOnScalewayServer extends Script {
         // }
         // while (actionComplete == false);
 
-        // Action Conditions
+        // Server status
         // String serverStatus = server.getStatus(); // possible values include running, stopped, stopped in place, starting, stopping and locked
+        String serverChangingStatus;
+        String serverExpectedStatus;
+
+        // Action Conditions
+        // Server Type Constraints Check
+        String serverType = server.getServerType();
+        // Add up sizes of root volume + all additional volumes
+        Long serverTotalVolumesSizes = 0L;
+        if (server.getRootVolume() != null) {
+            serverTotalVolumesSizes = calcServerTotalVolumesSizes(server);
+        }
+
+        // Get server type constraints
+        JsonObject serverConstraintsObj = getServerTypeRequirements(server, credential);
+        // minimum size requirement for sum of all volumes for server type
+        Long serverMinVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
 
         // Block volumes are only available for DEV1, GP1 and RENDER offers
-        if (action == "terminate") {
+        if (action == "poweron") {
+            // Check if available volume size meets requirements for server type
+            if (serverTotalVolumesSizes < serverMinVolumeSizeReq) {
+                String serverTotalVolumesSizesStr = Long.toString(serverTotalVolumesSizes);
+                String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
+                logger.debug("Current available volume size : {}, Volume size required for server type {} : {}", serverTotalVolumesSizesStr , serverType, serverMinVolumeSizeReqStr);
+                throw new BusinessException("Current total volume size is too small for selected server type");
+            }
+            serverChangingStatus = "starting";
+            serverExpectedStatus = "running";
+        } else if (action == "poweroff") {
+            // When a server is powered off, only its volumes and any reserved flexible IP address are billed.
+            // Check if volumes still attached to server
+            if(server.getRootVolume() != null || server.getAdditionalVolumes() != null) {
+                // Notify of billing condition
+            }
+            serverChangingStatus = "stopping";
+            serverExpectedStatus = "stopped";
+        } else if (action == "backup") {
+            // If action is backup - check for name of Backup to be created
+            if (server.getBackupName() != null) {
+                String imageName = server.getBackupName();
+                body.put("name", imageName);
+            }
+            serverExpectedStatus = "running";
+        } else if (action == "stop_in_place") {
+            serverChangingStatus = "stopping";
+            serverExpectedStatus = "stopped in place";
+        } else if (action == "terminate") {
             // when terminating a server, all the attached volumes (local and block storage) are deleted
-            parameters.put(RESULT_GUI_MESSAGE, "All Volumes for Server : "+serverId+" will be deleted, are you sure wou wish to proceed or select volumes to detach?");
             // check if user wants to keep volumes or delete them
-            // if keep volumes selected
-            if (!server.getAdditionalVolumes().isEmpty()) {
-                // TODO make an alert + check for confirmation 
-                // Alternative is to detach volumes prior to termination
-                // for local volumes, use archive action
-                // for block volumes, volumes must be detached before Server termination
-                
-                Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
-                for (Map.Entry<String, ServerVolume> additionalVolume : additionalVolumes.entrySet()) {
-                    if (additionalVolume.getValue().getVolumeType() == "l_ssd") {
+            if (server.getRootVolume() != null) {
+                parameters.put(RESULT_GUI_MESSAGE, "All Volumes for Server : "+serverId+" will be deleted, are you sure you wish to proceed?"); // alert possible?
+                // check for confirmation to proceed
+                    // without saving volumes
+                    // with saving volumes
+                    String rootVolumeType = server.getRootVolume().getVolumeType();
+                    if (rootVolumeType == "l_ssd") {
                         // perform archive action
                     } else {
-                        // detach volume from server
-                        // involves updating server
+                        // need to update server to remove b_ssd volumes
+                    }
+                if (!server.getAdditionalVolumes().isEmpty()) {
+                    // TODO make an alert + check for confirmation 
+                    // Alternative is to detach volumes prior to termination
+                    // for local volumes, use archive action
+                    // for block volumes, volumes must be detached before Server termination
+                    
+                    Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
+                    for (Map.Entry<String, ServerVolume> additionalVolume : additionalVolumes.entrySet()) {
+                        if (additionalVolume.getValue().getVolumeType() == "l_ssd") {
+                            // perform archive action
+                        } else {
+                            // detach volume from server
+                            // involves updating server
+                        }
                     }
                 }
             } 
-            // check if backup of rootVolume exists/ is recent?
-            // need to update server to detach rootVolume
-            // else if delete volumes, normal action call
-        } else if (action == "poweroff") {
-        // When a server is powered off, only its volumes and any reserved flexible IP address are billed.
-        // Check if volumes still attached to server
-        // Notify of billing condition
         }
-
         body.put("action", action);
-        //If action is backup - check for name of Backup to be created
-        if (action == "backup" && server.getBackupName() != null) {
-            String imageName = server.getBackupName();
-            body.put("name", imageName);
-        }
         
         String resp = JacksonUtil.toStringPrettyPrinted(body);
-
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).post(Entity.json((resp)));
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
@@ -134,12 +176,12 @@ public class PerformActionOnScalewayServer extends Script {
             ServerAction serverAction = new ServerAction();
             serverAction.setServer(server);
             serverAction.setUuid(serverActionObj.get("id").getAsString());
-            // Need to add providersideId
+            serverAction.setProviderSideId(serverActionObj.get("id").getAsString());
             serverAction.setCreationDate(OffsetDateTime.parse(serverActionObj.get("started_at").getAsString()).toInstant());
-            Duration timeElapsed = Duration.between(
-                OffsetDateTime.parse(serverActionObj.get("creation_date").getAsString()).toInstant(),
-                OffsetDateTime.parse(serverActionObj.get("terminated_at").getAsString()).toInstant()); //will need to be updated with job until terminated
-            serverAction.setElapsedTimeMs(timeElapsed.toMillis());
+            // Duration timeElapsed = Duration.between(
+            //     OffsetDateTime.parse(serverActionObj.get("creation_date").getAsString()).toInstant(),
+            //     OffsetDateTime.parse(serverActionObj.get("terminated_at").getAsString()).toInstant()); //will need to be updated with job until terminated
+            // serverAction.setElapsedTimeMs(timeElapsed.toMillis());
             serverAction.setResponse(serverActionObj.get("status").getAsString());
             serverAction.setResponseStatus(String.valueOf(response.getStatus()));
             serverAction.setAction(action);
@@ -148,6 +190,67 @@ public class PerformActionOnScalewayServer extends Script {
             } catch (Exception e) {
                 logger.error("error creating server action {} : {}", serverAction.getUuid(), e.getMessage());
             }
+            response.close();
         }
+    }
+
+    public static Long calcServerTotalVolumesSizes(ScalewayServer server){
+        Long serverTotalVolumesSizes = 0L;
+        ArrayList<Long> allVolumesSizes = new ArrayList<Long>();
+        logger.debug("SERVER ROOT VOLUME"+server.getRootVolume().getName());
+        logger.debug("SERVER ROOT VOLUME SIZE"+server.getRootVolume().getSize());
+        Long rootVolumeSize = Long.parseLong(server.getRootVolume().getSize());
+
+        allVolumesSizes.add(rootVolumeSize);
+        if (server.getAdditionalVolumes() != null){
+            Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
+                Long additionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
+                allVolumesSizes.add(additionalVolumeSize);
+            }
+        }
+        for (Long volumeSize : allVolumesSizes) {
+            serverTotalVolumesSizes = serverTotalVolumesSizes+volumeSize;
+        }
+        return serverTotalVolumesSizes;
+    }
+
+    public static JsonObject getServerTypeRequirements(ScalewayServer server, Credential credential) throws BusinessException {
+        String zone = server.getZone();
+        String serverType = server.getServerType();
+        
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/servers");
+        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+        String value = response.readEntity(String.class);
+
+        JsonObject serverConstraints = new JsonObject();
+        if (response.getStatus()<300) {
+            JsonObject serversObj = new JsonParser().parse(value).getAsJsonObject().get("servers").getAsJsonObject();
+             serverConstraints = serversObj.get(serverType).getAsJsonObject();
+        } else {
+            throw new BusinessException("Error retrieving Server type constraints");
+        }
+        response.close();
+        return serverConstraints;
+    }
+
+    public static String getActionComplete(ScalewayServer server, Credential credential) throws BusinessException {
+        String zone = server.getZone();
+        String serverId = server.getProviderSideId();
+        String serverCurrentStatus = null;
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers"+serverId);
+        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+        String value = response.readEntity(String.class);
+        if (response.getStatus() < 300) {
+            JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
+            serverCurrentStatus = serverObj.get("state").getAsString();
+        }
+        response.close();
+        return serverCurrentStatus;
     }
 }

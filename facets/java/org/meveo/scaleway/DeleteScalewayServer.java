@@ -29,6 +29,7 @@ public class DeleteScalewayServer extends Script{
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     static final private  String SCALEWAY_URL = "api.scaleway.com";
+    static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
     public void execute(Map<String, Object>parameters) throws BusinessException {
@@ -55,7 +56,7 @@ public class DeleteScalewayServer extends Script{
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/servers/"+serverId);
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
 
         // Instant currentInstant = Instant.now();
         // // check if Server has Image/ Backup
@@ -96,5 +97,6 @@ public class DeleteScalewayServer extends Script{
                 logger.error("error deleting server {} :{}", server.getUuid(), e.getMessage());
             }
         }
-    } 
+        response.close();
+    }
 }
