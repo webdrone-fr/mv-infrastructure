@@ -34,6 +34,10 @@ public class DeleteOVHServerScript extends Script {
     }
 
     public void DeleteServer(Credential credential, ServiceProvider openstack, Server server) throws BusinessException {
+        log.info("calling DeleteOVHServerScript");
+        //Check Token
+        checkOVHToken.checkOVHToken(credential, openstack);
+        //Check Server
         if (server.getUuid() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "server id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot delete server");
@@ -41,6 +45,7 @@ public class DeleteOVHServerScript extends Script {
         boolean smt = server.getInstanceName().startsWith("dev-");
         log.info("condition to delete {}", smt);
         if (server.getInstanceName().startsWith("dev-")) {
+            //Build and execute
             Client client = ClientBuilder.newClient();
             log.info("uuid used {}", server.getUuid());
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
