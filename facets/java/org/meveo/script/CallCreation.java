@@ -18,6 +18,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.meveo.script.openstack.CreateOVHServersScript;
+import org.meveo.script.CredentialsUtils;
 
 public class CallCreation extends Script {
   
@@ -31,14 +32,7 @@ public class CallCreation extends Script {
   
     private CreateOVHServersScript createOVHServersScript = new CreateOVHServersScript();
   
-    private Credential getCredential(String domain) {
-        List<Credential> matchigCredentials = crossStorageApi.find(defaultRepo, Credential.class).by("domainName", domain).getResults();
-        if (matchigCredentials.size() > 0) {
-            return matchigCredentials.get(0);
-        } else {
-            return null;
-        }
-    }
+    private CredentialsUtils credentialsUtils = new CredentialsUtils();
 	
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -46,7 +40,7 @@ public class CallCreation extends Script {
         log.info("calling CallCreation");
 		Server server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
         ServiceProvider openstack = server.getProvider();
-        Credential credential = getCredential(openstack.getApiBaseUrl());
+        Credential credential = credentialsUtils.getCredential(openstack.getApiBaseUrl());
         if (credential == null) {
             throw new BusinessException("No credential found for " + openstack.getApiBaseUrl()); 
         } else {
