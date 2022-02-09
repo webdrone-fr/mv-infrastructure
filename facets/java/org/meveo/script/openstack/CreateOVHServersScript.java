@@ -100,7 +100,6 @@ public class CreateOVHServersScript extends Script {
                 Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
                 String valueNewServ = response.readEntity(String.class);
                 if (response.getStatus() < 300) {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Server successfully created : " + server.getUuid()));
                     // Status
                     server.setStatus(serverObj.get("status").getAsString());
                     // volume & flavor
