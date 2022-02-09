@@ -52,6 +52,8 @@ public class DeleteOVHServerScript extends Script {
             Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
             if (response.getStatus() < 300) {
                 server.setStatus("DELETED");
+                server.setCreationDate(null);
+                server.setLastUpdate(null);
             }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "The server you're trying to delete is not a dev server : " + server.getInstanceName()));
