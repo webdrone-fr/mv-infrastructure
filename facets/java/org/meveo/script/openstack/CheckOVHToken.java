@@ -23,9 +23,6 @@ import org.meveo.model.customEntities.CustomEntityInstance;
 import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.service.crm.impl.CustomFieldTemplateService;
 import org.meveo.model.customEntities.CustomEntityTemplate;
-import org.meveo.service.custom.CustomEntityInstanceService;
-import org.meveo.service.crm.impl.CustomFieldInstanceService;
-import org.meveo.persistence.CrossStorageService;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.security.PasswordUtils;
 import org.meveo.model.crm.custom.CustomFieldValues;
@@ -44,12 +41,6 @@ public class CheckOVHToken extends Script {
     private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
 
     private CustomFieldTemplateService customFieldTemplateService = getCDIBean(CustomFieldTemplateService.class);
-
-    private CustomEntityInstanceService customEntityInstanceService = getCDIBean(CustomEntityInstanceService.class);
-
-    private CustomFieldInstanceService customFieldInstanceService = getCDIBean(CustomFieldInstanceService.class);
-
-    private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
