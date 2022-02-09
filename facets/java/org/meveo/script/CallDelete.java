@@ -58,11 +58,11 @@ public class CallDelete extends Script {
             deleteOVHServerScript.DeleteServer(credential, openstack, server);
             break;
           case "api.scaleway.com":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Deletion for scaleway servers"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Deletion for scaleway servers (WIP)"));
             //create
             break;
           case "api.gandi.net/v5/":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Deletion for gandi servers"));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Deletion for gandi servers(WIP)"));
             //create
             break;
           default:
