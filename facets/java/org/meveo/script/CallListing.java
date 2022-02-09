@@ -58,15 +58,12 @@ public class CallListing extends Script {
         }
         switch(credential.getDomainName()) {
           case "cloud.ovh.net":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Listing for OVH servers"));
             listOVHServerScript.callOVH(credential, serviceProvider);
             break;
           case "api.scaleway.com":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Listing for scaleway servers"));
             listScalewayServersScript.listScaleway(credential, serviceProvider);
             break;
           case "api.gandi.net/v5/":
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "INFO : ", "Listing for gandi servers"));
             //listGandiServer
             break;
           default:
