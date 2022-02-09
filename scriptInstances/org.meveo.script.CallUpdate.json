@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.CallUpdate",
+  "description" : "Update server generic",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
