@@ -46,10 +46,10 @@ public class CreateOVHServersScript extends Script {
         // Check Token
         checkOVHToken.checkOVHToken(credential, openstack);
         // Check Input
-        if (server.getInstanceName() == null) {
+        if (server.getName() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Instance name not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing instance name) for uuid : " + server.getUuid());
-        } else if (!server.getInstanceName().startsWith("dev-")) {
+        } else if (!server.getName().startsWith("dev-")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Instance Name needs to start by <dev-> : " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing image id) for uuid : " + server.getUuid());
         } else if (server.getImageRef() == null) {
