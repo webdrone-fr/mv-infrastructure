@@ -16,6 +16,7 @@ import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.meveo.script.openstack.UpdateOVHServersScript;
 
 public class CallUpdate extends Script {
 
@@ -26,6 +27,8 @@ public class CallUpdate extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
+  
+  	private UpdateOVHServersScript updateOVHServersScript = new UpdateOVHServersScript();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -40,7 +43,7 @@ public class CallUpdate extends Script {
             log.info("using credential {} with username {}", credential.getUuid(), credential.getUsername());
             switch(credential.getDomainName()) {
                 case "cloud.ovh.net":
-                    // updateOVHServerScript.createServer(credential, openstack, server);
+                    updateOVHServersScript.updateServer(credential, openstack, server);
                     break;
               	case "api.scaleway.com":
                 	//create
