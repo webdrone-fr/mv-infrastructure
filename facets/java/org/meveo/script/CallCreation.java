@@ -19,6 +19,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.meveo.script.openstack.CreateOVHServersScript;
 import org.meveo.script.CredentialsUtils;
+import org.meveo.credentials.CredentialHelperService;
 
 public class CallCreation extends Script {
   
@@ -40,7 +41,7 @@ public class CallCreation extends Script {
         log.info("calling CallCreation");
 		Server server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
         ServiceProvider openstack = server.getProvider();
-        Credential credential = credentialsUtils.getCredential(openstack.getApiBaseUrl());
+        Credential credential = CredentialHelperService.getCredential(openstack.getApiBaseUrl(), crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for " + openstack.getApiBaseUrl()); 
         } else {
