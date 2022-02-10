@@ -55,6 +55,7 @@ public class UpdateOVHServersScript extends Script {
       	Map<String, CustomFieldTemplate> newServCFT = customFieldTemplateService.findByAppliesTo(newServCET.getAppliesTo());
       	for(Map.Entry<String, CustomFieldTemplate> entry : newServCFT.entrySet()) {
 			log.info(entry.getKey());
+          	Object oldValue = oldServ.get(entry.getKey());
         }
     }
 
