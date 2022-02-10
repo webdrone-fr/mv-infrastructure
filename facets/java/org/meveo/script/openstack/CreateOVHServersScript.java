@@ -104,7 +104,7 @@ public class CreateOVHServersScript extends Script {
                 
                 WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
                 Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
-                String valueNewServ = response.readEntity(String.class);
+                String valueNewServ = newServReponse.readEntity(String.class);
                 if (response.getStatus() < 300) {
                     // Status
                     server.setStatus(serverObj.get("status").getAsString());
