@@ -18,7 +18,6 @@ import org.meveo.api.persistence.CrossStorageApi;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.meveo.script.openstack.CreateOVHServersScript;
-import org.meveo.script.CredentialsUtils;
 import org.meveo.credentials.CredentialHelperService;
 
 public class CallCreation extends Script {
@@ -32,8 +31,6 @@ public class CallCreation extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
     private CreateOVHServersScript createOVHServersScript = new CreateOVHServersScript();
-  
-    private CredentialsUtils credentialsUtils = new CredentialsUtils();
 	
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
