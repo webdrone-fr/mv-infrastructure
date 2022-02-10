@@ -57,7 +57,6 @@ public class UpdateOVHServersScript extends Script {
 		CustomEntityTemplate newServCET = customEntityTemplateService.findByCode(codeClass);
       	Map<String, CustomFieldTemplate> newServCFT = customFieldTemplateService.findByAppliesTo(newServCET.getAppliesTo());
       	for(Map.Entry<String, CustomFieldTemplate> entry : newServCFT.entrySet()) {
-			log.info(entry.getKey());
           	Object oldValue = oldServ.get(entry.getKey());
           	Object newValue = newToCEI.get(entry.getKey());
           	log.info("UPDATE: " + oldValue.toString() + " VS " + newValue.toString());
