@@ -64,6 +64,9 @@ public class CreateOVHServersScript extends Script {
         } else if (server.getKeyName() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Key Name id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing key pair id) for uuid : " + server.getUuid());
+        } else if (server.getZone() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Zone  not found for server: " + server.getUuid()));
+            throw new BusinessException("Cannot create new server (missing Zone) for uuid : " + server.getUuid());
         } else {
             // Build the request
             HashMap<String, Object> master = new HashMap<String, Object>();
