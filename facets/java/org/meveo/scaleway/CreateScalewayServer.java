@@ -143,13 +143,10 @@ public class CreateScalewayServer extends Script {
                     // Root Volume
                     String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
                     if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult() != null) {
-                        try { // if volume exists in default repo
-                            ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-                            server.setRootVolume(serverRootVolume);
-                            serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
-                        } catch(Exception e) {
-                            logger.error("error resolving root volume {} : {}", serverRootVolumeId, e.getMessage());
-                        }
+                        // if volume exists in default repo
+                        ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
+                        server.setRootVolume(serverRootVolume);
+                        serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
                     } else { // if root volume does not exist in default repo - create new
                         JsonObject serverRootVolumeObj = serverVolumesObj.get("0").getAsJsonObject();
                         ServerVolume rootVolume = new ServerVolume();
@@ -176,13 +173,10 @@ public class CreateScalewayServer extends Script {
                             Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
                             String serverAdditionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
                             if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult() != null) {
-                                try { // if additional volume exists in default repo
-                                    ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult();
-                                    serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                                    serverTotalVolumeSize += Long.parseLong(serverAdditionalVolume.getSize());
-                                } catch (Exception e) {
-                                    logger.error("error resolving additional volume {} : {}", serverAdditionalVolumeId, e.getMessage());
-                                }
+                                // if additional volume exists in default repo
+                                ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult();
+                                serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
+                                serverTotalVolumeSize += Long.parseLong(serverAdditionalVolume.getSize());
                             } else { // if additional volume does not exist in default repo - create new
                                 JsonObject serverAdditionalVolumeObj = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject();
                                 ServerVolume additionalVolume = new ServerVolume();

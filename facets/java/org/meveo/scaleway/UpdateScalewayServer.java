@@ -76,6 +76,7 @@ public class UpdateScalewayServer extends Script {
         }
 
         // Volumes
+        // Block volumes are only available for DEV1, GP1 and RENDER offers TODO
         Map<String, Object> volumes = new HashMap<String, Object>();
         // Root Volume
         if (server.getRootVolume() != null) {
@@ -87,7 +88,8 @@ public class UpdateScalewayServer extends Script {
         }
         // Additional Volumes
         if (server.getAdditionalVolumes() != null) {
-            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : server.getAdditionalVolumes().entrySet()) {
+            Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
                 Map<String, Object> additionalVolume = new HashMap<String, Object>();
                 additionalVolume.put("id", serverAdditionalVolume.getValue().getProviderSideId());
                 additionalVolume.put("boot", serverAdditionalVolume.getValue().getIsBoot());
@@ -153,9 +155,11 @@ public class UpdateScalewayServer extends Script {
             if (!serverObj.get("volumes").isJsonNull() && serverVolumesObj.entrySet().size() >= 1) {
                 // Root Volume
                 String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
-                ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-                server.setRootVolume(serverRootVolume);
-                serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
+                if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult() != null) {
+                    ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
+                    server.setRootVolume(serverRootVolume);
+                    serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
+                }
                 // Additional Volumes
                 if (serverVolumesObj.entrySet().size() > 1) {
                     Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();

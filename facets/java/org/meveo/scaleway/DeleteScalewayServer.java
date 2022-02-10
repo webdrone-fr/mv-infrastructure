@@ -2,6 +2,8 @@ package org.meveo.scaleway;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -12,6 +14,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
+import org.meveo.model.customEntities.ServerAction;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
@@ -33,16 +36,19 @@ public class DeleteScalewayServer extends Script{
 
     @Override
     public void execute(Map<String, Object>parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION);
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ScalewayServer server =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
         
         if (server.getZone()==null) { //Required
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
+        } else if (server.getRootVolume() != null || server.getAdditionalVolumes() != null) {
+            throw new BusinessException("Unable to delete Server \n Volumes are still attached");
+        } else if (server.getStatus() != "stopped") {
+            throw new BusinessException("Unable to delete Server \n Server is still running");
         }
 
-        // INPUT
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
         logger.info("action : {}, server uuid : {}", action, serverId);
@@ -51,37 +57,24 @@ public class DeleteScalewayServer extends Script{
         if (credential==null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
-            logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername()); //Need to verify username
+            logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername());
         }
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
 
-        // Instant currentInstant = Instant.now();
-        // // check if Server has Image/ Backup
-        //     // check if Image is recent?/ Any changes have been made between Image and current state of server ?
-        //     // Ask if User wants to make a backup of Server
-        // if (server.getImage() == null) {
-        //     // ask if backup
-        // } else {
-        //     Instant serverImageLastUpdated = server.getImage().getLastUpdated();
-        //     Duration timeSinceImageLastUpdate = Duration.between(serverImageLastUpdated, currentInstant);
-        //     if (timeSinceImageLastUpdate.toDays() > 2) { // Max Time TBC
-        //         // ask if backup
-        //     }
-        // }
-            
-        // // check if Server still has Volumes attached
-        //     // Detach Volume(s)
-        // if (!server.getAdditionalVolumes().isEmpty()) {
-        //     // Ask if detach volumes ie to keep
-        // }
-        // Instant serverRootVolumeLastModified = server.getRootVolume().getLastUpdated();
-        // Duration timeSinceRootVolumeLastUpdated = Duration.between(serverRootVolumeLastModified, currentInstant);
-        // if (timeSinceRootVolumeLastUpdated.toDays() > 2) {
-        //     // ask if backup
-        // }
+        // Remove server actions related to server as linked in reference to CET Server
+        if (crossStorageApi.find(defaultRepo, ServerAction.class).by("server", server).getResults() != null) {
+            List<ServerAction> serverActionsList = crossStorageApi.find(defaultRepo, ServerAction.class).by("server", server).getResults();
+            for (ServerAction serverAction : serverActionsList) {
+                try {
+                    crossStorageApi.remove(defaultRepo, serverAction.getUuid(), serverAction.getCetCode());
+                } catch (Exception e) {
+                    logger.debug("Error deleting Server Action : {}", serverAction.getUuid());
+                }
+            }
+        }
 
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);

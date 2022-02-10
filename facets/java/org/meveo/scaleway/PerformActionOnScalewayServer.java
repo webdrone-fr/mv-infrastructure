@@ -87,20 +87,18 @@ public class PerformActionOnScalewayServer extends Script {
         String serverChangingStatus;
         String serverExpectedStatus;
 
-        // Action Conditions
+        
         // Server Type Constraints Check
         String serverType = server.getServerType();
         // Add up sizes of root volume + all additional volumes
-        Long serverTotalVolumesSizes = 0L;
-        if (server.getRootVolume() != null) {
-            serverTotalVolumesSizes = calcServerTotalVolumesSizes(server);
-        }
+        Long serverTotalVolumesSizes = calcServerTotalVolumesSizes(server, crossStorageApi, defaultRepo);
 
         // Get server type constraints
-        JsonObject serverConstraintsObj = getServerTypeRequirements(server, credential);
+        JsonObject serverConstraintsObj = getServerTypeRequirements(server, crossStorageApi, defaultRepo, credential);
         // minimum size requirement for sum of all volumes for server type
         Long serverMinVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
 
+        // Action Conditions
         // Block volumes are only available for DEV1, GP1 and RENDER offers
         if (action == "poweron") {
             // Check if available volume size meets requirements for server type
@@ -122,9 +120,9 @@ public class PerformActionOnScalewayServer extends Script {
             serverExpectedStatus = "stopped";
         } else if (action == "backup") {
             // If action is backup - check for name of Backup to be created
-            if (server.getBackupName() != null) {
-                String imageName = server.getBackupName();
-                body.put("name", imageName);
+            if (server.getBackupName() != null) { // nullable
+                String backupName = server.getBackupName();
+                body.put("name", backupName);
             }
             serverExpectedStatus = "running";
         } else if (action == "stop_in_place") {
@@ -145,7 +143,7 @@ public class PerformActionOnScalewayServer extends Script {
                         // need to update server to remove b_ssd volumes
                     }
                 if (!server.getAdditionalVolumes().isEmpty()) {
-                    // TODO make an alert + check for confirmation 
+                    // TODO make an alert + check for confirmation - not possible on meveo
                     // Alternative is to detach volumes prior to termination
                     // for local volumes, use archive action
                     // for block volumes, volumes must be detached before Server termination
@@ -174,9 +172,9 @@ public class PerformActionOnScalewayServer extends Script {
             server.setLastUpdate(Instant.now());
             JsonObject serverActionObj = new JsonParser().parse(value).getAsJsonObject().get("task").getAsJsonObject();
             ServerAction serverAction = new ServerAction();
-            serverAction.setServer(server);
             serverAction.setUuid(serverActionObj.get("id").getAsString());
             serverAction.setProviderSideId(serverActionObj.get("id").getAsString());
+            serverAction.setServer(server);
             serverAction.setCreationDate(OffsetDateTime.parse(serverActionObj.get("started_at").getAsString()).toInstant());
             // Duration timeElapsed = Duration.between(
             //     OffsetDateTime.parse(serverActionObj.get("creation_date").getAsString()).toInstant(),
@@ -194,56 +192,74 @@ public class PerformActionOnScalewayServer extends Script {
         }
     }
 
-    public static Long calcServerTotalVolumesSizes(ScalewayServer server){
+    public static Long calcServerTotalVolumesSizes(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository repo) {
         Long serverTotalVolumesSizes = 0L;
         ArrayList<Long> allVolumesSizes = new ArrayList<Long>();
-        logger.debug("SERVER ROOT VOLUME"+server.getRootVolume().getName());
-        logger.debug("SERVER ROOT VOLUME SIZE"+server.getRootVolume().getSize());
-        Long rootVolumeSize = Long.parseLong(server.getRootVolume().getSize());
-
-        allVolumesSizes.add(rootVolumeSize);
+        // Root volume
+        ServerVolume rootVolume = null;
+        try {
+            rootVolume = crossStorageApiInstance.find(repo, server.getRootVolume().getUuid(), ServerVolume.class);
+            Long rootVolumeSize = Long.parseLong(rootVolume.getSize());
+            allVolumesSizes.add(rootVolumeSize);
+        } catch (Exception e) {
+            logger.debug("Error retrieving root volume, {}", e.getMessage());
+        }
+        // Additional volumes
         if (server.getAdditionalVolumes() != null){
-            Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+            Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
+            for (int i = 0; i < server.getAdditionalVolumes().size(); i++) {
+                ServerVolume additionalVolume = null;
+                try {
+                    additionalVolume = crossStorageApiInstance.find(repo, server.getAdditionalVolumes().get(String.valueOf(i)).getUuid(), ServerVolume.class);
+                    serverAdditionalVolumes.put(String.valueOf(i), additionalVolume);
+                } catch (Exception e) {
+                    logger.debug("Error retrieving additional volumes {}", e.getMessage());
+                }
+            }
             for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
                 Long additionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
                 allVolumesSizes.add(additionalVolumeSize);
             }
         }
+        // Sum of all values
         for (Long volumeSize : allVolumesSizes) {
-            serverTotalVolumesSizes = serverTotalVolumesSizes+volumeSize;
+            serverTotalVolumesSizes += volumeSize;
         }
         return serverTotalVolumesSizes;
     }
 
-    public static JsonObject getServerTypeRequirements(ScalewayServer server, Credential credential) throws BusinessException {
-        String zone = server.getZone();
-        String serverType = server.getServerType();
-        
-        Client client = ClientBuilder.newClient();
-        client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/servers");
-        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
-        String value = response.readEntity(String.class);
-
+    public static JsonObject getServerTypeRequirements(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository repo, Credential credential) throws BusinessException {
         JsonObject serverConstraints = new JsonObject();
-        if (response.getStatus()<300) {
-            JsonObject serversObj = new JsonParser().parse(value).getAsJsonObject().get("servers").getAsJsonObject();
-             serverConstraints = serversObj.get(serverType).getAsJsonObject();
-        } else {
-            throw new BusinessException("Error retrieving Server type constraints");
+        if (server != null) {
+            String zone = server.getZone();
+            String serverType = server.getServerType();
+            
+            Client client = ClientBuilder.newClient();
+            client.register(new CredentialHelperService.LoggingFilter());
+            WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/servers");
+            Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+            String value = response.readEntity(String.class);
+            if (response.getStatus()<300) {
+                serverConstraints = 
+                    new JsonParser().parse(value).getAsJsonObject()
+                        .get("servers").getAsJsonObject()
+                        .get(serverType).getAsJsonObject();
+            } else {
+                throw new BusinessException("Error retrieving Server type constraints");
+            }
+            response.close();
         }
-        response.close();
         return serverConstraints;
     }
 
-    public static String getActionComplete(ScalewayServer server, Credential credential) throws BusinessException {
+    public static String getActionComplete(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository repo, Credential credential) throws BusinessException {
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
-        String serverCurrentStatus = null;
+        String serverCurrentStatus = server.getStatus();
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers"+serverId);
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
         String value = response.readEntity(String.class);
         if (response.getStatus() < 300) {
