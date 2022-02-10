@@ -21,6 +21,8 @@ import org.meveo.model.customEntities.CustomEntityTemplate;
 import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.service.crm.impl.CustomFieldTemplateService;
+import org.meveo.model.persistence.CEIUtils;
+import org.meveo.model.customEntities.CustomEntityInstance;
 
 public class UpdateOVHServersScript extends Script {
 
@@ -48,6 +50,7 @@ public class UpdateOVHServersScript extends Script {
         // Check Token
         checkOVHToken.checkOVHToken(credential, openstack);
     	// Retreive actual values from the server
+      	CustomEntityInstance newToCEI = CEIUtils.pojoToCei(server);
       	HashMap<String, Object> oldServ = new HashMap<String, Object>();
       	oldServ = retreiveValues(credential, server.getUuid(), server.getZone());
       	String codeClass = server.getClass().getSimpleName();
