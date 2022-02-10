@@ -86,10 +86,11 @@ public class CreateOVHServersScript extends Script {
             String resp = JacksonUtil.toStringPrettyPrinted(master);
           	log.info("body String : {}", resp);
           	log.info("body json : {}", Entity.json(resp));
+          	JsonObject jsonObject = new JsonParser().parse(resp).getAsJsonObject();
             // Request
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
-            Response response = target.request().header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
+            Response response = target.request().header("X-Auth-Token", credential.getToken()).post(Entity.json(jsonObject));
             String value = response.readEntity(String.class);
             Integer responseStatus = response.getStatus();
             // Verification
