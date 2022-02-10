@@ -54,6 +54,7 @@ public class DeleteOVHServerScript extends Script {
                 server.setStatus("DELETED");
                 server.setCreationDate(null);
                 server.setLastUpdate(null);
+              	
             }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "The server you're trying to delete is not a dev server : " + server.getInstanceName()));
