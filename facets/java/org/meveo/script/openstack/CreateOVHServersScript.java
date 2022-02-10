@@ -103,8 +103,10 @@ public class CreateOVHServersScript extends Script {
                 WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
                 Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
                 String valueNewServ = newServReponse.readEntity(String.class);
-              	log.info(valueNewServ);
                 if (response.getStatus() < 300) {
+                  	JsonElement jsonNewServer = parserServer.parse(valueNewServ);
+                  	JsonObject newServerObj = jsonNewServer.getAsJsonObject();
+                  	serverObj = newServerObj;
                     // Status
                     server.setStatus(serverObj.get("status").getAsString());
                     // volume & flavor
