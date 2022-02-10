@@ -17,6 +17,10 @@ import javax.ws.rs.core.*;
 import java.util.HashMap;
 import com.google.gson.*;
 import java.time.OffsetDateTime;
+import org.meveo.model.customEntities.CustomEntityTemplate;
+import org.meveo.service.custom.CustomEntityTemplateService;
+import org.meveo.model.crm.CustomFieldTemplate;
+import org.meveo.service.crm.impl.CustomFieldTemplateService;
 
 public class UpdateOVHServersScript extends Script {
 
@@ -27,6 +31,10 @@ public class UpdateOVHServersScript extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
+
+    private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
+
+    private CustomFieldTemplateService customFieldTemplateService = getCDIBean(CustomFieldTemplateService.class);
 
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
 
@@ -42,6 +50,9 @@ public class UpdateOVHServersScript extends Script {
     	// Retreive actual values from the server
       	HashMap<String, Object> oldServ = new HashMap<String, Object>();
       	oldServ = retreiveValues(credential, server.getUuid(), server.getZone());
+      	String codeClass = server.getClass().getSimpleName();
+		CustomEntityTemplate newServCET = customEntityTemplateService.findByCode(codeClass);
+      	Map<String, CustomFieldTemplate> newServCFT = customFieldTemplateService.findByAppliesTo(newServCET.getAppliesTo());
     }
 
     private HashMap<String, Object> retreiveValues(Credential credential, String serverUuid, String zone) {
