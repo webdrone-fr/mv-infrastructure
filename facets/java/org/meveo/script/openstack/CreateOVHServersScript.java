@@ -162,7 +162,7 @@ public class CreateOVHServersScript extends Script {
                 }
               	try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
-                  	crossStorageApi.remove(defaultRepo, server.getClass().getSimpleName(), oldUuid);
+                  	crossStorageApi.remove(defaultRepo, oldUuid, server.getClass().getSimpleName());
                   	
                 } catch (Exception ex) {
                     log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
