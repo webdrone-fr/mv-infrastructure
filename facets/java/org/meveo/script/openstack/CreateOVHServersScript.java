@@ -23,7 +23,6 @@ import javax.ws.rs.core.*;
 import org.meveo.model.persistence.JacksonUtil;
 import com.google.gson.*;
 import java.time.OffsetDateTime;
-import org.meveo.credentials.CredentialHelperService;
 
 public class CreateOVHServersScript extends Script {
 
