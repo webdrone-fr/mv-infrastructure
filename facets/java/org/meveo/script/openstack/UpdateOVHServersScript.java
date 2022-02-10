@@ -51,21 +51,21 @@ public class UpdateOVHServersScript extends Script {
         checkOVHToken.checkOVHToken(credential, openstack);
     	// Retreive actual values from the server
       	CustomEntityInstance newToCEI = CEIUtils.pojoToCei(server);
-      	HashMap<String, String> oldServ = new HashMap<String, String>();
+      	HashMap<String, Object> oldServ = new HashMap<String, Object>();
       	oldServ = retreiveValues(credential, server.getUuid(), server.getZone());
       	String codeClass = server.getClass().getSimpleName();
 		CustomEntityTemplate newServCET = customEntityTemplateService.findByCode(codeClass);
       	Map<String, CustomFieldTemplate> newServCFT = customFieldTemplateService.findByAppliesTo(newServCET.getAppliesTo());
       	for(Map.Entry<String, CustomFieldTemplate> entry : newServCFT.entrySet()) {
 			log.info(entry.getKey());
-          	String oldValue = oldServ.get(entry.getKey());
+          	Object oldValue = oldServ.get(entry.getKey());
           	String newValue = newToCEI.get(entry.getKey());
-          	log.info("UPDATE: " + oldValue + " VS " + newValue);
+          	log.info("UPDATE: " + oldValue.toString() + " VS " + newValue);
         }
     }
 
-    private HashMap<String, String> retreiveValues(Credential credential, String serverUuid, String zone) {
-        HashMap<String, String> oldServ = new HashMap<String, String>();
+    private HashMap<String, Object> retreiveValues(Credential credential, String serverUuid, String zone) {
+        HashMap<String, Object> oldServ = new HashMap<String, Object>();
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("https://compute." + zone + ".cloud.ovh.net/v2.1/servers/" + serverUuid);
         Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
@@ -96,8 +96,8 @@ public class UpdateOVHServersScript extends Script {
                 oldServ.put("image", "Image not found");
                 log.error("Image with id : " + idImage + " cannot be found for the server : " + serverObj.get("name").getAsString());
             }
-            oldServ.put("creationDate", OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant().toString());
-            oldServ.put("lastUpdate", OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant().toString());
+            oldServ.put("creationDate", OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
+            oldServ.put("lastUpdate", OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
             oldServ.put("zone", zone);
             JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
             for (JsonElement ip : publicIpArray) {
