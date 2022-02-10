@@ -17,7 +17,7 @@ import org.meveo.script.openstack.ListOVHServersScript;
 import org.meveo.script.ListScalewayServersScript;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import org.meveo.script.CredentialsUtils;
+import org.meveo.credentials.CredentialHelperService;
 
 public class CallListing extends Script {
   
@@ -32,8 +32,6 @@ public class CallListing extends Script {
     private ListOVHServersScript listOVHServerScript = new ListOVHServersScript();
   
     private ListScalewayServersScript listScalewayServersScript = new ListScalewayServersScript();
-  
-    private CredentialsUtils credentialsUtils = new CredentialsUtils();
       
     private ServiceProvider getProvider(String code) {
 		return crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", code).getResult();
@@ -44,7 +42,7 @@ public class CallListing extends Script {
 		super.execute(parameters);
         log.info("calling CallListing");
         ServiceProvider serviceProvider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
-        Credential credential = credentialsUtils.getCredential(serviceProvider.getApiBaseUrl());
+        Credential credential = CredentialHelperService.getCredential(serviceProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for " + serviceProvider.getApiBaseUrl()); 
         } else {
