@@ -106,11 +106,11 @@ public class CreateOVHServersScript extends Script {
                 if (response.getStatus() < 300) {
                   	JsonElement jsonNewServer = parserServer.parse(valueNewServ);
                   	JsonObject newServerObj = jsonNewServer.getAsJsonObject();
-                  	serverObj = newServerObj;
+                  	newServerObj = newServerObj.get("server").getAsJsonObject();
                     // Status
-                    server.setStatus(serverObj.get("status").getAsString());
+                    server.setStatus(newServerObj.get("status").getAsString());
                     // volume & flavor
-                    String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
+                    String idFlavor = newServerObj.get("flavor").getAsJsonObject().get("id").getAsString();
                     WebTarget targetVolume = client.target("https://compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
@@ -126,7 +126,7 @@ public class CreateOVHServersScript extends Script {
                     }
                     // public IP
                   	/*
-                    JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
+                    JsonArray publicIpArray = newServerObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
                     for (JsonElement ip : publicIpArray) {
                         JsonObject ipElement = ip.getAsJsonObject();
                         if (ipElement.get("version").getAsInt() == 4) {
@@ -134,16 +134,16 @@ public class CreateOVHServersScript extends Script {
                         }
                     }*/
                     // Set the creation & updated date
-                    server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
-                    server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
+                    server.setCreationDate(OffsetDateTime.parse(newServerObj.get("created").getAsString()).toInstant());
+                    server.setLastUpdate(OffsetDateTime.parse(newServerObj.get("updated").getAsString()).toInstant());
                     // domain name
-                    server.setDomainName(serverObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
+                    server.setDomainName(newServerObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
                     // server name
-                    server.setInstanceName(serverObj.get("name").getAsString());
+                    server.setInstanceName(newServerObj.get("name").getAsString());
                     // tenant
-                    server.setOrganization(serverObj.get("tenant_id").getAsString());
+                    server.setOrganization(newServerObj.get("tenant_id").getAsString());
                     // Image
-                    String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
+                    String idImage = newServerObj.get("image").getAsJsonObject().get("id").getAsString();
                     WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
                     Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     String ImageValue = responseImage.readEntity(String.class);
@@ -156,7 +156,7 @@ public class CreateOVHServersScript extends Script {
                         }
                     } else {
                         server.setImage("Image not found");
-                        log.error("Image with id : " + idImage + " cannot be found for the server : " + serverObj.get("name").getAsString());
+                        log.error("Image with id : " + idImage + " cannot be found for the server : " + newServerObj.get("name").getAsString());
                     }
                 }
               	try {
