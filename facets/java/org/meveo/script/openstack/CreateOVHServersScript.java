@@ -85,8 +85,6 @@ public class CreateOVHServersScript extends Script {
             newServer.put("name", server.getName());
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
-          	log.info("body String : {}", resp);
-          	log.info("body json : {}", Entity.json(resp));
             // Request
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
@@ -105,6 +103,7 @@ public class CreateOVHServersScript extends Script {
                 WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
                 Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
                 String valueNewServ = newServReponse.readEntity(String.class);
+              	log.info(valueNewServ);
                 if (response.getStatus() < 300) {
                     // Status
                     server.setStatus(serverObj.get("status").getAsString());
