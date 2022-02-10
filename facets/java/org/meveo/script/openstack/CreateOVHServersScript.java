@@ -124,13 +124,14 @@ public class CreateOVHServersScript extends Script {
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
                     // public IP
+                  	/*
                     JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
                     for (JsonElement ip : publicIpArray) {
                         JsonObject ipElement = ip.getAsJsonObject();
                         if (ipElement.get("version").getAsInt() == 4) {
                             server.setPublicIp(ipElement.get("addr").getAsString());
                         }
-                    }
+                    }*/
                     // Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
                     server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
