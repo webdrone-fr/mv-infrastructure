@@ -84,7 +84,8 @@ public class CreateOVHServersScript extends Script {
             newServer.put("name", server.getName());
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
-          	log.info("body : {}", resp);
+          	log.info("body String : {}", resp);
+          	log.info("body json : {}", Entity.json(resp));
             // Request
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
