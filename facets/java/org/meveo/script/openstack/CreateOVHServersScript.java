@@ -93,12 +93,9 @@ public class CreateOVHServersScript extends Script {
                 JsonElement jsonServer = parserServer.parse(value);
                 JsonObject serverObj = jsonServer.getAsJsonObject();
                 serverObj = serverObj.get("server").getAsJsonObject();
+                // UUID
                 server.setUuid(serverObj.get("id").getAsString());
-                try {
-                    crossStorageApi.createOrUpdate(defaultRepo, server);
-                } catch (Exception ex) {
-                    log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
-                }
+                
                 WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
                 Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
                 String valueNewServ = response.readEntity(String.class);
@@ -133,6 +130,31 @@ public class CreateOVHServersScript extends Script {
                     server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
                     // domain name
                     server.setDomainName(serverObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
+                    // server name
+                    server.setInstanceName(serverObj.get("name").getAsString());
+                    // tenant
+                    server.setOrganization(serverObj.get("tenant_id").getAsString());
+                    // Image
+                    String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
+                    WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
+                    Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
+                    String ImageValue = responseImage.readEntity(String.class);
+                    if (!(ImageValue.startsWith("404"))) {
+                        JsonParser parser = new JsonParser();
+                        JsonElement jsonE = parser.parse(ImageValue);
+                        JsonObject ImageObj = jsonE.getAsJsonObject();
+                        if (ImageObj != null) {
+                            server.setImage(ImageObj.get("name").getAsString());
+                        }
+                    } else {
+                        server.setImage("Image not found");
+                        log.error("Image with id : " + idImage + " cannot be found for the server : " + serverObj.get("name").getAsString());
+                    }
+                }
+              	try {
+                    crossStorageApi.createOrUpdate(defaultRepo, server);
+                } catch (Exception ex) {
+                    log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
                 }
             } else {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Error while creating the server : " + server.getUuid()));
