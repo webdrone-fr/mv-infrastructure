@@ -16,6 +16,7 @@ import org.meveo.script.openstack.CheckOVHToken;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 import java.util.HashMap;
+import com.google.gson.*;
 
 public class UpdateOVHServersScript extends Script {
 
@@ -46,6 +47,14 @@ public class UpdateOVHServersScript extends Script {
       	Client client = ClientBuilder.newClient();
       	WebTarget target = client.target("https://compute." + zone + ".cloud.ovh.net/v2.1/servers/" + serverUuid);
       	Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
+        String value = response.readEntity(String.class);
+      	Integer responseStatus = response.getStatus();
+      	if (responseStatus < 300) {
+			JsonParser parserServer = new JsonParser();
+            JsonElement jsonServer = parserServer.parse(value);
+            JsonObject serverObj = jsonServer.getAsJsonObject();
+            serverObj = serverObj.get("server").getAsJsonObject();
+        }
 		return null;
     }
 	
