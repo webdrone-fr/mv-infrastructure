@@ -90,7 +90,7 @@ public class CreateOVHServersScript extends Script {
             // Request
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
-            Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
+            Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
             String value = response.readEntity(String.class);
             Integer responseStatus = response.getStatus();
             // Verification
