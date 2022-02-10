@@ -160,7 +160,7 @@ public class CreateOVHServersScript extends Script {
                     log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
                 }
             } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Error while creating the server : " + server.getUuid()));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Error while creating the server : (code: " + response.getStatus() + ") " + server.getUuid()));
                 log.info("Error while creating the server : {}", server.getUuid());
             }
             response.close();
