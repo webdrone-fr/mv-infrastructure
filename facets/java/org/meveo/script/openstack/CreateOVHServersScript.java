@@ -84,7 +84,7 @@ public class CreateOVHServersScript extends Script {
             newServer.put("ImageRef", server.getImageRef());
             newServer.put("name", server.getName());
             master.put("server", newServer);
-            String resp = JacksonUtil.toStringPrettyPrinted(master);
+            String resp = JacksonUtil.toStringPrettyPrinted(newServer);
           	log.info("body String : {}", resp);
           	log.info("body json : {}", Entity.json(resp));
             // Request
