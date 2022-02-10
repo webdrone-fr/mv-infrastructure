@@ -92,6 +92,7 @@ public class CreateOVHServersScript extends Script {
             String value = response.readEntity(String.class);
             Integer responseStatus = response.getStatus();
             // Verification
+          	String oldUuid = server.getUuid();
             if (responseStatus < 300) {
                 JsonParser parserServer = new JsonParser();
                 JsonElement jsonServer = parserServer.parse(value);
@@ -161,6 +162,8 @@ public class CreateOVHServersScript extends Script {
                 }
               	try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
+                  	crossStorageApi.remove(defaultRepo, server.getClass().getSimpleName(), oldUuid);
+                  	
                 } catch (Exception ex) {
                     log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
                 }
