@@ -59,7 +59,7 @@ public class UpdateOVHServersScript extends Script {
       	for(Map.Entry<String, CustomFieldTemplate> entry : newServCFT.entrySet()) {
           	Object oldValue = oldServ.get(entry.getKey());
           	Object newValue = newToCEI.get(entry.getKey());
-          	log.info("UPDATE: " + oldValue.toString() + " VS " + newValue.toString());
+          	log.info("UPDATE " + entry.getKey() + ": " + oldValue.toString() + " VS " + newValue.toString());
         }
     }
 
