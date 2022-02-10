@@ -35,8 +35,12 @@ public class UpdateOVHServersScript extends Script {
         log.info("calling UpdateOVHServersScripts");
         //Check Token
         checkOVHToken.checkOVHToken(credential, openstack);
-        //Check Input
+        //Retreive actual values from the server
         
+    }
+  
+    private Server retreiveValues (String serverUuid) {
+		return null;
     }
 	
 }
