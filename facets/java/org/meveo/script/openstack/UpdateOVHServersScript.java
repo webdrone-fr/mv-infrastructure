@@ -15,6 +15,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.script.openstack.CheckOVHToken;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
+import java.util.HashMap;
 
 public class UpdateOVHServersScript extends Script {
 
@@ -41,7 +42,7 @@ public class UpdateOVHServersScript extends Script {
         
     }
   
-    private Server retreiveValues (Credential credential, String serverUuid, String zone) {
+    private HashMap<String, Object> retreiveValues (Credential credential, String serverUuid, String zone) {
       	Client client = ClientBuilder.newClient();
       	WebTarget target = client.target("https://compute." + zone + ".cloud.ovh.net/v2.1/servers/" + serverUuid);
       	Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
