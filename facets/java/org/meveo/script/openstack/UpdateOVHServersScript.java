@@ -44,6 +44,7 @@ public class UpdateOVHServersScript extends Script {
     }
   
     private HashMap<String, Object> retreiveValues (Credential credential, String serverUuid, String zone) {
+        HashMap<String, Object> oldServ = new HashMap<String, Object>();
       	Client client = ClientBuilder.newClient();
       	WebTarget target = client.target("https://compute." + zone + ".cloud.ovh.net/v2.1/servers/" + serverUuid);
       	Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
