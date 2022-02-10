@@ -48,7 +48,7 @@ public class CallCreation extends Script {
         }
         switch(credential.getDomainName()) {
           case "cloud.ovh.net":
-            //createOVHServersScript.createServer(credential, openstack, server);
+            createOVHServersScript.createServer(credential, openstack, server);
             break;
           case "api.scaleway.com":
             //create
