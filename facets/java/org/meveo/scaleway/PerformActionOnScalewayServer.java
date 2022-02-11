@@ -131,34 +131,6 @@ public class PerformActionOnScalewayServer extends Script {
         } else if (action == "terminate") {
             // when terminating a server, all the attached volumes (local and block storage) are deleted
             // check if user wants to keep volumes or delete them
-            if (server.getRootVolume() != null) {
-                parameters.put(RESULT_GUI_MESSAGE, "All Volumes for Server : "+serverId+" will be deleted, are you sure you wish to proceed?"); // alert possible?
-                // check for confirmation to proceed
-                    // without saving volumes
-                    // with saving volumes
-                    String rootVolumeType = server.getRootVolume().getVolumeType();
-                    if (rootVolumeType == "l_ssd") {
-                        // perform archive action
-                    } else {
-                        // need to update server to remove b_ssd volumes
-                    }
-                if (!server.getAdditionalVolumes().isEmpty()) {
-                    // TODO make an alert + check for confirmation - not possible on meveo
-                    // Alternative is to detach volumes prior to termination
-                    // for local volumes, use archive action
-                    // for block volumes, volumes must be detached before Server termination
-                    
-                    Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
-                    for (Map.Entry<String, ServerVolume> additionalVolume : additionalVolumes.entrySet()) {
-                        if (additionalVolume.getValue().getVolumeType() == "l_ssd") {
-                            // perform archive action
-                        } else {
-                            // detach volume from server
-                            // involves updating server
-                        }
-                    }
-                }
-            } 
         }
         body.put("action", action);
         
@@ -202,7 +174,7 @@ public class PerformActionOnScalewayServer extends Script {
             Long rootVolumeSize = Long.parseLong(rootVolume.getSize());
             allVolumesSizes.add(rootVolumeSize);
         } catch (Exception e) {
-            logger.debug("Error retrieving root volume, {}", e.getMessage());
+            logger.error("Error retrieving root volume, {}", e.getMessage());
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
@@ -213,7 +185,7 @@ public class PerformActionOnScalewayServer extends Script {
                     additionalVolume = crossStorageApiInstance.find(repo, server.getAdditionalVolumes().get(String.valueOf(i)).getUuid(), ServerVolume.class);
                     serverAdditionalVolumes.put(String.valueOf(i), additionalVolume);
                 } catch (Exception e) {
-                    logger.debug("Error retrieving additional volumes {}", e.getMessage());
+                    logger.error("Error retrieving additional volumes {}", e.getMessage());
                 }
             }
             for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {

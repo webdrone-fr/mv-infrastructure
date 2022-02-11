@@ -53,7 +53,7 @@ public class ListScalewayVolumes extends Script{
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
                 for (JsonElement element : rootArray) {
                     JsonObject volumeObj = element.getAsJsonObject();
-                    if (volumeObj.get("name").getAsString().startsWith("dev-")) {
+                    // if (volumeObj.get("name").getAsString().startsWith("dev-")) {
                         ServerVolume serverVolume = new ServerVolume();
                         serverVolume.setUuid(volumeObj.get("id").getAsString());
                         serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
@@ -77,7 +77,7 @@ public class ListScalewayVolumes extends Script{
                         } catch (Exception e) {
                             logger.error("Error creating Server Volume {} : {}", serverVolume.getProviderSideId(), e.getMessage());
                         }
-                    }
+                    // }
                 }
             }
             response.close();

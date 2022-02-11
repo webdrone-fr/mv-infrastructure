@@ -41,7 +41,7 @@ public class CreateScalewayServer extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION);
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ScalewayServer server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
         
         if(server.getInstanceName() == null) { // required

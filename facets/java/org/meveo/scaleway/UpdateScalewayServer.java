@@ -53,12 +53,14 @@ public class UpdateScalewayServer extends Script {
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
         logger.info("action : {}, server uuid : {}", action, serverId);
+
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
+        
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
@@ -91,10 +93,16 @@ public class UpdateScalewayServer extends Script {
             Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
             for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
                 Map<String, Object> additionalVolume = new HashMap<String, Object>();
-                additionalVolume.put("id", serverAdditionalVolume.getValue().getProviderSideId());
-                additionalVolume.put("boot", serverAdditionalVolume.getValue().getIsBoot());
-                additionalVolume.put("name", serverAdditionalVolume.getValue().getName());
-                volumes.put(serverAdditionalVolume.getKey(), additionalVolume); // keys should be 1, 2, 3...
+                ServerVolume additionalVolumeObj = null;
+                try {
+                    additionalVolumeObj = crossStorageApi.find(defaultRepo, serverAdditionalVolume.getValue().getUuid(), ServerVolume.class);
+                    additionalVolume.put("id", additionalVolumeObj.getProviderSideId());
+                    additionalVolume.put("boot", additionalVolumeObj.getIsBoot());
+                    additionalVolume.put("name", additionalVolumeObj.getName());
+                    volumes.put(serverAdditionalVolume.getKey(), additionalVolume); // keys should be 1, 2, 3...
+                } catch (Exception e) {
+                    logger.error("Error retrieving additional volume", e.getMessage());
+                }
             }
         }
         body.put("volumes", volumes);
@@ -164,7 +172,7 @@ public class UpdateScalewayServer extends Script {
                 if (serverVolumesObj.entrySet().size() > 1) {
                     Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
                     for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                        String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsString();
+                        String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
                         ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
                         serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
                         serverTotalVolumeSize += Long.parseLong(serverAdditionalVolume.getSize()) ;

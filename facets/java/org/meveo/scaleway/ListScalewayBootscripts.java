@@ -27,6 +27,7 @@ public class ListScalewayBootscripts extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     static final private String SCALEWAY_URL = "api.scaleway.com";
+    static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -42,7 +43,7 @@ public class ListScalewayBootscripts extends Script {
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
-            WebTarget target = client.target("https://"+SCALEWAY_URL+"/instance/v1/zones/"+zone+"/bootscripts");
+            WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/bootscripts");
             Response response = CredentialHelperService.setCredential(target.request(), credential).get();
             String value = response.readEntity(String.class);
             logger.info("response : " + value);
@@ -73,6 +74,7 @@ public class ListScalewayBootscripts extends Script {
                     }
                 }
             }
+            response.close();
         }
     }
 }
