@@ -63,6 +63,18 @@ public class CreateScalewayServer extends Script {
             logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername());
         }
 
+        // Server Availability for all server types in zone - possible values include available, scarce and shortage
+        String serverType = server.getServerType();
+        JsonObject serverAvailabilityObj = ScalewayHelperService.getServerTypeAvailabilityInZone(zone, crossStorageApi, defaultRepo, credential);
+        String serverTypeAvailability = serverAvailabilityObj.get(serverType).getAsJsonObject().get("availability").getAsString();
+        if (serverTypeAvailability.equalsIgnoreCase("scarce")) {
+            parameters.put(RESULT_GUI_MESSAGE, "Server Type "+serverType+" has scarce availability in zone "+zone);
+            logger.info("Zone : {} has a scarce supply of Server Type : {}", zone, serverType);
+        } else if (serverTypeAvailability.equalsIgnoreCase("shortage")) {
+            logger.info("Zone : {} has a shortage of Server Type : {}", zone, serverType);
+            throw new BusinessException("Server Type : "+ serverType+ " is currently unavailable in zone " +zone);
+        }
+
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers");
@@ -169,8 +181,8 @@ public class CreateScalewayServer extends Script {
                     }
                     // Additional Volumes
                     if (serverVolumesObj.entrySet().size() > 1) {
+                        Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
                         for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                            Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
                             String serverAdditionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
                             if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult() != null) {
                                 // if additional volume exists in default repo
@@ -183,10 +195,11 @@ public class CreateScalewayServer extends Script {
                                 additionalVolume.setCreationDate(OffsetDateTime.parse(serverAdditionalVolumeObj.get("creation_date").getAsString()).toInstant());
                                 additionalVolume.setLastUpdated(OffsetDateTime.parse(serverAdditionalVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
                                 additionalVolume.setProviderSideId(serverAdditionalVolumeObj.get("id").getAsString());
+                                additionalVolume.setUuid(serverAdditionalVolumeObj.get("id").getAsString());
                                 additionalVolume.setName(serverAdditionalVolumeObj.get("name").getAsString());
                                 additionalVolume.setState(serverAdditionalVolumeObj.get("state").getAsString());
                                 additionalVolume.setSize(String.valueOf(serverAdditionalVolumeObj.get("size").getAsLong()));
-                                additionalVolume.setZone(zone);
+                                additionalVolume.setZone(serverAdditionalVolumeObj.get("zone").getAsString());
                                 additionalVolume.setVolumeType(serverAdditionalVolumeObj.get("volume_type").getAsString());
                                 additionalVolume.setServer(server.getProviderSideId());
                                 additionalVolume.setIsBoot(serverAdditionalVolumeObj.get("boot").getAsBoolean());

@@ -1,8 +1,6 @@
 package org.meveo.scaleway;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +13,6 @@ import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerAction;
-import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;

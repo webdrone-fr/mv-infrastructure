@@ -60,6 +60,52 @@ public class UpdateScalewayServer extends Script {
         } else {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
+
+        // Get Server Type requirements
+        String serverType = server.getServerType();
+        JsonObject serverConstraintsObj = ScalewayHelperService.getServerTypeRequirements(server, crossStorageApi, defaultRepo, credential);
+        
+        Long serverTotalLocalVolumeSize = 0L;
+        Long serverMinVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
+        Long serverMaxVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("max_size").getAsLong();
+
+        // Can be null when no volumes attached eg at creation
+        if (server.getRootVolume() != null) {
+            try {
+                ServerVolume rootVolume = crossStorageApi.find(defaultRepo,server.getRootVolume().getUuid(), ServerVolume.class);
+                if (rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
+                    serverTotalLocalVolumeSize += Long.valueOf(rootVolume.getSize());
+                }
+            } catch (Exception e) {
+                logger.error("error retrieving root volume : {}", e.getMessage());
+            }
+            // Additionla Volumes
+            if(server.getAdditionalVolumes() != null) {
+                Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
+                for (int i = 1; i < additionalVolumes.size(); i++) {
+                    try {
+                        ServerVolume additionalVolume = crossStorageApi.find(defaultRepo, additionalVolumes.get(String.valueOf(i)).getUuid(), ServerVolume.class);
+                        if (additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
+                            serverTotalLocalVolumeSize += Long.valueOf(additionalVolume.getSize());
+                        }
+                    } catch (Exception e) {
+                        logger.error("Error retieving additional volume : {}", e.getMessage());
+                    }
+                }
+            }
+            String serverTotalLocalVolumesSizeStr = Long.toString(serverTotalLocalVolumeSize);
+            String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
+            String serverMaxVolumeSizeReqStr = Long.toString(serverMaxVolumeSizeReq);
+            if (serverTotalLocalVolumeSize < serverMinVolumeSizeReq) {
+                logger.debug("Current available volume size : {}, Minimum Volume size required for server type {} : {}", serverTotalLocalVolumesSizeStr , serverType, serverMinVolumeSizeReqStr);
+                throw new BusinessException("Current total volume size is too small for selected server type");
+            } else if (serverTotalLocalVolumeSize > serverMaxVolumeSizeReq) {
+                logger.debug("Current available volume size : {}, Maximum Volume size allowed for server type {} : {}", serverTotalLocalVolumesSizeStr , serverType, serverMaxVolumeSizeReqStr);
+                throw new BusinessException("Current total volume size is too large for selected server type");
+            } else {
+                logger.info("Server Total Volume size : {}; Min Total Volume size : {}; Max Total Volume Size : {}", serverTotalLocalVolumesSizeStr, serverMinVolumeSizeReqStr, serverMaxVolumeSizeReqStr);
+            }
+        }
         
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
@@ -93,9 +139,8 @@ public class UpdateScalewayServer extends Script {
             Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
             for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
                 Map<String, Object> additionalVolume = new HashMap<String, Object>();
-                ServerVolume additionalVolumeObj = null;
                 try {
-                    additionalVolumeObj = crossStorageApi.find(defaultRepo, serverAdditionalVolume.getValue().getUuid(), ServerVolume.class);
+                    ServerVolume additionalVolumeObj = crossStorageApi.find(defaultRepo, serverAdditionalVolume.getValue().getUuid(), ServerVolume.class);
                     additionalVolume.put("id", additionalVolumeObj.getProviderSideId());
                     additionalVolume.put("boot", additionalVolumeObj.getIsBoot());
                     additionalVolume.put("name", additionalVolumeObj.getName());
@@ -160,7 +205,7 @@ public class UpdateScalewayServer extends Script {
             // Volumes
             JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
             Long serverTotalVolumeSize = 0L;
-            if (!serverObj.get("volumes").isJsonNull() && serverVolumesObj.entrySet().size() >= 1) {
+            if (serverVolumesObj.entrySet().size() >= 1) {
                 // Root Volume
                 String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
                 if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult() != null) {

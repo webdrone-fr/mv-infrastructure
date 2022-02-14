@@ -15,14 +15,13 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 // import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.SecurityGroup;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
-import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
-import org.meveo.persistence.CrossStorageService;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
@@ -33,7 +32,6 @@ public class ListScalewayServers extends Script {
    
     private static final Logger logger = LoggerFactory.getLogger(ListScalewayServers.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
-    private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
@@ -83,9 +81,16 @@ public class ListScalewayServers extends Script {
                         server.setDomainName(serverObj.get("hostname").getAsString());
                         server.setSergentUrl(server.getDomainName() + ":8001/sergent");
 
+                        // public IP CET
                         // If Server is powered off => no Ip assigned
                         if(!serverObj.get("public_ip").isJsonNull()) {
-                            server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
+                            String publicIpId = serverObj.get("public_ip").getAsJsonObject().get("id").getAsString();
+                            try {
+                                PublicIp publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
+                                server.setPublicIp(publicIp.getIpVFourAddress());
+                            } catch (Exception e) {
+                                logger.error("Error retrieving public ip : {}", publicIpId, e.getMessage());
+                            }
                         }
                         
                         // Image
@@ -103,10 +108,10 @@ public class ListScalewayServers extends Script {
                             String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
                             try {
                                 ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-                            server.setRootVolume(serverRootVolume);
-                            serverTotalVolumeSize = serverVolumesObj.get("0").getAsJsonObject().get("size").getAsLong();
+                                server.setRootVolume(serverRootVolume);
+                                serverTotalVolumeSize = serverVolumesObj.get("0").getAsJsonObject().get("size").getAsLong();
                             } catch (Exception e) {
-                                logger.error("Error updating server {} with additional volume {}",server.getUuid(), serverRootVolumeId, e.getMessage());
+                                logger.error("Error retrieving additional volume {} for server {}", serverRootVolumeId, server.getUuid(), e.getMessage());
                             }
                             // Additional Volumes
                             if (serverVolumesObj.entrySet().size() > 1) {
@@ -118,7 +123,7 @@ public class ListScalewayServers extends Script {
                                         serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
                                         serverTotalVolumeSize += serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("size").getAsLong();
                                     } catch (Exception e) {
-                                        logger.error("Error updating server {} with additional volume {}",server.getUuid(), additionalVolumeId, e.getMessage());
+                                        logger.error("Error retieving additional volume : {}", additionalVolumeId, e.getMessage());
                                     }
                                 }
                                 server.setAdditionalVolumes(serverAdditionalVolumes);
@@ -210,8 +215,7 @@ public class ListScalewayServers extends Script {
                             server.setPrivateNics(nicIds);
                         }
                         try {
-                            // crossStorageApi.createOrUpdate(defaultRepo, server);
-                            crossStorageService.createOrUpdate(defaultRepo, CEIUtils.pojoToCei(server));
+                            crossStorageApi.createOrUpdate(defaultRepo, server);
                             logger.info("Server Name : {} imported successfully", server.getInstanceName());
                         } catch (Exception e) {
                             logger.error("Error creating Server {} : {}", server.getInstanceName(), e.getMessage());

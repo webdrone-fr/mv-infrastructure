@@ -53,31 +53,26 @@ public class ListScalewayVolumes extends Script{
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
                 for (JsonElement element : rootArray) {
                     JsonObject volumeObj = element.getAsJsonObject();
-                    // if (volumeObj.get("name").getAsString().startsWith("dev-")) {
-                        ServerVolume serverVolume = new ServerVolume();
-                        serverVolume.setUuid(volumeObj.get("id").getAsString());
-                        serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
-                        serverVolume.setName(volumeObj.get("name").getAsString());
-                        Boolean isBoot = false;
-                        if (!volumeObj.get("server").isJsonNull()) {
-                            // need to check if is used for Boot of server - not part of response for volumes list
-                            isBoot = true;
-                            serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
-                        }
-                        serverVolume.setIsBoot(isBoot);
-                        serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
-                        serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-                        serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
-                        serverVolume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
-                        serverVolume.setZone(volumeObj.get("zone").getAsString());
-                        serverVolume.setState(volumeObj.get("state").getAsString());
-                        logger.info("Server Volume Name: {}", serverVolume.getName());
-                        try {
-                            crossStorageApi.createOrUpdate(defaultRepo, serverVolume);
-                        } catch (Exception e) {
-                            logger.error("Error creating Server Volume {} : {}", serverVolume.getProviderSideId(), e.getMessage());
-                        }
-                    // }
+                    ServerVolume serverVolume = new ServerVolume();
+
+                    serverVolume.setUuid(volumeObj.get("id").getAsString());
+                    serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
+                    serverVolume.setName(volumeObj.get("name").getAsString());
+                    if (!volumeObj.get("server").isJsonNull()) {
+                        serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
+                    }
+                    serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
+                    serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
+                    serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
+                    serverVolume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
+                    serverVolume.setZone(volumeObj.get("zone").getAsString());
+                    serverVolume.setState(volumeObj.get("state").getAsString());
+                    logger.info("Server Volume Name: {}", serverVolume.getName());
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, serverVolume);
+                    } catch (Exception e) {
+                        logger.error("Error creating Server Volume {} : {}", serverVolume.getProviderSideId(), e.getMessage());
+                    }
                 }
             }
             response.close();
