@@ -26,7 +26,6 @@ public class ListScalewayFlexibleIps extends Script{
 
     private static final Logger logger = LoggerFactory.getLogger(ListScalewayFlexibleIps.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
-    // private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
     
@@ -100,8 +99,10 @@ public class ListScalewayFlexibleIps extends Script{
                     }
 
                     try {
-                        crossStorageApi.createOrUpdate(defaultRepo, publicIp);
-                        logger.info("Public IP : {} imported successfully", publicIp.getIpVFourAddress());
+                        if (flexibleIp.get("server").isJsonNull() || flexibleIp.get("server").getAsJsonObject().get("name").getAsString().startsWith("dev-")) {
+                            crossStorageApi.createOrUpdate(defaultRepo, publicIp);
+                            logger.info("Public IP : {} imported successfully", publicIp.getIpVFourAddress());
+                        }
                     } catch (Exception e) {
                         logger.error("error creating public ip {} : {}", publicIp.getUuid(), e.getMessage());
                     }
