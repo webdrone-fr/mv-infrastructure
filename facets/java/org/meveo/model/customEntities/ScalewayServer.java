@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.ServerImage;
 import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
@@ -55,6 +56,8 @@ public class ScalewayServer extends Server implements CustomEntity {
     private String zone;
 
     private List<String> serverActions = new ArrayList<>();
+
+    private Bootscript bootscript;
 
     private String placementGroup;
 
@@ -219,6 +222,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setServerActions(List<String> serverActions) {
         this.serverActions = serverActions;
+    }
+
+    public Bootscript getBootscript() {
+        return bootscript;
+    }
+
+    public void setBootscript(Bootscript bootscript) {
+        this.bootscript = bootscript;
     }
 
     public String getPlacementGroup() {

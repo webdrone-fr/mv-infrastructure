@@ -13,6 +13,7 @@ import com.google.gson.*;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.SecurityGroup;
@@ -79,7 +80,7 @@ public class UpdateScalewayServer extends Script {
             } catch (Exception e) {
                 logger.error("error retrieving root volume : {}", e.getMessage());
             }
-            // Additionla Volumes
+            // Additional Volumes
             if(server.getAdditionalVolumes() != null) {
                 Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
                 for (int i = 1; i < additionalVolumes.size(); i++) {
@@ -112,11 +113,11 @@ public class UpdateScalewayServer extends Script {
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
 
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put("boot_type", server.getBootType()); // From List of values, includes local, bootscript, rescue -> default is local
         body.put("dynamic_ip_required", server.getDynamicIpRequired()); // nullable, default to false
         body.put("enable_ipv6",server.getEnableIPvSix()); //nullable default to true
         body.put("protected", server.getIsProtected()); //nullable default to false
-
+        body.put("boot_type", server.getBootType()); // From List of values, includes local, bootscript, rescue -> default is local
+        
         // Server Name
         // nullable
         if (server.getInstanceName() != null) {
@@ -159,6 +160,12 @@ public class UpdateScalewayServer extends Script {
             securityGroupMap.put("name", server.getSecurityGroup().getName());
         }
         body.put("security_group", securityGroupMap);
+
+        // Bootscript
+        if (server.getBootType() != null && server.getBootType().equalsIgnoreCase("bootscript") && server.getBootscript() != null) {
+            String bootscriptId = server.getBootscript().getProviderSideId();
+            body.put("bootscript", bootscriptId);
+        }
 
         // Private NICs
         // Cannot be null but not currently used
@@ -284,6 +291,36 @@ public class UpdateScalewayServer extends Script {
                 }
                 server.setMaintenances(maintenances); // Array
             }
+
+            // Bootscript
+            if(!serverObj.get("bootscript").isJsonNull()) {
+                JsonObject bootscriptObj = serverObj.get("bootscript").getAsJsonObject();
+                String bootscriptId = bootscriptObj.get("id").getAsString();
+                if (crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
+                    Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
+                    server.setBootscript(bootscript);
+                } else {
+                    Bootscript newBootscript = new Bootscript();
+                    newBootscript.setArch(bootscriptObj.get("arch").getAsString());
+                    newBootscript.setBootcmdargs(bootscriptObj.get("bootcmdargs").getAsString());
+                    newBootscript.setIsDefault(bootscriptObj.get("default").getAsBoolean());
+                    newBootscript.setDtb(bootscriptObj.get("dtb").getAsString());
+                    newBootscript.setInitrd(bootscriptObj.get("initrd").getAsString());
+                    newBootscript.setKernel(bootscriptObj.get("kernel").getAsString());
+                    newBootscript.setOrganization(bootscriptObj.get("organization").getAsString());
+                    newBootscript.setProject(bootscriptObj.get("project").getAsString());
+                    newBootscript.setIsPublic(bootscriptObj.get("public").getAsBoolean());
+                    newBootscript.setTitle(bootscriptObj.get("title").getAsString());
+                    newBootscript.setZone(bootscriptObj.get("zone").getAsString());
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, newBootscript);
+                        server.setBootscript(newBootscript);
+                    } catch (Exception e) {
+                        logger.error("Error creating bootscript for server : ", server.getUuid(), e.getMessage());
+                    }
+                }
+            }
+
             // Private NICs
             if (!serverObj.get("private_nics").isJsonNull()) {
                 JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();

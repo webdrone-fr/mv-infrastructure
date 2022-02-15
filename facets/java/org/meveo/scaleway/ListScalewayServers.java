@@ -13,7 +13,7 @@ import com.google.gson.*;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
-// import org.meveo.model.customEntities.Bootscript;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ScalewayServer;
@@ -86,8 +86,12 @@ public class ListScalewayServers extends Script {
                         if(!serverObj.get("public_ip").isJsonNull()) {
                             String publicIpId = serverObj.get("public_ip").getAsJsonObject().get("id").getAsString();
                             try {
-                                PublicIp publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
-                                server.setPublicIp(publicIp.getIpVFourAddress());
+                                if (crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult() != null) {
+                                    PublicIp publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
+                                    server.setPublicIp(publicIp.getIpVFourAddress());
+                                } else {
+                                    server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
+                                }
                             } catch (Exception e) {
                                 logger.error("Error retrieving public ip : {}", publicIpId, e.getMessage());
                             }
@@ -155,14 +159,6 @@ public class ListScalewayServers extends Script {
                             String location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
                             server.setLocation(location);
                         }
-
-                        // Bootscript
-                        // if (serverObj.get("bootscript").isJsonNull()){
-                        //     String bootscriptId = serverObj.get("bootscript").getAsJsonObject().get("id").getAsString();
-                        //     Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
-                        //     // server.setBootscript(bootscript);
-                        // }
-
                         
                         // Security Group CET
                        if (!serverObj.get("security_group").isJsonNull()) {
@@ -181,6 +177,17 @@ public class ListScalewayServers extends Script {
                         // Private IP
                         if (!serverObj.get("private_ip").isJsonNull()) {
                             server.setPrivateIp(serverObj.get("private_ip").getAsString());
+                        }
+
+                        // Bootscript
+                        if (!serverObj.get("bootscript").isJsonNull()){
+                            String bootscriptId = serverObj.get("bootscript").getAsJsonObject().get("id").getAsString();
+                            try {
+                                Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
+                                server.setBootscript(bootscript);
+                            } catch (Exception e) {
+                                logger.error("Error retrieving bootscript : {}", bootscriptId, e.getMessage());
+                            }
                         }
 
                         // Placement Group
