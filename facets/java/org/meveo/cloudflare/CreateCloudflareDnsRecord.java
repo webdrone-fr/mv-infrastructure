@@ -1,13 +1,13 @@
 package org.meveo.cloudflare;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import org.apache.commons.validator.routines.InetAddressValidator;
 import org.meveo.admin.exception.BusinessException;
@@ -36,9 +36,10 @@ public class CreateCloudflareDnsRecord extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION);
+        String action = parameters.get(CONTEXT_ACTION).toString();
         DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
         InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+
         if (record.getDomainName()==null) {
             throw new BusinessException("Invalid Record Domain");
         } else if (record.getRecordType()==null) {
@@ -52,25 +53,27 @@ public class CreateCloudflareDnsRecord extends Script {
         }
 
         DomainName domainName = record.getDomainName();
-        logger.info("action : {}, domain name uuid : {}", action, domainName.getUuid());
+        String domainNameId = domainName.getUuid();
+        logger.info("action : {}, domain name uuid : {}", action, domainNameId);
+
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
         } else {
-            logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername()); //Need to verify username
+            logger.info("Using Credential {} with username {}", credential.getDomainName(), credential.getUsername());
         }
+
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records");
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainNameId+"/dns_records");
 
-        Map<String, Object> body = Map.of(
-            "type", record.getRecordType(), 
-            "name", record.getName(), 
-            "content", record.getValue(), // needs to be valid IPv4 address
-            "ttl", String.valueOf(record.getTtl()),
-            // Optional setting
-            // proxied: Whether the record is receiving the performance and security benefits of Cloudflare
-            "proxied", record.getProxied());
+        Map<String, Object> body = new HashMap<String, Object>();
+        body.put("type", record.getRecordType());
+        body.put("name", record.getName());
+        body.put("content", record.getValue());
+        body.put("ttl", String.valueOf(record.getTtl()));
+        body.put("proxied", record.getProxied()); // default false
+
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
         Response response = 
@@ -80,16 +83,24 @@ public class CreateCloudflareDnsRecord extends Script {
         String value = response.readEntity(String.class);
         logger.info("response  :" + value);
         logger.debug("response status : {}", response.getStatus());
+
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
         if (response.getStatus()<300) {
+            JsonObject recordObj = new JsonParser().parse(value).getAsJsonObject().get("result").getAsJsonObject();
+            record.setCreationDate(Instant.now());
             record.setLastSyncDate(Instant.now());
-            // added new field providersideId for creation of new records as not possible to modify meveo uuid at creation
-            JsonObject serverObj =  (JsonObject) new JsonParser().parse(value).getAsJsonObject().get("result");
-            record.setProviderSideId(serverObj.get("id").getAsString());
+            record.setProviderSideId(recordObj.get("id").getAsString());
+            record.setRecordType(recordObj.get("type").getAsString());
+            record.setName(recordObj.get("name").getAsString());
+            record.setValue(recordObj.get("content").getAsString());
+            record.setProxiable(recordObj.get("proxiable").getAsBoolean());
+            record.setIsLocked(recordObj.get("locked").getAsBoolean());
+
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, record);
+                logger.info("Record : {} successfully created", record.getProviderSideId());
             } catch (Exception e) {
-                logger.error("error updating record {} :{}", record.getUuid(), e.getMessage());
+                logger.error("error creating record {} :{}", record.getUuid(), e.getMessage());
             }
         }
     }

@@ -30,30 +30,33 @@ public class DeleteCloudflareDnsRecord extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION);
+        String action = parameters.get(CONTEXT_ACTION).toString();
         DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
 
         DomainName domainName = record.getDomainName();
-        logger.info("action : {}, domain name uuid : {}", action, domainName.getUuid());
+        String domainNameId = domainName.getUuid();
+        logger.info("action : {}, domain name uuid : {}", action, domainNameId);
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
         } else {
-            logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername()); //Need to verify username
+            logger.info("using credential {} with username {}",credential.getUuid(), credential.getUsername()); //Need to verify username
         }
+
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records/"+record.getProviderSideId());
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainNameId+"/dns_records/"+record.getProviderSideId());
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
+        
         if (response.getStatus()<300) {
-            record.setLastSyncDate(Instant.now()); //TBC - record of when deleted?
+            record.setLastSyncDate(Instant.now());
             logger.info("record {} deleted at: {}", record.getUuid(), record.getLastSyncDate());
             try {
-                crossStorageApi.remove(defaultRepo, record.getUuid(), record.getCetCode()); //TBC 
+                crossStorageApi.remove(defaultRepo, record.getUuid(), record.getCetCode());
             } catch (Exception e) {
                 logger.error("error deleting record {} :{}", record.getUuid(), e.getMessage());
             }

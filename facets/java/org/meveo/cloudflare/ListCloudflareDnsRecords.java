@@ -36,45 +36,52 @@ public class ListCloudflareDnsRecords extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         DomainName domainName = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DomainName.class);
+
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
         } else {
-            logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername());
+            logger.info("using credential {} with username {}",credential.getUuid(), credential.getUsername());
         }
+        
+        String domainNameId = domainName.getUuid();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainName.getUuid()+"/dns_records");
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainNameId+"/dns_records");
         Response response = CredentialHelperService.setCredential(target.request(), credential).get();
         String value = response.readEntity(String.class);
-        ArrayList<String> nonImportedRecords = new ArrayList<String>();
         logger.info("response :", value);
         logger.debug("response status : {}", response.getStatus());
+        parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
+        
+        ArrayList<String> nonImportedRecords = new ArrayList<String>();
         if (response.getStatus() < 300) {
             JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("result").getAsJsonArray();
             for (JsonElement element : rootArray) {
-                JsonObject serverObj = element.getAsJsonObject();
+                JsonObject recordObj = element.getAsJsonObject();
                 DnsRecord record = new DnsRecord();
                 record.setDomainName(domainName);
-                String type = serverObj.get("type").getAsString();
-                String name = serverObj.get("name").getAsString();
+                String type = recordObj.get("type").getAsString();
+                String name = recordObj.get("name").getAsString();
                 if (("A".equals(type) || "CNAME".equals(type)) && name.startsWith("dev-")) { // also has AAAA, see dev-meveo.webdrone.fr
                     record.setRecordType(type);
-                    record.setTtl(serverObj.get("ttl").getAsLong());
+                    record.setTtl(recordObj.get("ttl").getAsLong());
                     record.setName(name);
-                    record.setValue(serverObj.get("content").getAsString());
+                    record.setValue(recordObj.get("content").getAsString());
                     record.setLastSyncDate(Instant.now());
-                    record.setUuid(serverObj.get("id").getAsString());
-                    record.setProviderSideId(serverObj.get("id").getAsString());
-                    record.setProxied(serverObj.get("proxied").getAsBoolean());
-                    logger.info("record :{} {} {}", record.getRecordType(),record.getName(),record.getValue());
+                    record.setUuid(recordObj.get("id").getAsString());
+                    record.setProviderSideId(recordObj.get("id").getAsString());
+                    record.setProxied(recordObj.get("proxied").getAsBoolean());
+                    record.setIsLocked(recordObj.get("locked").getAsBoolean());
+                    record.setProxiable(recordObj.get("proxiable").getAsBoolean());
+
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, record);
+                        logger.info("record : {} with address {} successfully retrieved", record.getRecordType(), record.getValue());
                     } catch (Exception e) {
-                        logger.error("error creating record {} :{}", record.getUuid(), e.getMessage());
+                        logger.error("error retrieving record {} : {}", record.getProviderSideId(), e.getMessage());
                     }
                 } else {
-                    //TODO notify of non imported records
                     if (name.startsWith("dev-")) {
                         nonImportedRecords.add(name + ": "+ type);
                     }

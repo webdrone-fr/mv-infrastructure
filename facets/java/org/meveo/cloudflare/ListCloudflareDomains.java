@@ -33,12 +33,14 @@ public class ListCloudflareDomains extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         ServiceProvider registrar = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "CLOUDFLARE").getResult();
+
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+CLOUDFLARE_URL);
         } else {
             logger.info("using credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
+        
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         // Cloudflare Zone: A Zone is a domain name along with its subdomains and other identities
@@ -47,6 +49,7 @@ public class ListCloudflareDomains extends Script {
         String value = response.readEntity(String.class);
         logger.info("response : " + value);
         logger.debug("response status : {}", response.getStatus());
+
         if (response.getStatus() < 300) {
             JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("result").getAsJsonArray();
             for (JsonElement element : rootArray) {
@@ -60,13 +63,14 @@ public class ListCloudflareDomains extends Script {
                 domainName.setLastUpdate(OffsetDateTime.parse(serverObj.get("modified_on").getAsString()).toInstant());
                 String tld = StringUtils.split(serverObj.get("name").getAsString(), ".")[1];
                 domainName.setTld(tld);
-                logger.info("domain name:{}", domainName.getName());
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, domainName);
+                    logger.info("Domain : {} successfully created", domainName.getName());
                 } catch (Exception e) {
                     logger.error("Error creating domainName {} : {}", domainName.getUuid(), e.getMessage());
                 }
             }
+            response.close();
         }
     }
 }
