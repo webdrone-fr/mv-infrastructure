@@ -21,21 +21,27 @@ public class DnsRecord implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String providerSideId;
+
     private String recordType;
 
     private DomainName domainName;
+
+    private Boolean isLocked;
 
     private String name;
 
     private Instant lastSyncDate;
 
+    private Boolean proxied;
+
+    private Instant creationDate;
+
+    private Boolean proxiable;
+
     private Long ttl;
 
     private String value;
-
-    private String providerSideId;
-
-    private Boolean proxied;
 
     @Override()
     public String getUuid() {
@@ -54,6 +60,14 @@ public class DnsRecord implements CustomEntity {
         this.storages = storages;
     }
 
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
+    }
+
     public String getRecordType() {
         return recordType;
     }
@@ -68,6 +82,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setDomainName(DomainName domainName) {
         this.domainName = domainName;
+    }
+
+    public Boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
     }
 
     public String getName() {
@@ -86,6 +108,30 @@ public class DnsRecord implements CustomEntity {
         this.lastSyncDate = lastSyncDate;
     }
 
+    public Boolean getProxied() {
+        return proxied;
+    }
+
+    public void setProxied(Boolean proxied) {
+        this.proxied = proxied;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Boolean getProxiable() {
+        return proxiable;
+    }
+
+    public void setProxiable(Boolean proxiable) {
+        this.proxiable = proxiable;
+    }
+
     public Long getTtl() {
         return ttl;
     }
@@ -100,22 +146,6 @@ public class DnsRecord implements CustomEntity {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    public String getProviderSideId() {
-        return providerSideId;
-    }
-
-    public void setProviderSideId(String providerSideId) {
-        this.providerSideId = providerSideId;
-    }
-
-    public Boolean getProxied() {
-        return proxied;
-    }
-
-    public void setProxied(Boolean proxied) {
-        this.proxied = proxied;
     }
 
     @Override()
