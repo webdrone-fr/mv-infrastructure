@@ -14,7 +14,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.SecurityGroup;
-// import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.Server;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -33,7 +33,7 @@ public class ListScalewaySecurityGroups extends Script {
     static final private String BASE_PATH = "/instance/v1/zones/";
 
     @Override
-    public void execute(Map<String, Object> parameters) throws BusinessException{
+    public void execute(Map<String, Object> parameters) throws BusinessException {
         
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -74,27 +74,24 @@ public class ListScalewaySecurityGroups extends Script {
                     securityGroup.setZone(zone);
 
                     // Servers
-                    JsonArray serversArr = secGroupObj.get("servers").getAsJsonArray();
-                    // ArrayList<Server> serversList = new ArrayList<Server>();
-                    ArrayList<String> serversList = new ArrayList<String>();
-                    for (JsonElement serverEl : serversArr) {
-                        JsonObject serverObj = serverEl.getAsJsonObject();
-                        String serverId = serverObj.get("id").getAsString();
-                        serversList.add(serverId);
-                        // try {
-                        //     Server server = crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult();
-                        //     serversList.add(server);
-                        // } catch (Exception ex) {
-                        //     logger.info("Unable to find server : {}, Error : ", serverId, ex.getMessage());
-                        //     parameters.put(RESULT_GUI_MESSAGE, "Server not found : "+serverId);
-                        // }
+                    if(!secGroupObj.get("servers").isJsonNull()) {
+                        JsonArray serversArr = secGroupObj.get("servers").getAsJsonArray();
+                        ArrayList<String> servers = new ArrayList<String>();
+                        for (JsonElement serverEl : serversArr) {
+                            JsonObject serverObj = serverEl.getAsJsonObject();
+                            String serverId = serverObj.get("id").getAsString();
+                            String serverInstanceName = serverObj.get("name").getAsString();
+                            if(serverInstanceName.startsWith("dev-") && crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
+                                servers.add(serverId);
+                            }
+                        }
+                        securityGroup.setServers(servers);
                     }
-                    securityGroup.setServers(serversList);
 
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
                     } catch (Exception e) {
-                        logger.error("Error creating Security Group {} : {}", securityGroup.getName(), e.getMessage());
+                        logger.error("Error retrieving Security Group {} : {}", securityGroup.getName(), e.getMessage());
                     }
                 }
             }
