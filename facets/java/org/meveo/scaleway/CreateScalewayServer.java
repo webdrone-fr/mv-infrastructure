@@ -171,6 +171,7 @@ public class CreateScalewayServer extends Script {
                         ServerVolume rootVolume = new ServerVolume();
                         rootVolume.setCreationDate(OffsetDateTime.parse(serverRootVolumeObj.get("creation_date").getAsString()).toInstant());
                         rootVolume.setLastUpdated(OffsetDateTime.parse(serverRootVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
+                        rootVolume.setUuid(serverRootVolumeObj.get("id").getAsString());
                         rootVolume.setProviderSideId(serverRootVolumeObj.get("id").getAsString());
                         rootVolume.setName(serverRootVolumeObj.get("name").getAsString());
                         rootVolume.setState(serverRootVolumeObj.get("state").getAsString());

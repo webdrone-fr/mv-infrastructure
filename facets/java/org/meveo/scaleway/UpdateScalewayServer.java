@@ -53,7 +53,7 @@ public class UpdateScalewayServer extends Script {
         
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
-        logger.info("action : {}, server uuid : {}", action, serverId);
+        logger.info("action : {}, server ID : {}", action, serverId);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
