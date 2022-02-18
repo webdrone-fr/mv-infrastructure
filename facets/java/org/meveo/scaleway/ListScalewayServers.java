@@ -100,8 +100,12 @@ public class ListScalewayServers extends Script {
                         // Image
                         if(!serverObj.get("image").isJsonNull()) {
                             String imageId = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                            ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
-                            server.setImage(image);
+                            try {
+                                ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
+                                server.setImage(image);
+                            } catch (Exception e) {
+                                logger.error("Error retrieving Server Image : {}", imageId, e.getMessage());
+                            }
                         }
 
                         // Volumes

@@ -61,7 +61,7 @@ public class CreateScalewayServer extends Script {
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
-            logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername());
+            logger.info("using credential {} with username {}", credential.getDomainName(), credential.getUsername());
         }
 
         // Server Availability for all server types in zone - possible values include available, scarce and shortage
@@ -82,7 +82,7 @@ public class CreateScalewayServer extends Script {
 
         Map<String, Object> body = new HashMap<String, Object>();
         body.put("name", server.getInstanceName());// required
-        body.put("dynamic_ip_required", server.getDynamicIpRequired()); // nullable, default to false
+        body.put("dynamic_ip_required", server.getDynamicIpRequired()); // nullable, default to true
         body.put("commercial_type", server.getServerType()); // required
         body.put("enable_ipv6", server.getEnableIPvSix()); // default to true
         body.put("boot_type", server.getBootType()); // From List of values, includes local, bootscript, rescue -> default is local

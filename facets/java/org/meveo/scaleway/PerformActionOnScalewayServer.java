@@ -1,13 +1,10 @@
 package org.meveo.scaleway;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -20,6 +17,7 @@ import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerAction;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
@@ -42,7 +40,6 @@ public class PerformActionOnScalewayServer extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = parameters.get("action").toString(); // Possible values include poweron, backup, stop_in_place, poweroff, terminate and reboot - default is poweron
-        logger.debug("ACTION TO PERFORM : {}", action);
         ScalewayServer server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
         List<String> allowedServerActions = server.getServerActions();
 
@@ -56,7 +53,7 @@ public class PerformActionOnScalewayServer extends Script {
 
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
-        logger.info("Performing {} on server with uuid : {}", action,  serverId);
+        logger.info("Performing {} on server : {}", action,  serverId);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -70,23 +67,7 @@ public class PerformActionOnScalewayServer extends Script {
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/action");
 
         Map <String, Object> body = new HashMap<String, Object>();
-        // Get latest server details
-        // Boolean actionComplete = false;
 
-        // do {
-        //     // request server details
-        //     // check if status == expected outcome of action
-        //     // wait delay
-        //     // change actionCompleted to true
-        // }
-        // while (actionComplete == false);
-
-        // Server status
-        // String serverStatus = server.getStatus(); // possible values include running, stopped, stopped in place, starting, stopping and locked
-        String serverChangingStatus;
-        String serverExpectedStatus;
-
-        
         // Server Type Constraints Check
         String serverType = server.getServerType();
         // Add up sizes of root volume + all additional volumes
@@ -99,7 +80,6 @@ public class PerformActionOnScalewayServer extends Script {
         Long serverMaxVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("max_size").getAsLong();
 
         // Action Conditions
-        logger.info("ACTION : {}",action);
         // Block volumes are only available for DEV1, GP1 and RENDER offers
         if (action.equalsIgnoreCase("poweron")) {
             // Check if available volume size meets requirements for server type
@@ -115,29 +95,12 @@ public class PerformActionOnScalewayServer extends Script {
             } else {
                 logger.info("Server Total Volume size : {}; Min Total Volume size : {}; Max Total Volume Size : {}", serverTotalVolumesSizesStr, serverMinVolumeSizeReqStr, serverMaxVolumeSizeReqStr);
             }
-            serverChangingStatus = "starting";
-            serverExpectedStatus = "running";
-        } else if (action.equalsIgnoreCase("poweroff")) {
-            // When a server is powered off, only its volumes and any reserved flexible IP address are billed.
-            // Check if volumes still attached to server
-            if(server.getRootVolume() != null || server.getAdditionalVolumes() != null) {
-                // Notify of billing condition
-            }
-            serverChangingStatus = "stopping";
-            serverExpectedStatus = "stopped";
         } else if (action.equalsIgnoreCase("backup")) {
             // If action is backup - check for name of Backup to be created
             if (server.getBackupName() != null) { // nullable
                 String backupName = server.getBackupName();
                 body.put("name", backupName);
             }
-            serverExpectedStatus = "running";
-        } else if (action.equalsIgnoreCase("stop_in_place")) {
-            serverChangingStatus = "stopping";
-            serverExpectedStatus = "stopped in place";
-        } else if (action.equalsIgnoreCase("terminate")) {
-            // when terminating a server, all the attached volumes (local and block storage) are deleted
-            // check if user wants to keep volumes or delete them
         }
         body.put("action", action);
         
@@ -147,6 +110,7 @@ public class PerformActionOnScalewayServer extends Script {
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
+
         if (response.getStatus() < 300) {
             server.setLastUpdate(Instant.now());
             JsonObject serverActionObj = new JsonParser().parse(value).getAsJsonObject().get("task").getAsJsonObject();
@@ -154,11 +118,15 @@ public class PerformActionOnScalewayServer extends Script {
             serverAction.setUuid(serverActionObj.get("id").getAsString());
             serverAction.setProviderSideId(serverActionObj.get("id").getAsString());
             serverAction.setServer(server);
+            // Provider
+            String providerId = server.getProvider().getUuid();
+            try {
+                ServiceProvider provider = crossStorageApi.find(defaultRepo, providerId, ServiceProvider.class);
+                serverAction.setProvider(provider);
+            } catch(Exception e) {
+                logger.error("Error retriving server provider : {}", providerId, e.getMessage());
+            }
             serverAction.setCreationDate(OffsetDateTime.parse(serverActionObj.get("started_at").getAsString()).toInstant());
-            // Duration timeElapsed = Duration.between(
-            //     OffsetDateTime.parse(serverActionObj.get("creation_date").getAsString()).toInstant(),
-            //     OffsetDateTime.parse(serverActionObj.get("terminated_at").getAsString()).toInstant()); //will need to be updated with job until terminated
-            // serverAction.setElapsedTimeMs(timeElapsed.toMillis());
             serverAction.setResponse(serverActionObj.get("status").getAsString());
             serverAction.setResponseStatus(String.valueOf(response.getStatus()));
             serverAction.setAction(action);
@@ -169,23 +137,5 @@ public class PerformActionOnScalewayServer extends Script {
             }
             response.close();
         }
-    }
-
-    public static String getActionComplete(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository repo, Credential credential) throws BusinessException {
-        String zone = server.getZone();
-        String serverId = server.getProviderSideId();
-        String serverCurrentStatus = server.getStatus();
-
-        Client client = ClientBuilder.newClient();
-        client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
-        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
-        String value = response.readEntity(String.class);
-        if (response.getStatus() < 300) {
-            JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
-            serverCurrentStatus = serverObj.get("state").getAsString();
-        }
-        response.close();
-        return serverCurrentStatus;
     }
 }
