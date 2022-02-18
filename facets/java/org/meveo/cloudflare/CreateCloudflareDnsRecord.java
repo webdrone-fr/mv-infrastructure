@@ -1,6 +1,6 @@
 package org.meveo.cloudflare;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,25 +36,49 @@ public class CreateCloudflareDnsRecord extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = parameters.get(CONTEXT_ACTION).toString();
-        DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
-        InetAddressValidator ipValidator = InetAddressValidator.getInstance();
 
-        if (record.getDomainName()==null) {
-            throw new BusinessException("Invalid Record Domain");
-        } else if (record.getRecordType()==null) {
-            throw new BusinessException("Invalid Record Type");
-        } else if (record.getName()==null || record.getName().isEmpty()) {
-            throw new BusinessException("Invalid Record Name");
-        } else if (record.getValue()==null || record.getValue().isEmpty()) {
-            throw new BusinessException("Invalid Record Value");
-        } else if (!ipValidator.isValidInet4Address(record.getValue())) {
-            throw new BusinessException("Invalid Record IP provided");
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        DnsRecord record;
+        String domainNameId = "webdrone.fr";
+
+        if (parameters.get(CONTEXT_ACTION) != null) {
+        
+            String action = parameters.get(CONTEXT_ACTION).toString();
+            record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
+            InetAddressValidator ipValidator = InetAddressValidator.getInstance();
+
+            if (record.getDomainName()==null) {
+                throw new BusinessException("Invalid Record Domain");
+            } else if (record.getRecordType()==null) {
+                throw new BusinessException("Invalid Record Type");
+            } else if (record.getName()==null || record.getName().isEmpty()) {
+                throw new BusinessException("Invalid Record Name");
+            } else if (record.getValue()==null || record.getValue().isEmpty()) {
+                throw new BusinessException("Invalid Record Value");
+            } else if (!ipValidator.isValidInet4Address(record.getValue())) {
+                throw new BusinessException("Invalid Record IP provided");
+            }
+
+            DomainName domainName = record.getDomainName();
+            domainNameId = domainName.getUuid();
+            logger.info("action : {}, domain name uuid : {}", action, domainNameId);
+
+        } else {
+            record = new DnsRecord();
+            // record.setDomainName(parameters.get("domain"));
+            record.setRecordType(parameters.get("recordType").toString());
+            record.setName(parameters.get("name").toString());
+            record.setValue(parameters.get("value").toString());
+            record.setTtl(Long.valueOf(parameters.get("ttl").toString()));
+            if(parameters.get("priority") != null) {
+                // record.setPriority(Long.valueOf(parameters.get("priority").toString()));
+            }
+            if(parameters.get("proxied")!= null) {
+                record.setProxied(Boolean.valueOf(parameters.get("isProxied").toString()));
+            }
         }
 
-        DomainName domainName = record.getDomainName();
-        String domainNameId = domainName.getUuid();
-        logger.info("action : {}, domain name uuid : {}", action, domainNameId);
 
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
@@ -63,16 +87,16 @@ public class CreateCloudflareDnsRecord extends Script {
             logger.info("Using Credential {} with username {}", credential.getDomainName(), credential.getUsername());
         }
 
-        Client client = ClientBuilder.newClient();
-        client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainNameId+"/dns_records");
-
         Map<String, Object> body = new HashMap<String, Object>();
+
         body.put("type", record.getRecordType());
         body.put("name", record.getName());
         body.put("content", record.getValue());
         body.put("ttl", String.valueOf(record.getTtl()));
         body.put("proxied", record.getProxied()); // default false
+
+        WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainNameId+"/dns_records");
+
 
         String resp = JacksonUtil.toStringPrettyPrinted(body);
 
@@ -87,8 +111,8 @@ public class CreateCloudflareDnsRecord extends Script {
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
         if (response.getStatus()<300) {
             JsonObject recordObj = new JsonParser().parse(value).getAsJsonObject().get("result").getAsJsonObject();
-            record.setCreationDate(Instant.now());
-            record.setLastSyncDate(Instant.now());
+            record.setCreationDate(OffsetDateTime.parse(recordObj.get("created_on").getAsString()).toInstant());
+            record.setLastSyncDate(OffsetDateTime.parse(recordObj.get("modified_on").getAsString()).toInstant());
             record.setProviderSideId(recordObj.get("id").getAsString());
             record.setRecordType(recordObj.get("type").getAsString());
             record.setName(recordObj.get("name").getAsString());
