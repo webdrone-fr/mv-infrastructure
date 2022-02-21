@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "keyName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Key Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_keyName",
+            "title": "Server.keyName",
+            "type": "string",
+            "maxLength": 255
+        },
         "sergentUrl": {
             "storages": ["SQL"],
             "nullable": true,
@@ -60,6 +71,23 @@
             "id": "CE_Server_creationDate",
             "title": "Server.creationDate",
             "type": "string"
+        },
+        "networks": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Networks",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_networks",
+            "title": "Server.networks",
+            "type": "array",
+            "items": {
+                "id": "CE_Server_networks_item",
+                "title": "Server.networks item",
+                "type": "string",
+                "maxLength": 255
+            }
         },
         "volumeSize": {
             "storages": ["SQL"],
@@ -134,6 +162,39 @@
             "versionable": false,
             "id": "CE_Server_serverType",
             "title": "Server.serverType",
+            "type": "string",
+            "maxLength": 255
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_name",
+            "title": "Server.name",
+            "type": "string",
+            "maxLength": 255
+        },
+        "flavorRef": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Flavor Ref",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_flavorRef",
+            "title": "Server.flavorRef",
+            "type": "string",
+            "maxLength": 255
+        },
+        "imageRef": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Image Ref",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_imageRef",
+            "title": "Server.imageRef",
             "type": "string",
             "maxLength": 255
         },

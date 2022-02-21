@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
+import java.util.ArrayList;
 import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,11 +26,15 @@ public class Server implements CustomEntity {
 
     private String instanceName;
 
+    private String keyName;
+
     private String sergentUrl;
 
     private String publicIp;
 
     private Instant creationDate;
+
+    private List<String> networks = new ArrayList<>();
 
     private String volumeSize;
 
@@ -44,6 +49,12 @@ public class Server implements CustomEntity {
     private String organization;
 
     private String serverType;
+
+    private String name;
+
+    private String flavorRef;
+
+    private String imageRef;
 
     private String status;
 
@@ -80,6 +91,14 @@ public class Server implements CustomEntity {
         this.instanceName = instanceName;
     }
 
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
+
     public String getSergentUrl() {
         return sergentUrl;
     }
@@ -102,6 +121,14 @@ public class Server implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<String> getNetworks() {
+        return networks;
+    }
+
+    public void setNetworks(List<String> networks) {
+        this.networks = networks;
     }
 
     public String getVolumeSize() {
@@ -158,6 +185,30 @@ public class Server implements CustomEntity {
 
     public void setServerType(String serverType) {
         this.serverType = serverType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFlavorRef() {
+        return flavorRef;
+    }
+
+    public void setFlavorRef(String flavorRef) {
+        this.flavorRef = flavorRef;
+    }
+
+    public String getImageRef() {
+        return imageRef;
+    }
+
+    public void setImageRef(String imageRef) {
+        this.imageRef = imageRef;
     }
 
     public String getStatus() {
