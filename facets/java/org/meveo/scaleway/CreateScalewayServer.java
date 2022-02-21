@@ -1,6 +1,5 @@
 package org.meveo.scaleway;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,8 +135,8 @@ public class CreateScalewayServer extends Script {
             JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
             
             // Default server values
-            server.setCreationDate(Instant.now());
-            server.setLastUpdate(Instant.now());
+            server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
+            server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
             server.setProviderSideId(serverObj.get("id").getAsString());
             server.setInstanceName(serverObj.get("name").getAsString());
             server.setServerType(serverObj.get("commercial_type").getAsString());

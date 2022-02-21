@@ -2,6 +2,7 @@ package org.meveo.scaleway;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -45,12 +46,14 @@ public class CheckScalewayServerActionStatus extends Script{
 
         String actionId = action.getProviderSideId();
         String serverId = action.getServer().getUuid();
+        Server server = null;
         String zone = null;
         try {
-            Server server = crossStorageApi.find(defaultRepo, serverId, Server.class);
+            server = crossStorageApi.find(defaultRepo, serverId, Server.class);
             zone = server.getZone();
         } catch (Exception e) {
             logger.error("Error retrieving server : {}", serverId, e.getMessage());
+            throw new BusinessException("Action notServer does not exist");
         }
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -81,6 +84,10 @@ public class CheckScalewayServerActionStatus extends Script{
                     actionComplete = true;
                 } else {
                     action.setProgress(taskObj.get("progress").getAsLong());
+                    action.setResponse(taskObj.get("status").getAsString());
+                    if(action.getResponse().equalsIgnoreCase("failure")) {
+                        throw new BusinessException("Task failed");
+                    }
                 }
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, action);
@@ -90,5 +97,36 @@ public class CheckScalewayServerActionStatus extends Script{
             }
             response.close();
         } while (actionComplete != true);
+
+        if (action.getResponse().equalsIgnoreCase("success")) {
+            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetailsAfterSuccessfulAction(zone, serverId, crossStorageApi, defaultRepo, credential);
+            switch (action.getAction()) {
+                case "poweron": 
+                    // Public Ip
+                    if(!serverDetailsObj.get("public_ip").isJsonNull()){
+                        server.setPublicIp(serverDetailsObj.get("public_ip").getAsString());
+                    }
+                    // Server Actions
+                    JsonArray allowedActions = serverDetailsObj.get("allowed_actions").getAsJsonArray();
+                    ArrayList<String> serverActions = new ArrayList<String>();
+                    for (JsonElement allowedAction : allowedActions) {
+                        serverActions.add(allowedAction.getAsString());
+                    }
+                    server.setServerActions(serverActions);
+                    server.setStatus("running");
+                    break;
+                case "poweroff":
+                    server.setStatus("stopped");
+                    break;
+                case "stop_in_place":
+                    server.setStatus("stopped in place");
+                    break;
+            }
+            try{
+                crossStorageApi.createOrUpdate(defaultRepo, server);
+            } catch(Exception e){
+                logger.error("Error updating server after action", e.getMessage());
+            }
+        }
     }
 }

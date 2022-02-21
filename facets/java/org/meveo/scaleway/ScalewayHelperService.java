@@ -124,4 +124,22 @@ public class ScalewayHelperService extends Script{
         response.close();
         return serverUserDataObj;
     }
+
+    public static JsonObject getServerDetailsAfterSuccessfulAction(String zone, String serverId, CrossStorageApi crossStorageApi, Repository defaultRepo, Credential credential) throws BusinessException {
+        JsonObject serverDetailsObj = new JsonObject();
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
+        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+        String value = response.readEntity(String.class);
+
+        if(response.getStatus()<300) {
+            serverDetailsObj = new JsonParser().parse(value).getAsJsonObject();
+        } else {
+            throw new BusinessException("Error retrieving Server : "+serverId);
+        }
+        response.close();
+        return serverDetailsObj;
+    }
 }

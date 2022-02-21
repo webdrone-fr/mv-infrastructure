@@ -2,6 +2,7 @@ package org.meveo.cloudflare;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -16,6 +17,7 @@ import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.DnsRecord;
 import org.meveo.model.customEntities.DomainName;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
@@ -66,19 +68,36 @@ public class CreateCloudflareDnsRecord extends Script {
 
         } else {
             record = new DnsRecord();
-            // record.setDomainName(parameters.get("domain"));
+            try {
+                String providerId = parameters.get("providerId").toString();
+                ServiceProvider provider = crossStorageApi.find(defaultRepo, providerId, ServiceProvider.class);
+                List<DomainName> providerDomainNames = crossStorageApi.find(defaultRepo, DomainName.class).by("registrar", provider).getResults();
+                for (DomainName domainName : providerDomainNames) {
+                    if(domainNameId.equals(domainName.getName())) {
+                        record.setDomainName(domainName);
+                    }
+                }
+            } catch(Exception e) {
+                logger.error("Error retrieving domain name", e.getMessage());
+            }
+            
+            // try {
+            //     DomainName domainName = crossStorageApi.find(defaultRepo, DomainName.class).by("name", domainNameId).getResult();
+            //     record.setDomainName(domainName);
+            // } catch (Exception e){
+            //     logger.error("Error retrieving domain name", e.getMessage());
+            // }
             record.setRecordType(parameters.get("recordType").toString());
             record.setName(parameters.get("name").toString());
             record.setValue(parameters.get("value").toString());
             record.setTtl(Long.valueOf(parameters.get("ttl").toString()));
-            if(parameters.get("priority") != null) {
-                // record.setPriority(Long.valueOf(parameters.get("priority").toString()));
+            if(parameters.get("priority") != null) { // optional
+                record.setPriority(Long.valueOf(parameters.get("priority").toString()));
             }
-            if(parameters.get("proxied")!= null) {
+            if(parameters.get("proxied")!= null) { // optional
                 record.setProxied(Boolean.valueOf(parameters.get("isProxied").toString()));
             }
         }
-
 
         Credential credential = CredentialHelperService.getCredential(CLOUDFLARE_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
@@ -95,15 +114,15 @@ public class CreateCloudflareDnsRecord extends Script {
         body.put("ttl", String.valueOf(record.getTtl()));
         body.put("proxied", record.getProxied()); // default false
 
+        if(record.getPriority()!=null){
+            body.put("priority", record.getPriority());
+        }
+
         WebTarget target = client.target("https://"+CLOUDFLARE_URL+"/zones/"+domainNameId+"/dns_records");
-
-
         String resp = JacksonUtil.toStringPrettyPrinted(body);
-
         Response response = 
             CredentialHelperService.setCredential(target.request("application/json"), credential)
                 .post(Entity.json(resp));
-
         String value = response.readEntity(String.class);
         logger.info("response  :" + value);
         logger.debug("response status : {}", response.getStatus());

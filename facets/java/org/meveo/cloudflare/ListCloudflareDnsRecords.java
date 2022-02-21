@@ -1,6 +1,6 @@
 package org.meveo.cloudflare;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -68,12 +68,14 @@ public class ListCloudflareDnsRecords extends Script {
                     record.setTtl(recordObj.get("ttl").getAsLong());
                     record.setName(name);
                     record.setValue(recordObj.get("content").getAsString());
-                    record.setLastSyncDate(Instant.now());
+                    record.setCreationDate(OffsetDateTime.parse(recordObj.get("created_on").getAsString()).toInstant());
+                    record.setLastSyncDate(OffsetDateTime.parse(recordObj.get("modified_on").getAsString()).toInstant());
                     record.setUuid(recordObj.get("id").getAsString());
                     record.setProviderSideId(recordObj.get("id").getAsString());
                     record.setProxied(recordObj.get("proxied").getAsBoolean());
                     record.setIsLocked(recordObj.get("locked").getAsBoolean());
                     record.setProxiable(recordObj.get("proxiable").getAsBoolean());
+                    
 
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, record);

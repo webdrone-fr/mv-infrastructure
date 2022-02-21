@@ -1,6 +1,6 @@
 package org.meveo.cloudflare;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +86,9 @@ public class UpdateCloudflareDnsRecord extends Script {
         if (response.getStatus()<300) {
             JsonObject recordObj = new JsonParser().parse(value).getAsJsonObject().get("result").getAsJsonObject();
 
-            record.setLastSyncDate(Instant.now());
+            record.setCreationDate(OffsetDateTime.parse(recordObj.get("created_on").getAsString()).toInstant());
+            record.setLastSyncDate(OffsetDateTime.parse(recordObj.get("modified_on").getAsString()).toInstant());
+            record.setName(recordObj.get("name").getAsString());
             record.setRecordType(recordObj.get("type").getAsString());
             record.setValue(recordObj.get("content").getAsString());
             record.setTtl(recordObj.get("ttl").getAsLong());

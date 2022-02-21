@@ -1,6 +1,5 @@
 package org.meveo.scaleway;
 
-import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +80,7 @@ public class PerformActionOnScalewayServer extends Script {
 
         // Action Conditions
         // Block volumes are only available for DEV1, GP1 and RENDER offers
-        if (action.equalsIgnoreCase("poweron")) {
+        if (action.equalsIgnoreCase("poweron") || action.equalsIgnoreCase("reboot")) {
             // Check if available volume size meets requirements for server type
             String serverTotalVolumesSizesStr = Long.toString(serverTotalVolumesSizes);
             String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
@@ -112,7 +111,6 @@ public class PerformActionOnScalewayServer extends Script {
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
 
         if (response.getStatus() < 300) {
-            server.setLastUpdate(Instant.now());
             JsonObject serverActionObj = new JsonParser().parse(value).getAsJsonObject().get("task").getAsJsonObject();
             ServerAction serverAction = new ServerAction();
             serverAction.setUuid(serverActionObj.get("id").getAsString());
@@ -123,8 +121,8 @@ public class PerformActionOnScalewayServer extends Script {
             try {
                 ServiceProvider provider = crossStorageApi.find(defaultRepo, providerId, ServiceProvider.class);
                 serverAction.setProvider(provider);
-            } catch(Exception e) {
-                logger.error("Error retriving server provider : {}", providerId, e.getMessage());
+            } catch (Exception e) {
+                logger.error("Error retrieving server provider : {}", providerId, e.getMessage());
             }
             serverAction.setCreationDate(OffsetDateTime.parse(serverActionObj.get("started_at").getAsString()).toInstant());
             serverAction.setResponse(serverActionObj.get("status").getAsString());
