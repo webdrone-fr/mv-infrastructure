@@ -14,7 +14,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerAction;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
@@ -46,14 +46,14 @@ public class CheckScalewayServerActionStatus extends Script{
 
         String actionId = action.getProviderSideId();
         String serverId = action.getServer().getUuid();
-        Server server = null;
+        ScalewayServer server = null;
         String zone = null;
         try {
-            server = crossStorageApi.find(defaultRepo, serverId, Server.class);
+            server = crossStorageApi.find(defaultRepo, serverId, ScalewayServer.class);
             zone = server.getZone();
         } catch (Exception e) {
             logger.error("Error retrieving server : {}", serverId, e.getMessage());
-            throw new BusinessException("Action notServer does not exist");
+            throw new BusinessException("Server not found");
         }
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -82,12 +82,12 @@ public class CheckScalewayServerActionStatus extends Script{
                     action.setElapsedTimeMs(timeElapsed.toMillis());
                     action.setProgress(taskObj.get("progress").getAsLong());
                     actionComplete = true;
+                    parameters.put(RESULT_GUI_MESSAGE, "Action :"+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
+                } else if (action.getResponse().equalsIgnoreCase("failure")) {
+                    throw new BusinessException("Task failed");
                 } else {
                     action.setProgress(taskObj.get("progress").getAsLong());
                     action.setResponse(taskObj.get("status").getAsString());
-                    if(action.getResponse().equalsIgnoreCase("failure")) {
-                        throw new BusinessException("Task failed");
-                    }
                 }
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, action);
@@ -99,32 +99,86 @@ public class CheckScalewayServerActionStatus extends Script{
         } while (actionComplete != true);
 
         if (action.getResponse().equalsIgnoreCase("success")) {
-            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetailsAfterSuccessfulAction(zone, serverId, crossStorageApi, defaultRepo, credential);
+            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetailsAfterSuccessfulAction(zone, server.getProviderSideId(), crossStorageApi, defaultRepo, credential);
+            // Values to update
+            // Default Server values
+            String publicIp = null;
+            JsonArray allowedActions = new JsonArray();
+            ArrayList<String> serverActions = new ArrayList<String>();
+            String location = null;
+            // Scaleway specific values
+            String privateIp = null;
+            String ipVSix = null;
+            String status = null;
+
             switch (action.getAction()) {
                 case "poweron": 
                     // Public Ip
                     if(!serverDetailsObj.get("public_ip").isJsonNull()){
-                        server.setPublicIp(serverDetailsObj.get("public_ip").getAsString());
+                        publicIp = serverDetailsObj.get("public_ip").getAsJsonObject().get("address").getAsString();
                     }
                     // Server Actions
-                    JsonArray allowedActions = serverDetailsObj.get("allowed_actions").getAsJsonArray();
-                    ArrayList<String> serverActions = new ArrayList<String>();
+                    allowedActions = serverDetailsObj.get("allowed_actions").getAsJsonArray();
                     for (JsonElement allowedAction : allowedActions) {
                         serverActions.add(allowedAction.getAsString());
                     }
-                    server.setServerActions(serverActions);
-                    server.setStatus("running");
+                    // Location
+                    if (!serverDetailsObj.get("location").isJsonNull()) {
+                        JsonObject locationObj = serverDetailsObj.get("location").getAsJsonObject();
+                        String zone_id = locationObj.get("zone_id").getAsString();
+                        String platform_id = locationObj.get("platform_id").getAsString();
+                        String cluster_id = locationObj.get("cluster_id").getAsString();
+                        String hypervisor_id = locationObj.get("hypervisor_id").getAsString();
+                        String node_id = locationObj.get("node_id").getAsString();
+                        location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
+                    }
+                    privateIp = serverDetailsObj.get("private_ip").getAsString();
+                    ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                    status = "running";
                     break;
                 case "poweroff":
-                    server.setStatus("stopped");
+                    // Server Actions
+                    allowedActions = serverDetailsObj.get("allowed_actions").getAsJsonArray();
+                    for (JsonElement allowedAction : allowedActions) {
+                        serverActions.add(allowedAction.getAsString());
+                    }
+                    status = "stopped";
                     break;
                 case "stop_in_place":
-                    server.setStatus("stopped in place");
+                    // Public Ip
+                    if(!serverDetailsObj.get("public_ip").isJsonNull()){
+                        publicIp = serverDetailsObj.get("public_ip").getAsJsonObject().get("address").getAsString();
+                    }
+                    // Server Actions
+                    allowedActions = serverDetailsObj.get("allowed_actions").getAsJsonArray();
+                    for (JsonElement allowedAction : allowedActions) {
+                        serverActions.add(allowedAction.getAsString());
+                    }
+                    // Location
+                    if (!serverDetailsObj.get("location").isJsonNull()) {
+                        JsonObject locationObj = serverDetailsObj.get("location").getAsJsonObject();
+                        String zone_id = locationObj.get("zone_id").getAsString();
+                        String platform_id = locationObj.get("platform_id").getAsString();
+                        String cluster_id = locationObj.get("cluster_id").getAsString();
+                        String hypervisor_id = locationObj.get("hypervisor_id").getAsString();
+                        String node_id = locationObj.get("node_id").getAsString();
+                        location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
+                    }
+                    privateIp = serverDetailsObj.get("private_ip").getAsString();
+                    ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                    status = "stopped in place";
                     break;
             }
-            try{
+            server.setLastUpdate(OffsetDateTime.parse(serverDetailsObj.get("modification_date").getAsString()).toInstant());
+            server.setPublicIp(publicIp);
+            server.setServerActions(serverActions);
+            server.setLocation(location);
+            server.setPrivateIp(privateIp);
+            server.setIpVSix(ipVSix);
+            server.setStatus(status);
+            try {
                 crossStorageApi.createOrUpdate(defaultRepo, server);
-            } catch(Exception e){
+            }catch(Exception e){
                 logger.error("Error updating server after action", e.getMessage());
             }
         }

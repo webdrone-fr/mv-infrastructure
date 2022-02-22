@@ -3,6 +3,7 @@ package org.meveo.scaleway;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -73,7 +74,8 @@ public class UpdateScalewayServer extends Script {
         // Can be null when no volumes attached eg at creation
         if (server.getRootVolume() != null) {
             try {
-                ServerVolume rootVolume = crossStorageApi.find(defaultRepo,server.getRootVolume().getUuid(), ServerVolume.class);
+                String rootVolumeId = server.getRootVolume().getUuid();
+                ServerVolume rootVolume = crossStorageApi.find(defaultRepo, rootVolumeId, ServerVolume.class);
                 if (rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
                     serverTotalLocalVolumeSize += Long.valueOf(rootVolume.getSize());
                 }
@@ -85,7 +87,8 @@ public class UpdateScalewayServer extends Script {
                 Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
                 for (int i = 1; i < additionalVolumes.size(); i++) {
                     try {
-                        ServerVolume additionalVolume = crossStorageApi.find(defaultRepo, additionalVolumes.get(String.valueOf(i)).getUuid(), ServerVolume.class);
+                        String additionalVolumeId = additionalVolumes.get(String.valueOf(i)).getUuid();
+                        ServerVolume additionalVolume = crossStorageApi.find(defaultRepo, additionalVolumeId, ServerVolume.class);
                         if (additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
                             serverTotalLocalVolumeSize += Long.valueOf(additionalVolume.getSize());
                         }
@@ -130,18 +133,26 @@ public class UpdateScalewayServer extends Script {
         // Root Volume
         if (server.getRootVolume() != null) {
             Map<String, Object> rootVolume = new HashMap<String, Object>();
-            rootVolume.put("id", server.getRootVolume().getProviderSideId());
-            rootVolume.put("boot", server.getRootVolume().getIsBoot());
-            rootVolume.put("name", server.getRootVolume().getName());
-            volumes.put("0", rootVolume);
+            String serverRootVolumeId = server.getRootVolume().getUuid();
+            try {
+                ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, serverRootVolumeId, ServerVolume.class);
+                rootVolume.put("id", serverRootVolume.getProviderSideId());
+                rootVolume.put("boot", serverRootVolume.getIsBoot());
+                rootVolume.put("name", serverRootVolume.getName());
+                volumes.put("0", rootVolume);
+            } catch (Exception e) {
+                logger.error("Error retrieving server root volume", e.getMessage());
+            }
+            
         }
         // Additional Volumes
         if (server.getAdditionalVolumes() != null) {
             Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
             for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
                 Map<String, Object> additionalVolume = new HashMap<String, Object>();
+                String serverAdditionalVolumeId = serverAdditionalVolume.getValue().getUuid();
                 try {
-                    ServerVolume additionalVolumeObj = crossStorageApi.find(defaultRepo, serverAdditionalVolume.getValue().getUuid(), ServerVolume.class);
+                    ServerVolume additionalVolumeObj = crossStorageApi.find(defaultRepo, serverAdditionalVolumeId, ServerVolume.class);
                     additionalVolume.put("id", additionalVolumeObj.getProviderSideId());
                     additionalVolume.put("boot", additionalVolumeObj.getIsBoot());
                     additionalVolume.put("name", additionalVolumeObj.getName());
@@ -171,7 +182,8 @@ public class UpdateScalewayServer extends Script {
         // Cannot be null but not currently used
         ArrayList<String> privateNics = new ArrayList<String>();
         if (server.getPrivateNics() != null) {
-            for (String privateNic : (server.getPrivateNics())) {
+            List<String> serverPrivateNics = server.getPrivateNics();
+            for (String privateNic : serverPrivateNics) {
                 privateNics.add(privateNic);
             }
             body.put("private_nics", privateNics);
@@ -234,6 +246,10 @@ public class UpdateScalewayServer extends Script {
                 server.setVolumeSize(String.valueOf(serverTotalVolumeSize));
             }
 
+            // Location Definition
+            String locationDefinition = "zone_id/platform_id/cluster_id/hypervisor_id/node_id";
+            server.setLocationDefinition(locationDefinition);
+
             // Location
             if (!serverObj.get("location").isJsonNull()) {
                 JsonObject serverLocationObj = serverObj.get("location").getAsJsonObject();
@@ -245,15 +261,27 @@ public class UpdateScalewayServer extends Script {
                     serverLocationObj.get("node_id");
                 server.setLocation(serverLocation);
             }
-            
-            String locationDefinition = "zone_id/platform_id/cluster_id/hypervisor_id/node_id";
-            server.setLocationDefinition(locationDefinition);
 
             // Security Group CET
             if (!serverObj.get("security_group").isJsonNull()) {
-                String securityGroupId = serverObj.get("security_group").getAsJsonObject().get("id").getAsString();
-                SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
-                server.setSecurityGroup(securityGroup);
+                JsonObject securityGroupObj = serverObj.get("security_group").getAsJsonObject();
+                String securityGroupId = securityGroupObj.get("id").getAsString();
+                if (crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult() != null) {
+                    SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
+                    server.setSecurityGroup(securityGroup);
+                } else {
+                    SecurityGroup newSecurityGroup = new SecurityGroup();
+                    newSecurityGroup.setUuid(securityGroupId);
+                    newSecurityGroup.setProviderSideId(securityGroupId);
+                    newSecurityGroup.setName(securityGroupObj.get("name").getAsString());
+                    newSecurityGroup.setZone(zone);
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, newSecurityGroup);
+                        server.setSecurityGroup(newSecurityGroup);
+                    }catch (Exception e) {
+                        logger.error("Error creating new security group", e.getMessage());
+                    }
+                }
             }
 
             // Server Actions
@@ -301,7 +329,9 @@ public class UpdateScalewayServer extends Script {
                     server.setBootscript(bootscript);
                 } else {
                     Bootscript newBootscript = new Bootscript();
-                    newBootscript.setArch(bootscriptObj.get("arch").getAsString());
+                    newBootscript.setUuid(bootscriptId);
+                    newBootscript.setProviderSideId(bootscriptId);
+                    newBootscript.setArch(bootscriptObj.get("architecture").getAsString());
                     newBootscript.setBootcmdargs(bootscriptObj.get("bootcmdargs").getAsString());
                     newBootscript.setIsDefault(bootscriptObj.get("default").getAsBoolean());
                     newBootscript.setDtb(bootscriptObj.get("dtb").getAsString());

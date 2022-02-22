@@ -135,9 +135,9 @@ public class ScalewayHelperService extends Script{
         String value = response.readEntity(String.class);
 
         if(response.getStatus()<300) {
-            serverDetailsObj = new JsonParser().parse(value).getAsJsonObject();
+            serverDetailsObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
         } else {
-            throw new BusinessException("Error retrieving Server : "+serverId);
+            throw new BusinessException("Error retrieving Details for Server : "+serverId);
         }
         response.close();
         return serverDetailsObj;

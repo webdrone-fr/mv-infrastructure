@@ -14,7 +14,6 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.SecurityGroup;
-import org.meveo.model.customEntities.Server;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -81,9 +80,10 @@ public class ListScalewaySecurityGroups extends Script {
                             JsonObject serverObj = serverEl.getAsJsonObject();
                             String serverId = serverObj.get("id").getAsString();
                             String serverInstanceName = serverObj.get("name").getAsString();
-                            if(serverInstanceName.startsWith("dev-") && crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
-                                servers.add(serverId);
-                            }
+                            // if(serverInstanceName.startsWith("dev-") && crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
+                            //     servers.add(serverId);
+                            // }
+                            servers.add(serverId+" : "+serverInstanceName);
                         }
                         securityGroup.setServers(servers);
                     }

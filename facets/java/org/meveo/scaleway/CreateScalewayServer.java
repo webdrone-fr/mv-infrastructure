@@ -43,18 +43,18 @@ public class CreateScalewayServer extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = parameters.get(CONTEXT_ACTION).toString();
         ScalewayServer server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ScalewayServer.class);
-        
+        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
+
         if(server.getInstanceName() == null) { // required
             throw new BusinessException("Invalid Server Instance Name");
         } else if (server.getServerType() == null) { // required
             throw new BusinessException("Invalid Server Type");
-        } else if(server.getZone() == null) {
+        } else if(server.getZone() == null) { // required
             throw new BusinessException("Invalid Server Zone");
         }
 
         String zone = server.getZone(); // Required for path
-        ServiceProvider serviceProvider = server.getProvider();
-        logger.info("Action : {}, Server Uuid : {}, Provider Uuid : {}", action, server.getUuid(), serviceProvider.getUuid());
+        logger.info("Action : {}, Provider : {}", action, provider.getCode());
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -125,7 +125,6 @@ public class CreateScalewayServer extends Script {
         Response response = 
             CredentialHelperService.setCredential(target.request("application/json"), credential)
                 .post(Entity.json(resp));
-        
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());
@@ -133,15 +132,15 @@ public class CreateScalewayServer extends Script {
 
         if (response.getStatus()<300) {
             JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
-            
+            String serverId = serverObj.get("id").getAsString();
             // Default server values
             server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
             server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
-            server.setProviderSideId(serverObj.get("id").getAsString());
+            server.setProviderSideId(serverId);
             server.setInstanceName(serverObj.get("name").getAsString());
             server.setServerType(serverObj.get("commercial_type").getAsString());
             server.setZone(serverObj.get("zone").getAsString());
-            server.setProvider(serviceProvider);
+            server.setProvider(provider);
             server.setOrganization(serverObj.get("organization").getAsString());
             server.setStatus(serverObj.get("state").getAsString());
             server.setDomainName(serverObj.get("hostname").getAsString());
@@ -170,14 +169,14 @@ public class CreateScalewayServer extends Script {
                         ServerVolume rootVolume = new ServerVolume();
                         rootVolume.setCreationDate(OffsetDateTime.parse(serverRootVolumeObj.get("creation_date").getAsString()).toInstant());
                         rootVolume.setLastUpdated(OffsetDateTime.parse(serverRootVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
-                        rootVolume.setUuid(serverRootVolumeObj.get("id").getAsString());
-                        rootVolume.setProviderSideId(serverRootVolumeObj.get("id").getAsString());
+                        rootVolume.setUuid(serverRootVolumeId);
+                        rootVolume.setProviderSideId(serverRootVolumeId);
                         rootVolume.setName(serverRootVolumeObj.get("name").getAsString());
                         rootVolume.setState(serverRootVolumeObj.get("state").getAsString());
                         rootVolume.setSize(String.valueOf(serverRootVolumeObj.get("size").getAsLong()));
                         rootVolume.setZone(zone);
                         rootVolume.setVolumeType(serverRootVolumeObj.get("volume_type").getAsString());
-                        rootVolume.setServer(server.getProviderSideId());
+                        rootVolume.setServer(serverId);
                         rootVolume.setIsBoot(serverRootVolumeObj.get("boot").getAsBoolean());
                         try {
                             crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
@@ -201,14 +200,14 @@ public class CreateScalewayServer extends Script {
                                 ServerVolume additionalVolume = new ServerVolume();
                                 additionalVolume.setCreationDate(OffsetDateTime.parse(serverAdditionalVolumeObj.get("creation_date").getAsString()).toInstant());
                                 additionalVolume.setLastUpdated(OffsetDateTime.parse(serverAdditionalVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
-                                additionalVolume.setProviderSideId(serverAdditionalVolumeObj.get("id").getAsString());
-                                additionalVolume.setUuid(serverAdditionalVolumeObj.get("id").getAsString());
+                                additionalVolume.setProviderSideId(serverAdditionalVolumeId);
+                                additionalVolume.setUuid(serverAdditionalVolumeId);
                                 additionalVolume.setName(serverAdditionalVolumeObj.get("name").getAsString());
                                 additionalVolume.setState(serverAdditionalVolumeObj.get("state").getAsString());
                                 additionalVolume.setSize(String.valueOf(serverAdditionalVolumeObj.get("size").getAsLong()));
                                 additionalVolume.setZone(serverAdditionalVolumeObj.get("zone").getAsString());
                                 additionalVolume.setVolumeType(serverAdditionalVolumeObj.get("volume_type").getAsString());
-                                additionalVolume.setServer(server.getProviderSideId());
+                                additionalVolume.setServer(serverId);
                                 additionalVolume.setIsBoot(serverAdditionalVolumeObj.get("boot").getAsBoolean());
                                 try {
                                     crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
@@ -230,9 +229,24 @@ public class CreateScalewayServer extends Script {
 
             // Security Group CET
             if (!serverObj.get("security_group").isJsonNull()) {
-                String securityGroupId = serverObj.get("security_group").getAsJsonObject().get("id").getAsString();
-                SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
-                server.setSecurityGroup(securityGroup);
+                JsonObject securityGroupObj = serverObj.get("security_group").getAsJsonObject();
+                 String securityGroupId = securityGroupObj.get("id").getAsString();
+                 if (crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult() != null) {
+                     SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
+                     server.setSecurityGroup(securityGroup);
+                 } else {
+                     SecurityGroup newSecurityGroup = new SecurityGroup();
+                     newSecurityGroup.setUuid(securityGroupId);
+                     newSecurityGroup.setProviderSideId(securityGroupId);
+                     newSecurityGroup.setName(securityGroupObj.get("name").getAsString());
+                     newSecurityGroup.setZone(zone);
+                     try {
+                         crossStorageApi.createOrUpdate(defaultRepo, newSecurityGroup);
+                         server.setSecurityGroup(newSecurityGroup);
+                     }catch (Exception e) {
+                         logger.error("Error creating new security group", e.getMessage());
+                     }
+                 }
             }
             
             // Server Actions
@@ -258,7 +272,9 @@ public class CreateScalewayServer extends Script {
                     server.setBootscript(bootscript);
                 } else {
                     Bootscript newBootscript = new Bootscript();
-                    newBootscript.setArch(bootscriptObj.get("arch").getAsString());
+                    newBootscript.setUuid(bootscriptId);
+                    newBootscript.setProviderSideId(bootscriptId);
+                    newBootscript.setArch(bootscriptObj.get("architecture").getAsString());
                     newBootscript.setBootcmdargs(bootscriptObj.get("bootcmdargs").getAsString());
                     newBootscript.setIsDefault(bootscriptObj.get("default").getAsBoolean());
                     newBootscript.setDtb(bootscriptObj.get("dtb").getAsString());
@@ -273,7 +289,7 @@ public class CreateScalewayServer extends Script {
                         crossStorageApi.createOrUpdate(defaultRepo, newBootscript);
                         server.setBootscript(newBootscript);
                     } catch (Exception e) {
-                        logger.error("Error creating bootscript for server : ", server.getUuid(), e.getMessage());
+                        logger.error("Error creating bootscript for server : ", serverId, e.getMessage());
                     }
                 }
             }
@@ -283,17 +299,17 @@ public class CreateScalewayServer extends Script {
                 JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
                 ArrayList<String> nicIds = new ArrayList<String>();
                 for (JsonElement nic : nicsArr) {
-                    JsonObject privateNic = nic.getAsJsonObject();
-                    nicIds.add(privateNic.get("id").getAsString());
+                    JsonObject nicObj = nic.getAsJsonObject();
+                    String nicId = nicObj.get("id").getAsString();
+                    nicIds.add(nicId);
                 }
                 server.setPrivateNics(nicIds);
             }
 
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, server);
-                logger.info("Server Name : {} successfully created", server.getInstanceName());
             } catch (Exception e) {
-                logger.error("error creating server {} : {}", server.getUuid(), e.getMessage());
+                logger.error("error creating server {} : {}", serverId, e.getMessage());
             }
             response.close();
         }

@@ -37,6 +37,8 @@ public class DnsRecord implements CustomEntity {
 
     private Instant creationDate;
 
+    private Long priority;
+
     private Boolean proxiable;
 
     private Long ttl;
@@ -122,6 +124,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
     }
 
     public Boolean getProxiable() {
