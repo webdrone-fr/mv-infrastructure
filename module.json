@@ -1,5 +1,5 @@
 {
-  "code" : "Infrastructure",
+  "code" : "mv-infrastructure",
   "description" : "Infrastructure management",
   "license" : "GPL",
   "currentVersion" : "1.31",
