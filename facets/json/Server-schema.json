@@ -4,5 +4,210 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "Server",
     "title": "Server",
-    "type": "object"
+    "type": "object",
+    "properties": {
+        "image": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Image",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_image",
+            "title": "Server.image",
+            "type": "string",
+            "maxLength": 255
+        },
+        "instanceName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Instance name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_instanceName",
+            "title": "Server.instanceName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "keyName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Key Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_keyName",
+            "title": "Server.keyName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "sergentUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Sergent URL",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_sergentUrl",
+            "title": "Server.sergentUrl",
+            "type": "string",
+            "maxLength": 500
+        },
+        "publicIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Public IP",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_publicIp",
+            "title": "Server.publicIp",
+            "type": "string",
+            "maxLength": 100
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_creationDate",
+            "title": "Server.creationDate",
+            "type": "string"
+        },
+        "networks": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Networks",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_networks",
+            "title": "Server.networks",
+            "type": "array",
+            "items": {
+                "id": "CE_Server_networks_item",
+                "title": "Server.networks item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
+        "volumeSize": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Main volume size",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_volumeSize",
+            "title": "Server.volumeSize",
+            "type": "string",
+            "maxLength": 20
+        },
+        "provider": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_provider",
+            "title": "Server.provider",
+            "$ref": "#/definitions/ServiceProvider"
+        },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_zone",
+            "title": "Server.zone",
+            "type": "string",
+            "maxLength": 50
+        },
+        "domainName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Domain name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_domainName",
+            "title": "Server.domainName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "lastUpdate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last update",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_lastUpdate",
+            "title": "Server.lastUpdate",
+            "type": "string"
+        },
+        "organization": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Organization",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_organization",
+            "title": "Server.organization",
+            "type": "string",
+            "maxLength": 255
+        },
+        "serverType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_serverType",
+            "title": "Server.serverType",
+            "type": "string",
+            "maxLength": 255
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_name",
+            "title": "Server.name",
+            "type": "string",
+            "maxLength": 255
+        },
+        "flavorRef": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Flavor Ref",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_flavorRef",
+            "title": "Server.flavorRef",
+            "type": "string",
+            "maxLength": 255
+        },
+        "imageRef": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Image Ref",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_imageRef",
+            "title": "Server.imageRef",
+            "type": "string",
+            "maxLength": 255
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_status",
+            "title": "Server.status",
+            "type": "string",
+            "maxLength": 50
+        }
+    }
 }
