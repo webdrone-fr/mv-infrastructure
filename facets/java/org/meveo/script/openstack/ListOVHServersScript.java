@@ -123,7 +123,7 @@ public class ListOVHServersScript extends Script {
             response.close();
         }
     }
-  	public void checkForDeletedServer() {
-      	
+  	public void ListActualServer() {
+      	 
     }
 }
