@@ -4,7 +4,6 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
-import java.util.ArrayList;
 import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -33,8 +32,6 @@ public class Server implements CustomEntity {
     private String publicIp;
 
     private Instant creationDate;
-
-    private List<String> networks = new ArrayList<>();
 
     private String volumeSize;
 
@@ -115,14 +112,6 @@ public class Server implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public List<String> getNetworks() {
-        return networks;
-    }
-
-    public void setNetworks(List<String> networks) {
-        this.networks = networks;
     }
 
     public String getVolumeSize() {
