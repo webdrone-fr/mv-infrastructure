@@ -52,8 +52,6 @@ public class Server implements CustomEntity {
 
     private String flavorRef;
 
-    private String imageRef;
-
     private String status;
 
     @Override()
@@ -191,14 +189,6 @@ public class Server implements CustomEntity {
 
     public void setFlavorRef(String flavorRef) {
         this.flavorRef = flavorRef;
-    }
-
-    public String getImageRef() {
-        return imageRef;
-    }
-
-    public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
     }
 
     public String getStatus() {
