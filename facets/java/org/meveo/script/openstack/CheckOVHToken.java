@@ -55,7 +55,6 @@ public class CheckOVHToken extends Script {
         if (currentDate.isAfter(expireDate)) {
             try {
                 // Dechiffrement du mot de passe
-                /*
                 String stringToDecrypt = credential.getPasswordSecret();
                 String codeClass = credential.getClass().getSimpleName();
                 CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
@@ -64,8 +63,6 @@ public class CheckOVHToken extends Script {
                 Map<String, CustomFieldTemplate> customFieldTemplates = customFieldTemplateService.findByAppliesTo(cet.getAppliesTo());
                 var hash = CEIUtils.getHash(credentialCEI, customFieldTemplates);
                 String stringDecrypted = PasswordUtils.decryptNoSecret(hash, stringToDecrypt);
-                */
-                String stringDecrypted = "TODO";
                 // Creation du body
                 HashMap<String, Object> master = new HashMap<String, Object>();
                 HashMap<String, Object> auth = new HashMap<String, Object>();
