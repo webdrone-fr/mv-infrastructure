@@ -50,8 +50,6 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
-    private String name;
-
     private String flavorRef;
 
     private String imageRef;
@@ -185,14 +183,6 @@ public class Server implements CustomEntity {
 
     public void setServerType(String serverType) {
         this.serverType = serverType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getFlavorRef() {
