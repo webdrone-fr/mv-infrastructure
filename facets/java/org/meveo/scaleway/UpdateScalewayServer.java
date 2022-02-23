@@ -63,54 +63,6 @@ public class UpdateScalewayServer extends Script {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        // Get Server Type requirements
-        String serverType = server.getServerType();
-        JsonObject serverConstraintsObj = ScalewayHelperService.getServerTypeRequirements(server, crossStorageApi, defaultRepo, credential);
-        
-        Long serverTotalLocalVolumeSize = 0L;
-        Long serverMinVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
-        Long serverMaxVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("max_size").getAsLong();
-
-        // Can be null when no volumes attached eg at creation
-        if (server.getRootVolume() != null) {
-            try {
-                String rootVolumeId = server.getRootVolume().getUuid();
-                ServerVolume rootVolume = crossStorageApi.find(defaultRepo, rootVolumeId, ServerVolume.class);
-                if (rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
-                    serverTotalLocalVolumeSize += Long.valueOf(rootVolume.getSize());
-                }
-            } catch (Exception e) {
-                logger.error("error retrieving root volume : {}", e.getMessage());
-            }
-            // Additional Volumes
-            if(server.getAdditionalVolumes() != null) {
-                Map<String, ServerVolume> additionalVolumes = server.getAdditionalVolumes();
-                for (int i = 1; i < additionalVolumes.size(); i++) {
-                    try {
-                        String additionalVolumeId = additionalVolumes.get(String.valueOf(i)).getUuid();
-                        ServerVolume additionalVolume = crossStorageApi.find(defaultRepo, additionalVolumeId, ServerVolume.class);
-                        if (additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
-                            serverTotalLocalVolumeSize += Long.valueOf(additionalVolume.getSize());
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error retieving additional volume : {}", e.getMessage());
-                    }
-                }
-            }
-            String serverTotalLocalVolumesSizeStr = Long.toString(serverTotalLocalVolumeSize);
-            String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
-            String serverMaxVolumeSizeReqStr = Long.toString(serverMaxVolumeSizeReq);
-            if (serverTotalLocalVolumeSize < serverMinVolumeSizeReq) {
-                logger.debug("Current available volume size : {}, Minimum Volume size required for server type {} : {}", serverTotalLocalVolumesSizeStr , serverType, serverMinVolumeSizeReqStr);
-                throw new BusinessException("Current total volume size is too small for selected server type");
-            } else if (serverTotalLocalVolumeSize > serverMaxVolumeSizeReq) {
-                logger.debug("Current available volume size : {}, Maximum Volume size allowed for server type {} : {}", serverTotalLocalVolumesSizeStr , serverType, serverMaxVolumeSizeReqStr);
-                throw new BusinessException("Current total volume size is too large for selected server type");
-            } else {
-                logger.info("Server Total Volume size : {}; Min Total Volume size : {}; Max Total Volume Size : {}", serverTotalLocalVolumesSizeStr, serverMinVolumeSizeReqStr, serverMaxVolumeSizeReqStr);
-            }
-        }
-        
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
@@ -128,35 +80,53 @@ public class UpdateScalewayServer extends Script {
         }
 
         // Volumes
-        // Block volumes are only available for DEV1, GP1 and RENDER offers TODO
+        // Block volumes are only available for DEV1, GP1 and RENDER offers
         Map<String, Object> volumes = new HashMap<String, Object>();
         // Root Volume
+        String serverType = server.getServerType();
         if (server.getRootVolume() != null) {
             Map<String, Object> rootVolume = new HashMap<String, Object>();
             String serverRootVolumeId = server.getRootVolume().getUuid();
             try {
                 ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, serverRootVolumeId, ServerVolume.class);
-                rootVolume.put("id", serverRootVolume.getProviderSideId());
-                rootVolume.put("boot", serverRootVolume.getIsBoot());
-                rootVolume.put("name", serverRootVolume.getName());
+                String serverRootVolumetype = serverRootVolume.getVolumeType();
+                if(serverRootVolumetype.equalsIgnoreCase("l_ssd")) {
+                    rootVolume.put("id", serverRootVolume.getProviderSideId());
+                    rootVolume.put("boot", serverRootVolume.getIsBoot());
+                    rootVolume.put("name", serverRootVolume.getName());
+                } else if (serverType.startsWith("DEV1") || serverType.startsWith("GP1") || serverType.startsWith("RENDER")) {
+                    rootVolume.put("id", serverRootVolume.getProviderSideId());
+                    rootVolume.put("boot", serverRootVolume.getIsBoot());
+                    rootVolume.put("name", serverRootVolume.getName());
+                } else {
+                    throw new BusinessException("Invalid Root Volume Type for Server Type : "+serverType);
+                }
                 volumes.put("0", rootVolume);
             } catch (Exception e) {
                 logger.error("Error retrieving server root volume", e.getMessage());
             }
-            
         }
         // Additional Volumes
         if (server.getAdditionalVolumes() != null) {
             Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
-            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolumeEnt : serverAdditionalVolumes.entrySet()) {
                 Map<String, Object> additionalVolume = new HashMap<String, Object>();
-                String serverAdditionalVolumeId = serverAdditionalVolume.getValue().getUuid();
+                String serverAdditionalVolumeId = serverAdditionalVolumeEnt.getValue().getUuid();
                 try {
-                    ServerVolume additionalVolumeObj = crossStorageApi.find(defaultRepo, serverAdditionalVolumeId, ServerVolume.class);
-                    additionalVolume.put("id", additionalVolumeObj.getProviderSideId());
-                    additionalVolume.put("boot", additionalVolumeObj.getIsBoot());
-                    additionalVolume.put("name", additionalVolumeObj.getName());
-                    volumes.put(serverAdditionalVolume.getKey(), additionalVolume); // keys should be 1, 2, 3...
+                    ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, serverAdditionalVolumeId, ServerVolume.class);
+                    String serverAdditionalVolumeType = serverAdditionalVolume.getVolumeType();
+                    if(serverAdditionalVolumeType.equalsIgnoreCase("l_ssd")) {
+                        additionalVolume.put("id", serverAdditionalVolume.getProviderSideId());
+                        additionalVolume.put("boot", serverAdditionalVolume.getIsBoot());
+                        additionalVolume.put("name", serverAdditionalVolume.getName());
+                    } else if(serverType.startsWith("DEV1") || serverType.startsWith("GP1") || serverType.startsWith("RENDER")) {
+                        additionalVolume.put("id", serverAdditionalVolume.getProviderSideId());
+                        additionalVolume.put("boot", serverAdditionalVolume.getIsBoot());
+                        additionalVolume.put("name", serverAdditionalVolume.getName());
+                    } else {
+                        throw new BusinessException("Invalid Additional Volume Type for Server Type : "+serverType);
+                    }
+                    volumes.put(serverAdditionalVolumeEnt.getKey(), additionalVolume); // keys should be 1, 2, 3...
                 } catch (Exception e) {
                     logger.error("Error retrieving additional volume", e.getMessage());
                 }
@@ -189,7 +159,6 @@ public class UpdateScalewayServer extends Script {
             body.put("private_nics", privateNics);
         }
         
-
         String resp = JacksonUtil.toStringPrettyPrinted(body);
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential)
             .method("PATCH", Entity.json(resp));
@@ -217,33 +186,45 @@ public class UpdateScalewayServer extends Script {
             // Image
             if (!serverObj.get("image").isJsonNull()) {
                 String serverImageId = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                ServerImage serverImage = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", serverImageId).getResult();
-                server.setImage(serverImage);
+                try {
+                    ServerImage serverImage = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", serverImageId).getResult();
+                    server.setImage(serverImage);
+                } catch (Exception e) {
+                    logger.error("Error retrieving image", e.getMessage());
+                }
             }
 
             // Volumes
             JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
-            Long serverTotalVolumeSize = 0L;
+            Long totalVolumeSize = 0L;
             if (serverVolumesObj.entrySet().size() >= 1) {
                 // Root Volume
                 String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
                 if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult() != null) {
-                    ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-                    server.setRootVolume(serverRootVolume);
-                    serverTotalVolumeSize += Long.parseLong(serverRootVolume.getSize());
+                    try {
+                        ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
+                        server.setRootVolume(serverRootVolume);
+                        totalVolumeSize += Long.valueOf(serverRootVolume.getSize());
+                    } catch (Exception e) {
+                        logger.error("Error retrieving root volume", e.getMessage());
+                    }
                 }
                 // Additional Volumes
                 if (serverVolumesObj.entrySet().size() > 1) {
                     Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
                     for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
                         String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
-                        ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                        serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                        serverTotalVolumeSize += Long.parseLong(serverAdditionalVolume.getSize()) ;
+                        try{
+                            ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+                            serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
+                            totalVolumeSize += Long.valueOf(serverAdditionalVolume.getSize());
+                        } catch (Exception e) {
+                            logger.error("Error retrieving additional volume", e.getMessage());
+                        }
                     }
                     server.setAdditionalVolumes(serverAdditionalVolumes);
                 }
-                server.setVolumeSize(String.valueOf(serverTotalVolumeSize));
+                server.setVolumeSize(String.valueOf(totalVolumeSize));
             }
 
             // Location Definition
@@ -267,8 +248,12 @@ public class UpdateScalewayServer extends Script {
                 JsonObject securityGroupObj = serverObj.get("security_group").getAsJsonObject();
                 String securityGroupId = securityGroupObj.get("id").getAsString();
                 if (crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult() != null) {
-                    SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
-                    server.setSecurityGroup(securityGroup);
+                    try {
+                        SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
+                        server.setSecurityGroup(securityGroup);
+                    } catch(Exception e) {
+                        logger.error("Error retrieving security group", e.getMessage());
+                    }
                 } else {
                     SecurityGroup newSecurityGroup = new SecurityGroup();
                     newSecurityGroup.setUuid(securityGroupId);
@@ -325,8 +310,12 @@ public class UpdateScalewayServer extends Script {
                 JsonObject bootscriptObj = serverObj.get("bootscript").getAsJsonObject();
                 String bootscriptId = bootscriptObj.get("id").getAsString();
                 if (crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
-                    Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
-                    server.setBootscript(bootscript);
+                    try {
+                        Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
+                        server.setBootscript(bootscript);
+                    } catch (Exception e) {
+                        logger.error("Error retrieving bootscript", e.getMessage());
+                    }
                 } else {
                     Bootscript newBootscript = new Bootscript();
                     newBootscript.setUuid(bootscriptId);

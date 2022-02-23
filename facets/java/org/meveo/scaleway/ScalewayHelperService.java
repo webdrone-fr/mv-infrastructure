@@ -29,33 +29,32 @@ public class ScalewayHelperService extends Script{
     static final private String BASE_PATH = "/instance/v1/zones/";
 
     // for local volumes TODO rename function
-    public static Long calcServerTotalVolumesSizes(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository repo) {
+    public static Long calcServerTotalVolumesSizes(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository defaultRepo) {
         Long serverTotalVolumesSizes = 0L;
         ArrayList<Long> allVolumesSizes = new ArrayList<Long>();
         // Root volume
         try {
-            ServerVolume rootVolume = crossStorageApiInstance.find(repo, server.getRootVolume().getUuid(), ServerVolume.class);
-            if (rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")) {
-                Long rootVolumeSize = Long.parseLong(rootVolume.getSize());
-                allVolumesSizes.add(rootVolumeSize);
-            }
+            String serverRootVolumeId = server.getRootVolume().getUuid();
+            ServerVolume serverRootVolume = crossStorageApiInstance.find(defaultRepo, serverRootVolumeId, ServerVolume.class);
+            Long rootVolumeSize = Long.valueOf(serverRootVolume.getSize());
+            allVolumesSizes.add(rootVolumeSize);
         } catch (Exception e) {
             logger.error("Error retrieving root volume, {}", e.getMessage());
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
-            Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-            for (int i = 1; i <= server.getAdditionalVolumes().size(); i++) {
+            Map<String, ServerVolume> additionalVolumes = new HashMap<String, ServerVolume>();
+            Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+            for (int i = 1; i < serverAdditionalVolumes.size(); i++) {
                 try {
-                    ServerVolume additionalVolume = crossStorageApiInstance.find(repo, server.getAdditionalVolumes().get(String.valueOf(i)).getUuid(), ServerVolume.class);
-                    if (additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd"))
-                    serverAdditionalVolumes.put(String.valueOf(i), additionalVolume);
+                    ServerVolume serverAdditionalVolume = crossStorageApiInstance.find(defaultRepo, serverAdditionalVolumes.get(String.valueOf(i)).getUuid(), ServerVolume.class);
+                    additionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
                 } catch (Exception e) {
                     logger.error("Error retrieving additional volumes {}", e.getMessage());
                 }
             }
-            for (Map.Entry<String, ServerVolume> serverAdditionalVolume : serverAdditionalVolumes.entrySet()) {
-                Long additionalVolumeSize = Long.parseLong(serverAdditionalVolume.getValue().getSize());
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolumeEnt : additionalVolumes.entrySet()) {
+                Long additionalVolumeSize = Long.valueOf(serverAdditionalVolumeEnt.getValue().getSize());
                 allVolumesSizes.add(additionalVolumeSize);
             }
         }
@@ -66,7 +65,7 @@ public class ScalewayHelperService extends Script{
         return serverTotalVolumesSizes;
     }
 
-    public static JsonObject getServerTypeRequirements(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository repo, Credential credential) throws BusinessException {
+    public static JsonObject getServerTypeRequirements(ScalewayServer server, Credential credential) throws BusinessException {
         JsonObject serverConstraints = new JsonObject();
         if (server != null) {
             String zone = server.getZone();
@@ -90,7 +89,7 @@ public class ScalewayHelperService extends Script{
         return serverConstraints;
     }
 
-    public static JsonObject getServerTypeAvailabilityInZone(String zone, CrossStorageApi crossStorageApiInstance, Repository repo, Credential credential) throws BusinessException {
+    public static JsonObject getServerTypeAvailabilityInZone(String zone, Credential credential) throws BusinessException {
         JsonObject serverAvailabilityObj = new JsonObject();
 
         Client client = ClientBuilder.newClient();
@@ -107,7 +106,7 @@ public class ScalewayHelperService extends Script{
         return serverAvailabilityObj;
     }
 
-    public static JsonObject getServerUserData(String zone, String serverId, String key, CrossStorageApi crossStorageApiInstance, Repository repo, Credential credential) throws BusinessException {
+    public static JsonObject getServerUserData(String zone, String serverId, String key, Credential credential) throws BusinessException {
         JsonObject serverUserDataObj = new JsonObject();
 
         Client client = ClientBuilder.newClient();
@@ -125,7 +124,7 @@ public class ScalewayHelperService extends Script{
         return serverUserDataObj;
     }
 
-    public static JsonObject getServerDetailsAfterSuccessfulAction(String zone, String serverId, CrossStorageApi crossStorageApi, Repository defaultRepo, Credential credential) throws BusinessException {
+    public static JsonObject getServerDetailsAfterSuccessfulAction(String zone, String serverId, Credential credential) throws BusinessException {
         JsonObject serverDetailsObj = new JsonObject();
 
         Client client = ClientBuilder.newClient();

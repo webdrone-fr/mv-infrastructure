@@ -73,14 +73,14 @@ public class PerformActionOnScalewayServer extends Script {
         Long serverTotalVolumesSizes = ScalewayHelperService.calcServerTotalVolumesSizes(server, crossStorageApi, defaultRepo);
 
         // Get server type constraints
-        JsonObject serverConstraintsObj = ScalewayHelperService.getServerTypeRequirements(server, crossStorageApi, defaultRepo, credential);
+        JsonObject serverConstraintsObj = ScalewayHelperService.getServerTypeRequirements(server, credential);
         // Size requirements for sum of all volumes for server type
         Long serverMinVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("min_size").getAsLong();
         Long serverMaxVolumeSizeReq = serverConstraintsObj.get("volumes_constraint").getAsJsonObject().get("max_size").getAsLong();
 
         // Action Conditions
         // Block volumes are only available for DEV1, GP1 and RENDER offers
-        if (action.equalsIgnoreCase("poweron") || action.equalsIgnoreCase("reboot")) {
+        if (action.equalsIgnoreCase("poweron")) {
             // Check if available volume size meets requirements for server type
             String serverTotalVolumesSizesStr = Long.toString(serverTotalVolumesSizes);
             String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);

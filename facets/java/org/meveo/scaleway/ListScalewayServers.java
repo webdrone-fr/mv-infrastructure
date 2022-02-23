@@ -18,10 +18,10 @@ import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.SecurityGroup;
-import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -73,7 +73,6 @@ public class ListScalewayServers extends Script {
                         server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
                         server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
                         server.setUuid(serverId);
-                        ((Server) server).setUuid(serverId);
                         server.setProviderSideId(serverId);
                         server.setInstanceName(name);
                         server.setServerType(type);
@@ -143,7 +142,7 @@ public class ListScalewayServers extends Script {
                                 try {
                                     crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
                                     server.setRootVolume(rootVolume);
-                                    serverTotalVolumeSize += Long.parseLong(rootVolume.getSize());
+                                    serverTotalVolumeSize += Long.valueOf(rootVolume.getSize());
                                 } catch(Exception e) {
                                     logger.error("error creating root volume {} : {}", serverRootVolumeId, e.getMessage());
                                 }
@@ -180,12 +179,13 @@ public class ListScalewayServers extends Script {
                                         try {
                                             crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
                                             serverAdditionalVolumes.put(String.valueOf(i), additionalVolume);
-                                            serverTotalVolumeSize += Long.parseLong(additionalVolume.getSize());
+                                            serverTotalVolumeSize += Long.valueOf(additionalVolume.getSize());
                                         } catch(Exception e) {
                                             logger.error("error creating additional volume {} : {}", additionalVolumeId, e.getMessage());
                                         }
                                     }
                                 }
+                                logger.info("SERVER ADDITIONAL VOLUMES : {}",JacksonUtil.toStringPrettyPrinted(serverAdditionalVolumes));
                                 server.setAdditionalVolumes(serverAdditionalVolumes);
                             }
                             // Volume size
@@ -314,6 +314,7 @@ public class ListScalewayServers extends Script {
                             server.setPrivateNics(nicIds);
                         }
                         try {
+                            logger.info("SERVER  : {}",JacksonUtil.toStringPrettyPrinted(server));
                             crossStorageApi.createOrUpdate(defaultRepo, server);
                         } catch (Exception e) {
                             logger.error("Error retrieving Server {}", serverId, e.getMessage());

@@ -1,6 +1,6 @@
 package org.meveo.scaleway;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,11 +36,11 @@ public class CreateScalewayVolume extends Script{
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = parameters.get(CONTEXT_ACTION).toString();
-        ServerVolume volume =CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServerVolume.class);
+        ServerVolume volume = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServerVolume.class);
 
         if (volume.getName() == null) {
             throw new BusinessException("Invalid Volume Name");
-        } else if (volume.getVolumeType() == null && (volume.getVolumeType() == "l_ssd" || volume.getVolumeType() == "b_ssd")) {
+        } else if (volume.getVolumeType() == null) {
             throw new BusinessException("Invalid Volume Type");
         } else if (volume.getSize() == null) {
             throw new BusinessException("Invalid Volume Size");
@@ -55,7 +55,7 @@ public class CreateScalewayVolume extends Script{
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
-            logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername());
+            logger.info("using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
         Client client = ClientBuilder.newClient();
@@ -86,7 +86,7 @@ public class CreateScalewayVolume extends Script{
         // Only 1 of volume size and base_volume can be set
         // base_volume is id of volume whose parameters are to "copy"
         // Size
-        Long volumeSize = Long.parseLong(volume.getSize());
+        Long volumeSize = Long.valueOf(volume.getSize());
         if (volumeSize >= volumeTypeMinSize && volumeSize < volumeTypeMaxSize) {
             logger.debug("volume size = {}, volume size long = {} ", volume.getSize(), volumeSize);
             body.put("size", volumeSize); // check output after size formating
@@ -109,16 +109,17 @@ public class CreateScalewayVolume extends Script{
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
         if (response.getStatus()<300) {
-            volume.setCreationDate(Instant.now());
-            volume.setLastUpdated(Instant.now());
             JsonObject volumeObj = new JsonParser().parse(value).getAsJsonObject().get("volume").getAsJsonObject();
+            volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
+            volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
             volume.setProviderSideId(volumeObj.get("id").getAsString());
+            volume.setName(volumeObj.get("name").getAsString());
             volume.setState(volumeObj.get("state").getAsString());
             volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, volume);
             } catch (Exception e) {
-                logger.error("error creating volume {} : {}", volume.getUuid(), e.getMessage());
+                logger.error("error creating volume : {}", volume.getUuid(), e.getMessage());
             }
         }
         response.close();

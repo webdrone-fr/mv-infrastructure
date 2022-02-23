@@ -59,7 +59,7 @@ public class ListScalewayServerUserData extends Script {
             for (JsonElement userDataKeyEl : userDataArr) {
                 ServerUserData userData = new ServerUserData();
                 String userDataKey = userDataKeyEl.getAsString();
-                JsonObject serverUserDataObj = ScalewayHelperService.getServerUserData(zone, serverId, userDataKey, crossStorageApi, defaultRepo, credential);
+                JsonObject serverUserDataObj = ScalewayHelperService.getServerUserData(zone, serverId, userDataKey, credential);
                 userData.setName(serverUserDataObj.get("name").getAsString());
                 userData.setContentType(serverUserDataObj.get("content_type").getAsString());
                 userData.setContent(serverUserDataObj.get("content").getAsString());

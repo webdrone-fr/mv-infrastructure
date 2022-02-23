@@ -31,8 +31,7 @@ public class ListScalewayVolumes extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        // INPUT
-        // String zone_id = parameters.get("zone").toString();// Select from list
+
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
@@ -40,9 +39,9 @@ public class ListScalewayVolumes extends Script{
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
+        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         for (String zone : zones) {
             WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/volumes");
             Response response = CredentialHelperService.setCredential(target.request(), credential).get();
@@ -53,25 +52,24 @@ public class ListScalewayVolumes extends Script{
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
                 for (JsonElement element : rootArray) {
                     JsonObject volumeObj = element.getAsJsonObject();
-                    ServerVolume serverVolume = new ServerVolume();
+                    ServerVolume volume = new ServerVolume();
 
-                    serverVolume.setUuid(volumeObj.get("id").getAsString());
-                    serverVolume.setProviderSideId(volumeObj.get("id").getAsString());
-                    serverVolume.setName(volumeObj.get("name").getAsString());
+                    volume.setUuid(volumeObj.get("id").getAsString());
+                    volume.setProviderSideId(volumeObj.get("id").getAsString());
+                    volume.setName(volumeObj.get("name").getAsString());
                     if (!volumeObj.get("server").isJsonNull()) {
-                        serverVolume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
+                        volume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
                     }
-                    serverVolume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
-                    serverVolume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-                    serverVolume.setVolumeType(volumeObj.get("volume_type").getAsString());
-                    serverVolume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
-                    serverVolume.setZone(volumeObj.get("zone").getAsString());
-                    serverVolume.setState(volumeObj.get("state").getAsString());
-                    logger.info("Server Volume Name: {}", serverVolume.getName());
+                    volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
+                    volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
+                    volume.setVolumeType(volumeObj.get("volume_type").getAsString());
+                    volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
+                    volume.setZone(volumeObj.get("zone").getAsString());
+                    volume.setState(volumeObj.get("state").getAsString());
                     try {
-                        crossStorageApi.createOrUpdate(defaultRepo, serverVolume);
+                        crossStorageApi.createOrUpdate(defaultRepo, volume);
                     } catch (Exception e) {
-                        logger.error("Error creating Server Volume {} : {}", serverVolume.getProviderSideId(), e.getMessage());
+                        logger.error("Error creating Server Volume : {}", volume.getProviderSideId(), e.getMessage());
                     }
                 }
             }

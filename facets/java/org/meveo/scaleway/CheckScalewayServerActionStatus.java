@@ -99,7 +99,7 @@ public class CheckScalewayServerActionStatus extends Script{
         } while (actionComplete != true);
 
         if (action.getResponse().equalsIgnoreCase("success")) {
-            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetailsAfterSuccessfulAction(zone, server.getProviderSideId(), crossStorageApi, defaultRepo, credential);
+            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetailsAfterSuccessfulAction(zone, server.getProviderSideId(), credential);
             // Values to update
             // Default Server values
             String publicIp = null;
