@@ -55,7 +55,7 @@
             "nullable": true,
             "format": "date-time",
             "description": "Creation date",
-            "readOnly": false,
+            "readOnly": true,
             "versionable": false,
             "id": "CE_Server_creationDate",
             "title": "Server.creationDate",
