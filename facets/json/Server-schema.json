@@ -32,7 +32,7 @@
             "storages": ["SQL"],
             "nullable": true,
             "description": "Volume State",
-            "readOnly": false,
+            "readOnly": true,
             "versionable": false,
             "id": "CE_Server_volumeState",
             "title": "Server.volumeState",
