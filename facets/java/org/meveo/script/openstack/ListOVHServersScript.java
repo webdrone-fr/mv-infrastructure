@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import org.meveo.model.customEntities.ServiceProvider;
-import org.meveo.model.customEntities.ServerOVH;
+import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
@@ -64,7 +64,7 @@ public class ListOVHServersScript extends Script {
                 for (JsonElement element : rootArray) {
                     JsonObject serverObj = element.getAsJsonObject();
                     // Create new servers
-                    ServerOVH server = new ServerOVH();
+                    Server server = new Server();
                     // UUID
                     server.setUuid(serverObj.get("id").getAsString());
                     // server name
