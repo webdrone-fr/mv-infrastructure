@@ -1,6 +1,6 @@
 {
   "code" : "volumeSize",
-  "description" : "Main volume size",
+  "description" : "Volume Size",
   "fieldType" : "STRING",
   "accountLevel" : "CE_Server",
   "appliesTo" : "CE_Server",
@@ -9,7 +9,7 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "allowEdit" : true,
+  "allowEdit" : false,
   "hideOnNew" : false,
   "maxValue" : 20,
   "contentTypes" : [ ],
