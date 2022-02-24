@@ -9,7 +9,7 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "allowEdit" : true,
+  "allowEdit" : false,
   "hideOnNew" : false,
   "maxValue" : 50,
   "contentTypes" : [ ],
