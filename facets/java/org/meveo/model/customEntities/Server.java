@@ -47,6 +47,8 @@ public class Server implements CustomEntity {
 
     private String name;
 
+    private String imageRef;
+
     private String status;
 
     @Override()
@@ -168,6 +170,14 @@ public class Server implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageRef() {
+        return imageRef;
+    }
+
+    public void setImageRef(String imageRef) {
+        this.imageRef = imageRef;
     }
 
     public String getStatus() {
