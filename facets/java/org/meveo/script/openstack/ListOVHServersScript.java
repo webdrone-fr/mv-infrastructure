@@ -131,11 +131,13 @@ public class ListOVHServersScript extends Script {
             response.close();
         }
     }
+  
   	public void ListActualServer(ServerOVH serverOVH) {
       	String codeClass = serverOVH.getClass().getSimpleName();
 		CustomEntityTemplate servCET = customEntityTemplateService.findByCode(codeClass);
       	try {
     		List<Map<String, Object>> listSer = crossStorageService.find(defaultRepo, servCET, null);
+          	log.info(listSer.toString());
         } catch (EntityDoesNotExistsException ex) {
           	
         }
