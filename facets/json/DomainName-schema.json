@@ -4,5 +4,106 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "DomainName",
     "title": "Domain name",
-    "type": "object"
+    "type": "object",
+    "properties": {
+        "normedName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Normalized name (ASCII)",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_normedName",
+            "title": "DomainName.normedName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "registrationEndDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Registration end date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registrationEndDate",
+            "title": "DomainName.registrationEndDate",
+            "type": "string"
+        },
+        "lastUpdate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last update",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_lastUpdate",
+            "title": "DomainName.lastUpdate",
+            "type": "string"
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "domain name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_name",
+            "title": "DomainName.name",
+            "type": "string",
+            "maxLength": 255
+        },
+        "registrationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Registration date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registrationDate",
+            "title": "DomainName.registrationDate",
+            "type": "string"
+        },
+        "autoRenew": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Auto renew",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_autoRenew",
+            "title": "DomainName.autoRenew",
+            "type": "string"
+        },
+        "registar": {
+            "storages": ["SQL"],
+            "default": "GANDI",
+            "nullable": true,
+            "description": "Registar",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registar",
+            "title": "DomainName.registar",
+            "enum": ["GANDI"]
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_creationDate",
+            "title": "DomainName.creationDate",
+            "type": "string"
+        },
+        "tld": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Tld",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_tld",
+            "title": "DomainName.tld",
+            "type": "string",
+            "maxLength": 20
+        }
+    }
 }

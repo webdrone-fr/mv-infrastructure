@@ -9,7 +9,7 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "allowEdit" : false,
+  "allowEdit" : true,
   "hideOnNew" : false,
   "contentTypes" : [ ],
   "fileExtensions" : [ ],

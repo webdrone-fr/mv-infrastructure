@@ -1,1 +1,0 @@
-{"code":"deleteServer","appliesTo":"CE_Server","applicableOnEl":"#{!empty entity.getCfValuesAsValues().get(\"creationDate\")}","label":"Delete Server","script":"org.meveo.script.CallDelete","guiPosition":"tab:Server:0;action:15","applicableToEntityList":false,"applicableToEntityInstance":true}

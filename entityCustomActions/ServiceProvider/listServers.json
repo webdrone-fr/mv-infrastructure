@@ -1,1 +1,1 @@
-{"code":"listServers","description":"List servers","appliesTo":"CE_ServiceProvider","label":"List Servers","script":"org.meveo.script.CallListing","applicableToEntityList":false,"applicableToEntityInstance":true}
+{"code":"listServers","description":"List servers","appliesTo":"CE_ServiceProvider","applicableOnEl":"#{entity.getCfValuesAsValues().get(\"code\") eq 'SCALEWAY'}","label":"List Servers","script":"org.meveo.script.ListScalewayServersScript","applicableToEntityList":false,"applicableToEntityInstance":true}
