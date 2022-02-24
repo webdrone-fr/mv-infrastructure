@@ -1,0 +1,1 @@
+{"code":"updateServer","appliesTo":"CE_ServerOVH","applicableOnEl":"#{!empty entity.getCfValuesAsValues().get(\"creationDate\")}","label":"Update Server","script":"org.meveo.script.CallUpdate","guiPosition":"tab:Server OVH:0;action:7","applicableToEntityList":false,"applicableToEntityInstance":true}
