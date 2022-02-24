@@ -6,7 +6,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.meveo.model.customEntities.ServiceProvider;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServerOVH;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
@@ -41,7 +41,7 @@ public class CreateOVHServersScript extends Script {
         super.execute(parameters);
     }
 
-    public void createServer(Credential credential, ServiceProvider openstack, Server server) throws BusinessException {
+    public void createServer(Credential credential, ServiceProvider openstack, ServerOVH server) throws BusinessException {
         log.info("calling CreateOVHServersScript");
         // Check Token
         checkOVHToken.checkOVHToken(credential, openstack);
