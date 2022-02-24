@@ -24,6 +24,8 @@ public class Server implements CustomEntity {
 
     private String image;
 
+    private String volumeState;
+
     private String instanceName;
 
     private String keyName;
@@ -85,6 +87,14 @@ public class Server implements CustomEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getVolumeState() {
+        return volumeState;
+    }
+
+    public void setVolumeState(String volumeState) {
+        this.volumeState = volumeState;
     }
 
     public String getInstanceName() {
