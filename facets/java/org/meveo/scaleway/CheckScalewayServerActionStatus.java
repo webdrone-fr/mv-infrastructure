@@ -82,7 +82,7 @@ public class CheckScalewayServerActionStatus extends Script{
                     action.setElapsedTimeMs(timeElapsed.toMillis());
                     action.setProgress(taskObj.get("progress").getAsLong());
                     actionComplete = true;
-                    parameters.put(RESULT_GUI_MESSAGE, "Action :"+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
+                    parameters.put(RESULT_GUI_MESSAGE, "Action : "+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
                 } else if (action.getResponse().equalsIgnoreCase("failure")) {
                     throw new BusinessException("Task failed");
                 } else {
@@ -132,8 +132,14 @@ public class CheckScalewayServerActionStatus extends Script{
                         String node_id = locationObj.get("node_id").getAsString();
                         location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
                     }
-                    privateIp = serverDetailsObj.get("private_ip").getAsString();
-                    ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                    if(!serverDetailsObj.get("private_ip").isJsonNull()) {
+                        privateIp = serverDetailsObj.get("private_ip").getAsString();
+                    }
+                    
+                    if (!serverDetailsObj.get("ipv6").isJsonNull()) {
+                        ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                    }
+                    
                     status = "running";
                     break;
                 case "poweroff":
@@ -164,8 +170,14 @@ public class CheckScalewayServerActionStatus extends Script{
                         String node_id = locationObj.get("node_id").getAsString();
                         location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
                     }
-                    privateIp = serverDetailsObj.get("private_ip").getAsString();
-                    ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                    if(!serverDetailsObj.get("private_ip").isJsonNull()) {
+                        privateIp = serverDetailsObj.get("private_ip").getAsString();
+                    }
+                    
+                    if (!serverDetailsObj.get("ipv6").isJsonNull()) {
+                        ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                    }
+
                     status = "stopped in place";
                     break;
             }
@@ -176,6 +188,31 @@ public class CheckScalewayServerActionStatus extends Script{
             server.setPrivateIp(privateIp);
             server.setIpVSix(ipVSix);
             server.setStatus(status);
+            try {
+                crossStorageApi.createOrUpdate(defaultRepo, server);
+            }catch(Exception e){
+                logger.error("Error updating server after action", e.getMessage());
+            }
+        } else if(action.getResponse().equalsIgnoreCase("pending")) {
+            String serverStatus = null;
+            switch(action.getAction()) {
+                case "poweron":
+                    serverStatus = "starting";
+                    break;
+                case "poweroff":
+                    serverStatus = "stopping";
+                    break;
+                case "stop_in_place":
+                    serverStatus = "stopping";
+                    break;
+                case "reboot":
+                    serverStatus = "rebooting";
+                    break;
+                case "backup":
+                    serverStatus = "backing up";
+                    break;
+            }
+            server.setStatus(serverStatus);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, server);
             }catch(Exception e){

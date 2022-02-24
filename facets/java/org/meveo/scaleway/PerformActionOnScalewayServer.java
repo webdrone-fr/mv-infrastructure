@@ -65,12 +65,10 @@ public class PerformActionOnScalewayServer extends Script {
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/action");
 
-        Map <String, Object> body = new HashMap<String, Object>();
-
         // Server Type Constraints Check
         String serverType = server.getServerType();
-        // Add up sizes of root volume + all additional volumes
-        Long serverTotalVolumesSizes = ScalewayHelperService.calcServerTotalVolumesSizes(server, crossStorageApi, defaultRepo);
+        // Add up sizes of root volume + all additional volumes - Local
+        Long serverTotalLocalVolumesSizes = ScalewayHelperService.calcServerTotalLocalVolumesSize(server, crossStorageApi, defaultRepo);
 
         // Get server type constraints
         JsonObject serverConstraintsObj = ScalewayHelperService.getServerTypeRequirements(server, credential);
@@ -80,19 +78,20 @@ public class PerformActionOnScalewayServer extends Script {
 
         // Action Conditions
         // Block volumes are only available for DEV1, GP1 and RENDER offers
+        Map <String, Object> body = new HashMap<String, Object>();
         if (action.equalsIgnoreCase("poweron")) {
             // Check if available volume size meets requirements for server type
-            String serverTotalVolumesSizesStr = Long.toString(serverTotalVolumesSizes);
+            String serverTotalLocalVolumesSizesStr = Long.toString(serverTotalLocalVolumesSizes);
             String serverMinVolumeSizeReqStr = Long.toString(serverMinVolumeSizeReq);
             String serverMaxVolumeSizeReqStr = Long.toString(serverMaxVolumeSizeReq);
-            if (serverTotalVolumesSizes < serverMinVolumeSizeReq) {
-                logger.debug("Current available volume size : {}, Minimum Volume size required for server type {} : {}", serverTotalVolumesSizesStr , serverType, serverMinVolumeSizeReqStr);
+            if (serverTotalLocalVolumesSizes < serverMinVolumeSizeReq) {
+                logger.debug("Current available local volume size : {}, Minimum Local Volume size required for server type {} : {}", serverTotalLocalVolumesSizesStr , serverType, serverMinVolumeSizeReqStr);
                 throw new BusinessException("Current total volume size is too small for selected server type");
-            } else if (serverTotalVolumesSizes > serverMaxVolumeSizeReq) {
-                logger.debug("Current available volume size : {}, Maximum Volume size allowed for server type {} : {}", serverTotalVolumesSizesStr , serverType, serverMaxVolumeSizeReqStr);
+            } else if (serverTotalLocalVolumesSizes > serverMaxVolumeSizeReq) {
+                logger.debug("Current available local volume size : {}, Maximum Local Volume size allowed for server type {} : {}", serverTotalLocalVolumesSizesStr , serverType, serverMaxVolumeSizeReqStr);
                 throw new BusinessException("Current total volume size is too large for selected server type");
             } else {
-                logger.info("Server Total Volume size : {}; Min Total Volume size : {}; Max Total Volume Size : {}", serverTotalVolumesSizesStr, serverMinVolumeSizeReqStr, serverMaxVolumeSizeReqStr);
+                logger.info("Server Total Local Volume size : {}; Min Total Volume size : {}; Max Total Volume Size : {}", serverTotalLocalVolumesSizesStr, serverMinVolumeSizeReqStr, serverMaxVolumeSizeReqStr);
             }
         } else if (action.equalsIgnoreCase("backup")) {
             // If action is backup - check for name of Backup to be created
