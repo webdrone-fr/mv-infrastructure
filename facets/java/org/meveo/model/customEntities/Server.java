@@ -45,6 +45,8 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
+    private String name;
+
     private String status;
 
     @Override()
@@ -158,6 +160,14 @@ public class Server implements CustomEntity {
 
     public void setServerType(String serverType) {
         this.serverType = serverType;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getStatus() {
