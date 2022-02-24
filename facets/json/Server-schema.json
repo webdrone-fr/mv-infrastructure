@@ -137,6 +137,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_name",
+            "title": "Server.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "status": {
             "storages": ["SQL"],
             "default": "IN CREATION",
