@@ -176,6 +176,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "volumeId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Volume id",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_volumeId",
+            "title": "Server.volumeId",
+            "type": "string",
+            "maxLength": 255
+        },
         "flavorRef": {
             "storages": ["SQL"],
             "nullable": true,
