@@ -113,7 +113,8 @@ public class ListScalewayServers extends Script {
 
                         // Volumes
                         JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
-                        Long serverTotalVolumeSize = 0L;
+                        Long serverTotalVolumesSize = 0L;
+                        Long serverTotalLocalVolumesSize = 0L;
                         if (serverVolumesObj.entrySet().size() >= 1) {
                             // Root Volume
                             String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
@@ -122,7 +123,10 @@ public class ListScalewayServers extends Script {
                                 try {
                                     ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
                                     server.setRootVolume(serverRootVolume);
-                                    serverTotalVolumeSize = serverVolumesObj.get("0").getAsJsonObject().get("size").getAsLong();
+                                    serverTotalVolumesSize = Long.valueOf(serverRootVolume.getSize());
+                                    if(serverRootVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
+                                        serverTotalLocalVolumesSize = Long.valueOf(serverRootVolume.getSize());
+                                    }
                                 } catch (Exception e) {
                                     logger.error("Error retrieving root volume {} ", serverRootVolumeId, e.getMessage());
                                 }
@@ -143,7 +147,10 @@ public class ListScalewayServers extends Script {
                                 try {
                                     crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
                                     server.setRootVolume(rootVolume);
-                                    serverTotalVolumeSize += Long.valueOf(rootVolume.getSize());
+                                    serverTotalVolumesSize = Long.valueOf(rootVolume.getSize());
+                                    if(rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
+                                        serverTotalLocalVolumesSize = Long.valueOf(rootVolume.getSize());
+                                    }
                                 } catch(Exception e) {
                                     logger.error("error creating root volume {} : {}", serverRootVolumeId, e.getMessage());
                                 }
@@ -154,13 +161,16 @@ public class ListScalewayServers extends Script {
                                 Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
                                 Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = serverVolumesObj.entrySet();
                                 for (Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
-                                    if(additionalVolumeEntry.getKey() != "0") { // key for root volume
+                                    if(!additionalVolumeEntry.getKey().equals("0")) { // key for root volume
                                         String additionalVolumeId = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject().get("id").getAsString();
                                         if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
                                             try{
                                                 ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
                                                 serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), serverAdditionalVolume);
-                                                serverTotalVolumeSize += Long.valueOf(serverAdditionalVolume.getSize());
+                                                serverTotalVolumesSize += Long.valueOf(serverAdditionalVolume.getSize());
+                                                if(serverAdditionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
+                                                    serverTotalLocalVolumesSize = Long.valueOf(serverAdditionalVolume.getSize());
+                                                }
                                             } catch (Exception e) {
                                                 logger.error("Error retrieving additional volume", e.getMessage());
                                             }
@@ -181,7 +191,10 @@ public class ListScalewayServers extends Script {
                                             try {
                                                 crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
                                                 serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
-                                                serverTotalVolumeSize += Long.valueOf(additionalVolume.getSize());
+                                                serverTotalVolumesSize += Long.valueOf(additionalVolume.getSize());
+                                                if(additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
+                                                    serverTotalLocalVolumesSize = Long.valueOf(additionalVolume.getSize());
+                                                }
                                             } catch(Exception e) {
                                                 logger.error("error creating additional volume {} : {}", additionalVolumeId, e.getMessage());
                                             }
@@ -192,7 +205,8 @@ public class ListScalewayServers extends Script {
                                 server.setAdditionalVolumes(serverAdditionalVolumes);
                             }
                             // Volume size
-                            server.setVolumeSize(String.valueOf(serverTotalVolumeSize));
+                            server.setVolumeSize(String.valueOf(serverTotalVolumesSize));
+                            server.setTotalLocalVolumesSize(String.valueOf(serverTotalLocalVolumesSize));
                         }
 
                         // Server Actions

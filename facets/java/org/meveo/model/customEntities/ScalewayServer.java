@@ -43,6 +43,8 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     private String locationDefinition;
 
+    private String totalLocalVolumesSize;
+
     private String volumeSize;
 
     private List<String> privateNics = new ArrayList<>();
@@ -166,6 +168,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setLocationDefinition(String locationDefinition) {
         this.locationDefinition = locationDefinition;
+    }
+
+    public String getTotalLocalVolumesSize() {
+        return totalLocalVolumesSize;
+    }
+
+    public void setTotalLocalVolumesSize(String totalLocalVolumesSize) {
+        this.totalLocalVolumesSize = totalLocalVolumesSize;
     }
 
     public String getVolumeSize() {

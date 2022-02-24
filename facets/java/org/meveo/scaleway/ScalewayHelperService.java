@@ -1,7 +1,6 @@
 package org.meveo.scaleway;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -28,9 +27,8 @@ public class ScalewayHelperService extends Script{
     static final private String SCALEWAY_URL = "api.scaleway.com";
     static final private String BASE_PATH = "/instance/v1/zones/";
 
-    // for local volumes TODO rename function
-    public static Long calcServerTotalVolumesSizes(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository defaultRepo) {
-        Long serverTotalVolumesSizes = 0L;
+    public static Long calcServerTotalVolumesSize(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository defaultRepo) {
+        Long serverTotalVolumesSize = 0L;
         ArrayList<Long> allVolumesSizes = new ArrayList<Long>();
         // Root volume
         try {
@@ -43,26 +41,62 @@ public class ScalewayHelperService extends Script{
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
-            Map<String, ServerVolume> additionalVolumes = new HashMap<String, ServerVolume>();
             Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
-            for (int i = 1; i < serverAdditionalVolumes.size(); i++) {
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolumeEnt : serverAdditionalVolumes.entrySet()) {
                 try {
-                    ServerVolume serverAdditionalVolume = crossStorageApiInstance.find(defaultRepo, serverAdditionalVolumes.get(String.valueOf(i)).getUuid(), ServerVolume.class);
-                    additionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
+                    String serverAdditionalVolumeId = serverAdditionalVolumes.get(serverAdditionalVolumeEnt.getKey()).getUuid();
+                    ServerVolume serverAdditionalVolume = crossStorageApiInstance.find(defaultRepo, serverAdditionalVolumeId, ServerVolume.class);
+                    Long serverAdditionalVolumeSize = Long.valueOf(serverAdditionalVolume.getSize());
+                    allVolumesSizes.add(serverAdditionalVolumeSize);
                 } catch (Exception e) {
                     logger.error("Error retrieving additional volumes {}", e.getMessage());
                 }
             }
-            for (Map.Entry<String, ServerVolume> serverAdditionalVolumeEnt : additionalVolumes.entrySet()) {
-                Long additionalVolumeSize = Long.valueOf(serverAdditionalVolumeEnt.getValue().getSize());
-                allVolumesSizes.add(additionalVolumeSize);
-            }
         }
         // Sum of all values
         for (Long volumeSize : allVolumesSizes) {
-            serverTotalVolumesSizes += volumeSize;
+            serverTotalVolumesSize += volumeSize;
         }
-        return serverTotalVolumesSizes;
+        return serverTotalVolumesSize;
+    }
+
+    public static Long calcServerTotalLocalVolumesSize(ScalewayServer server, CrossStorageApi crossStorageApiInstance, Repository defaultRepo) {
+        Long serverTotalLocalVolumesSize = 0L;
+        ArrayList<Long> allLocalVolumesSizes = new ArrayList<Long>();
+        // Root volume
+        try {
+            String serverRootVolumeId = server.getRootVolume().getUuid();
+            ServerVolume serverRootVolume = crossStorageApiInstance.find(defaultRepo, serverRootVolumeId, ServerVolume.class);
+            String serverRootVolumeType = serverRootVolume.getVolumeType();
+            if(serverRootVolumeType.equalsIgnoreCase("l_ssd")){
+                Long rootVolumeSize = Long.valueOf(serverRootVolume.getSize());
+                allLocalVolumesSizes.add(rootVolumeSize);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving root volume, {}", e.getMessage());
+        }
+        // Additional volumes
+        if (server.getAdditionalVolumes() != null){
+            Map<String, ServerVolume> serverAdditionalVolumes = server.getAdditionalVolumes();
+            for (Map.Entry<String, ServerVolume> serverAdditionalVolumeEnt : serverAdditionalVolumes.entrySet()) {
+                try {
+                    String serverAdditionalVolumeId = serverAdditionalVolumes.get(serverAdditionalVolumeEnt.getKey()).getUuid();
+                    ServerVolume serverAdditionalVolume = crossStorageApiInstance.find(defaultRepo, serverAdditionalVolumeId, ServerVolume.class);
+                    String serverAdditionalVolumeType = serverAdditionalVolume.getVolumeType();
+                    if (serverAdditionalVolumeType.equalsIgnoreCase("l_ssd")) {
+                        Long serverAdditionalVolumeSize = Long.valueOf(serverAdditionalVolume.getSize());
+                        allLocalVolumesSizes.add(serverAdditionalVolumeSize);
+                    }
+                } catch (Exception e) {
+                    logger.error("Error retrieving additional volumes {}", e.getMessage());
+                }
+            }
+        }
+        // Sum of all values
+        for (Long volumeSize : allLocalVolumesSizes) {
+            serverTotalLocalVolumesSize += volumeSize;
+        }
+        return serverTotalLocalVolumesSize;
     }
 
     public static JsonObject getServerTypeRequirements(ScalewayServer server, Credential credential) throws BusinessException {
