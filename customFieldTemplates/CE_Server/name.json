@@ -19,9 +19,9 @@
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],
-  "summary" : true,
+  "summary" : false,
   "audited" : false,
   "persisted" : true,
-  "filter" : true,
+  "filter" : false,
   "unique" : false
 }
