@@ -120,8 +120,8 @@
         "volumeSize": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Main volume size",
-            "readOnly": false,
+            "description": "Volume Size",
+            "readOnly": true,
             "versionable": false,
             "id": "CE_Server_volumeSize",
             "title": "Server.volumeSize",
