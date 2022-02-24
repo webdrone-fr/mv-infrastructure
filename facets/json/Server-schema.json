@@ -17,6 +17,23 @@
             "type": "string",
             "maxLength": 255
         },
+        "serverAction": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Server Action",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_serverAction",
+            "title": "Server.serverAction",
+            "type": "array",
+            "items": {
+                "id": "CE_Server_serverAction_item",
+                "title": "Server.serverAction item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "volumeState": {
             "storages": ["SQL"],
             "nullable": true,
