@@ -49,11 +49,6 @@ public class ListOVHServersScript extends Script {
 
     public void callOVH(Credential credential, ServiceProvider openstack) {
         log.info("calling ListOVHServersScript");
-      	//List actual Server register in meveo
-      	ServerOVH s = new ServerOVH();
-      	String codeClass = s.getClass().getSimpleName();
-		CustomEntityTemplate servCET = customEntityTemplateService.findByCode(codeClass);
-      	listActualServer(servCET);
         //Check the token
         checkOVHToken.checkOVHToken(credential, openstack);
         // Call every region to list server
@@ -134,15 +129,6 @@ public class ListOVHServersScript extends Script {
                 }
             }
             response.close();
-        }
-    }
-  
-  	public void listActualServer(CustomEntityTemplate serverOVH) {
-      	try {
-    		List<Map<String, Object>> listSer = crossStorageService.find(defaultRepo, serverOVH, null);
-          	log.info(listSer.toString());
-        } catch (EntityDoesNotExistsException ex) {
-          	
         }
     }
 }
