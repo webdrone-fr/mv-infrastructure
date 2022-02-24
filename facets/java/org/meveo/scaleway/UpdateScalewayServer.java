@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -212,14 +213,17 @@ public class UpdateScalewayServer extends Script {
                 // Additional Volumes
                 if (serverVolumesObj.entrySet().size() > 1) {
                     Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-                    for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                        String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
-                        try{
-                            ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                            serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                            totalVolumeSize += Long.valueOf(serverAdditionalVolume.getSize());
-                        } catch (Exception e) {
-                            logger.error("Error retrieving additional volume", e.getMessage());
+                    Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = serverVolumesObj.entrySet();
+                    for (Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
+                        if(additionalVolumeEntry.getKey() != "0") { // key for root volume
+                            String additionalVolumeId = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject().get("id").getAsString();
+                            try{
+                                ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+                                serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), serverAdditionalVolume);
+                                totalVolumeSize += Long.valueOf(serverAdditionalVolume.getSize());
+                            } catch (Exception e) {
+                                logger.error("Error retrieving additional volume", e.getMessage());
+                            }
                         }
                     }
                     server.setAdditionalVolumes(serverAdditionalVolumes);

@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -151,37 +152,39 @@ public class ListScalewayServers extends Script {
                             // Additional Volumes
                             if (serverVolumesObj.entrySet().size() > 1) {
                                 Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-                                for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                                    String additionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
-                                    if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
-                                        // if additional volume exists in default repo
-                                        try {
-                                            ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                                            serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                                            serverTotalVolumeSize += serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("size").getAsLong();
-                                        } catch (Exception e) {
-                                            logger.error("Error retieving additional volume : {}", additionalVolumeId, e.getMessage());
-                                        }
-                                    } else { // if additional volume does not exist in default repo - create new
-                                        JsonObject serverAdditionalVolumeObj = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject();
-                                        ServerVolume additionalVolume = new ServerVolume();
-                                        additionalVolume.setCreationDate(OffsetDateTime.parse(serverAdditionalVolumeObj.get("creation_date").getAsString()).toInstant());
-                                        additionalVolume.setLastUpdated(OffsetDateTime.parse(serverAdditionalVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
-                                        additionalVolume.setProviderSideId(additionalVolumeId);
-                                        additionalVolume.setUuid(additionalVolumeId);
-                                        additionalVolume.setName(serverAdditionalVolumeObj.get("name").getAsString());
-                                        additionalVolume.setState(serverAdditionalVolumeObj.get("state").getAsString());
-                                        additionalVolume.setSize(String.valueOf(serverAdditionalVolumeObj.get("size").getAsLong()));
-                                        additionalVolume.setZone(zone);
-                                        additionalVolume.setVolumeType(serverAdditionalVolumeObj.get("volume_type").getAsString());
-                                        additionalVolume.setServer(serverId);
-                                        additionalVolume.setIsBoot(serverAdditionalVolumeObj.get("boot").getAsBoolean());
-                                        try {
-                                            crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
-                                            serverAdditionalVolumes.put(String.valueOf(i), additionalVolume);
-                                            serverTotalVolumeSize += Long.valueOf(additionalVolume.getSize());
-                                        } catch(Exception e) {
-                                            logger.error("error creating additional volume {} : {}", additionalVolumeId, e.getMessage());
+                                Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = serverVolumesObj.entrySet();
+                                for (Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
+                                    if(additionalVolumeEntry.getKey() != "0") { // key for root volume
+                                        String additionalVolumeId = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject().get("id").getAsString();
+                                        if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
+                                            try{
+                                                ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+                                                serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), serverAdditionalVolume);
+                                                serverTotalVolumeSize += Long.valueOf(serverAdditionalVolume.getSize());
+                                            } catch (Exception e) {
+                                                logger.error("Error retrieving additional volume", e.getMessage());
+                                            }
+                                        } else { // if additional volume does not exist in default repo - create new
+                                            JsonObject serverAdditionalVolumeObj = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject();
+                                            ServerVolume additionalVolume = new ServerVolume();
+                                            additionalVolume.setCreationDate(OffsetDateTime.parse(serverAdditionalVolumeObj.get("creation_date").getAsString()).toInstant());
+                                            additionalVolume.setLastUpdated(OffsetDateTime.parse(serverAdditionalVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
+                                            additionalVolume.setProviderSideId(additionalVolumeId);
+                                            additionalVolume.setUuid(additionalVolumeId);
+                                            additionalVolume.setName(serverAdditionalVolumeObj.get("name").getAsString());
+                                            additionalVolume.setState(serverAdditionalVolumeObj.get("state").getAsString());
+                                            additionalVolume.setSize(String.valueOf(serverAdditionalVolumeObj.get("size").getAsLong()));
+                                            additionalVolume.setZone(zone);
+                                            additionalVolume.setVolumeType(serverAdditionalVolumeObj.get("volume_type").getAsString());
+                                            additionalVolume.setServer(serverId);
+                                            additionalVolume.setIsBoot(serverAdditionalVolumeObj.get("boot").getAsBoolean());
+                                            try {
+                                                crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
+                                                serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
+                                                serverTotalVolumeSize += Long.valueOf(additionalVolume.getSize());
+                                            } catch(Exception e) {
+                                                logger.error("error creating additional volume {} : {}", additionalVolumeId, e.getMessage());
+                                            }
                                         }
                                     }
                                 }
