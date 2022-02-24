@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
 import org.meveo.script.openstack.CheckOVHToken;
+import org.meveo.persistence.CrossStorageService;
+import org.meveo.model.customEntities.CustomEntityTemplate;
+import org.meveo.service.custom.CustomEntityTemplateService;
+import org.meveo.api.exception.EntityDoesNotExistsException;
 
 public class ListOVHServersScript extends Script {
 
@@ -33,6 +37,10 @@ public class ListOVHServersScript extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
+  
+  	private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
+
+    private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -123,7 +131,13 @@ public class ListOVHServersScript extends Script {
             response.close();
         }
     }
-  	public void ListActualServer() {
-      	 
+  	public void ListActualServer(ServerOVH serverOVH) {
+      	String codeClass = serverOVH.getClass().getSimpleName();
+		CustomEntityTemplate servCET = customEntityTemplateService.findByCode(codeClass);
+      	try {
+    		List<Map<String, Object>> listSer = crossStorageService.find(defaultRepo, servCET, null);
+        } catch (EntityDoesNotExistsException ex) {
+          	
+        }
     }
 }
