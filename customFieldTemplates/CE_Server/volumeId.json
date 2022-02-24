@@ -1,6 +1,6 @@
 {
   "code" : "volumeId",
-  "description" : "Volume id",
+  "description" : "Volume Id",
   "fieldType" : "STRING",
   "accountLevel" : "CE_Server",
   "appliesTo" : "CE_Server",
