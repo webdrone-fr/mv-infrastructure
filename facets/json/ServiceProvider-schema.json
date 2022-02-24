@@ -103,6 +103,23 @@
             "type": "string",
             "maxLength": 255
         },
+        "publicIPs": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Public IPs",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_publicIPs",
+            "title": "ServiceProvider.publicIPs",
+            "type": "array",
+            "items": {
+                "id": "CE_ServiceProvider_publicIPs_item",
+                "title": "ServiceProvider.publicIPs item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
