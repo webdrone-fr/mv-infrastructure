@@ -190,7 +190,7 @@
         "volumeId": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Volume id",
+            "description": "Volume Id",
             "readOnly": true,
             "versionable": false,
             "id": "CE_Server_volumeId",
