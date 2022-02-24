@@ -141,7 +141,7 @@
             "storages": ["SQL"],
             "nullable": true,
             "description": "Status",
-            "readOnly": false,
+            "readOnly": true,
             "versionable": false,
             "id": "CE_Server_status",
             "title": "Server.status",
