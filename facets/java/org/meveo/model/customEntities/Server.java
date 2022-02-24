@@ -3,8 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.time.Instant;
 import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,6 +23,8 @@ public class Server implements CustomEntity {
     private DBStorageType storages;
 
     private String image;
+
+    private List<String> serverAction = new ArrayList<>();
 
     private String volumeState;
 
@@ -89,6 +91,14 @@ public class Server implements CustomEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public List<String> getServerAction() {
+        return serverAction;
+    }
+
+    public void setServerAction(List<String> serverAction) {
+        this.serverAction = serverAction;
     }
 
     public String getVolumeState() {
