@@ -36,6 +36,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String description;
 
+    private List<String> publicIPs = new ArrayList<>();
+
     private List<String> status = new ArrayList<>();
 
     @Override()
@@ -109,6 +111,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<String> getPublicIPs() {
+        return publicIPs;
+    }
+
+    public void setPublicIPs(List<String> publicIPs) {
+        this.publicIPs = publicIPs;
     }
 
     public List<String> getStatus() {
