@@ -62,6 +62,8 @@ public class Server implements CustomEntity {
 
     private String imageRef;
 
+    private String volumeZone;
+
     private String status;
 
     @Override()
@@ -239,6 +241,14 @@ public class Server implements CustomEntity {
 
     public void setImageRef(String imageRef) {
         this.imageRef = imageRef;
+    }
+
+    public String getVolumeZone() {
+        return volumeZone;
+    }
+
+    public void setVolumeZone(String volumeZone) {
+        this.volumeZone = volumeZone;
     }
 
     public String getStatus() {
