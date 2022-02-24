@@ -24,8 +24,6 @@ public class Server implements CustomEntity {
 
     private String image;
 
-    private Instant volumeCreationDate;
-
     private String volumeState;
 
     private String instanceName;
@@ -91,14 +89,6 @@ public class Server implements CustomEntity {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public Instant getVolumeCreationDate() {
-        return volumeCreationDate;
-    }
-
-    public void setVolumeCreationDate(Instant volumeCreationDate) {
-        this.volumeCreationDate = volumeCreationDate;
     }
 
     public String getVolumeState() {
