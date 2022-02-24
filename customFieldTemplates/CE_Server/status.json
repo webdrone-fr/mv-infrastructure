@@ -4,6 +4,7 @@
   "fieldType" : "STRING",
   "accountLevel" : "CE_Server",
   "appliesTo" : "CE_Server",
+  "defaultValue" : "IN CREATION",
   "useInheritedAsDefaultValue" : false,
   "storageType" : "SINGLE",
   "valueRequired" : false,
