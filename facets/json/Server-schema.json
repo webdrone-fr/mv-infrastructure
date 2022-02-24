@@ -139,6 +139,7 @@
         },
         "status": {
             "storages": ["SQL"],
+            "default": "IN CREATION",
             "nullable": true,
             "description": "Status",
             "readOnly": true,
