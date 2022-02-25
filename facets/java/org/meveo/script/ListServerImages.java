@@ -15,6 +15,8 @@ import org.meveo.persistence.CrossStorageService;
 import org.meveo.model.customEntities.CustomEntityTemplate;
 import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.api.exception.EntityDoesNotExistsException;
+import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Credential;
 
 public class ListServerImages extends Script {
 
@@ -38,9 +40,9 @@ public class ListServerImages extends Script {
 		CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
       	try {
       		List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
-          	log.info(providers.toString());
           	for(Map<String, Object> provider : providers) {
-              	
+          		log.info(provider.toString());
+              	//Credential credential = CredentialHelperService.getCredential(provider.getApiBaseUrl(), crossStorageApi, defaultRepo);
             }
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
