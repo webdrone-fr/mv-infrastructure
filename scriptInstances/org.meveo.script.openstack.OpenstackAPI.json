@@ -1,0 +1,13 @@
+{
+  "code" : "org.meveo.script.openstack.OpenstackAPI",
+  "inputs" : [ ],
+  "outputs" : [ ],
+  "generateOutputs" : false,
+  "type" : "JAVA",
+  "transactionType" : "SAME",
+  "script" : "package org.meveo.script.openstack;\r\n\r\nimport java.util.Map;\r\n\r\nimport org.meveo.service.script.Script;\r\nimport org.meveo.admin.exception.BusinessException;\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\nimport javax.ws.rs.client.*;\r\nimport javax.ws.rs.core.*;\r\nimport java.util.List;\r\nimport java.util.ArrayList;\r\nimport com.google.gson.*;\r\n\r\npublic class OpenstackAPI extends Script {\r\n\r\n    private static final Logger log = LoggerFactory.getLogger(ListOVHServersScript.class);\r\n  \r\n  \tprivate String computeBaseAPI = \"https://compute.gra11.cloud.ovh.net/v2.1/\";\r\n  \r\n  \tprivate String networkBaseAPI = \"https://network.compute.gra11.cloud.ovh.net/v2.0/\";\r\n  \r\n  \tprivate String imageBaseAPI = \"https://image.compute.gra11.cloud.ovh.net/v2/\";\r\n  \r\n  \tpublic List<JsonObject> computeAPI(String url, String token, String jsonBody) {\r\n      \tList<JsonObject> res = new ArrayList<>();\r\n\t\tClient client = ClientBuilder.newClient();\r\n      \tWebTarget target = client.target(this.computeBaseAPI + url);\r\n      \tResponse response = target.request().header(\"X-Auth-Token\", token).get();\r\n      \tString value = response.readEntity(String.class);\r\n      \tif (response.getStatus() < 300) {\r\n          \tString objectReturned = url.substring(0, url.indexOf(\"/\"));\r\n          \tJsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);\r\n            for (JsonElement element : rootArray) {\r\n            \tJsonObject JObject = element.getAsJsonObject();\r\n              \tres.add(JObject);\r\n            }\r\n        }\r\n      \treturn res;\r\n    }\r\n  \r\n  \tpublic List<JsonObject> networkAPI(String url, String token, String jsonBody) {\r\n      \tList<JsonObject> res = new ArrayList<>();\r\n      \t\r\n      \t\r\n      \treturn res;\r\n    }\r\n  \r\n  \tpublic List<JsonObject> imageAPI(String url, String token, String jsonBody) {\r\n      \tList<JsonObject> res = new ArrayList<>();\r\n      \t\r\n      \t\r\n      \treturn res;\r\n    }\r\n  \r\n  \tpublic List<JsonObject> IdentityAPI(String url, String token, String jsonBody) {\r\n      \tList<JsonObject> res = new ArrayList<>();\r\n      \t\r\n      \t\r\n      \treturn res;\r\n    }\r\n\t\r\n\t@Override\r\n\tpublic void execute(Map<String, Object> parameters) throws BusinessException {\r\n\t\tsuper.execute(parameters);\r\n\t}\r\n  \r\n\t\r\n}",
+  "executionRoles" : [ ],
+  "sourcingRoles" : [ ],
+  "mavenDependencies" : [ ],
+  "importScriptInstances" : [ ]
+}
