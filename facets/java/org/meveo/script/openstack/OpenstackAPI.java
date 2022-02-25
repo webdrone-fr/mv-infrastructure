@@ -58,6 +58,10 @@ public class OpenstackAPI extends Script {
             }
             response.close();
         } else if (methodType.equalsIgnoreCase("delete")) {
+            WebTarget target = client.target(this.computeBaseAPI + url);
+            Response response = target.request().header("X-Auth-Token", token).delete();
+            String value = response.readEntity(String.class);
+            response.close();
         } else if (methodType.equalsIgnoreCase("put")) {
         } else {
           	throw new BusinessException("Cannot found " + methodType + " in method type request. Available methods : get, post, delete, put");
