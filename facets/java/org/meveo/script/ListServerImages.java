@@ -37,7 +37,7 @@ public class ListServerImages extends Script {
       	String codeClass = sp.getClass().getSimpleName();
 		CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
       	try {
-      	List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
+      		List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
         } catch (EntityDoesNotExistsException ex) {
           	
         }
