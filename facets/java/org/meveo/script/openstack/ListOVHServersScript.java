@@ -71,9 +71,9 @@ public class ListOVHServersScript extends Script {
                     server.setOrganization(serverObj.get("tenant_id").getAsString());
                     // image
                     String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                  	String url = "images/" + idImage;
-                  	log.info(url);
-                  	List<JsonObject> images = openstackAPI.computeAPI(url, credential.getToken(), null);
+                  	String urlImage = "images/" + idImage;
+                  	log.info(urlImage);
+                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null);
                     //WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
                     //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     //String ImageValue = responseImage.readEntity(String.class);
@@ -112,6 +112,7 @@ public class ListOVHServersScript extends Script {
                     server.setProvider(openstack);
                     // volume & flavor
                     String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
+                  	String urlFlavor = "flavors/" + idFlavor;
                     WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
