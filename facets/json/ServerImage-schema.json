@@ -5,14 +5,27 @@
     "id": "ServerImage",
     "title": "Server Image",
     "type": "object",
-    "properties": {"provider": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Provider",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServerImage_provider",
-        "title": "ServerImage.provider",
-        "$ref": "#/definitions/ServiceProvider"
-    }}
+    "properties": {
+        "provider": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_provider",
+            "title": "ServerImage.provider",
+            "$ref": "#/definitions/ServiceProvider"
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_name",
+            "title": "ServerImage.name",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
