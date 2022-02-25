@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.ListServerTypes",
+  "description" : "List server types",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
