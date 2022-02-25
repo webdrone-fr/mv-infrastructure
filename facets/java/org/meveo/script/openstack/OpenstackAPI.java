@@ -24,7 +24,7 @@ public class OpenstackAPI extends Script {
   
   	private String identityBaseAPI = "https://auth.cloud.ovh.net/";
   
-  	public List<JsonObject> computeAPI(String url, String zone, String token, String jsonBody) {
+  	public List<JsonObject> computeAPI(String url, String zone, String token, String jsonBody, String pute, String putee) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.computeBaseAPI + url);
