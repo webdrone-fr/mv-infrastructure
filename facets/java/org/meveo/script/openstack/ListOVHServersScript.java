@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
 import org.meveo.script.openstack.CheckOVHToken;
+import org.meveo.script.openstack.OpenstackAPI;
 
 public class ListOVHServersScript extends Script {
 
@@ -33,6 +34,8 @@ public class ListOVHServersScript extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
+  
+  	private OpenstackAPI openstackAPI = new OpenstackAPI();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
