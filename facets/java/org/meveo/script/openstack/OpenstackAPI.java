@@ -31,6 +31,7 @@ public class OpenstackAPI extends Script {
       	Response response = target.request().header("X-Auth-Token", token).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
+          	log.info(url);
           	String objectReturned = url.substring(0, url.indexOf("/"));
           	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
             for (JsonElement element : rootArray) {
