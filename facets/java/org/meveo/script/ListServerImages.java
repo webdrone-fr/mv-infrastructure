@@ -17,6 +17,7 @@ import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.script.openstack.CheckOVHToken;
 
 public class ListServerImages extends Script {
 
@@ -31,6 +32,8 @@ public class ListServerImages extends Script {
   	private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
 
     private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
+  
+    private CheckOVHToken checkOVHToken = new CheckOVHToken();
 	
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -45,7 +48,7 @@ public class ListServerImages extends Script {
               	String baseURL = provider.get("apiBaseUrl").toString();
               	ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
               	Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
-              	
+              	checkOVHToken.checkOVHToken(credential, matchingProvider);
             }
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
