@@ -24,6 +24,8 @@ public class ServerType implements CustomEntity {
 
     private String name;
 
+    private String state;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -55,6 +57,14 @@ public class ServerType implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override()
