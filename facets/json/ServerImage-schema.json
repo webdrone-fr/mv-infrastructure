@@ -27,6 +27,17 @@
             "title": "ServerImage.provider",
             "$ref": "#/definitions/ServiceProvider"
         },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerImage_zone",
+            "title": "ServerImage.zone",
+            "type": "string",
+            "maxLength": 50
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
