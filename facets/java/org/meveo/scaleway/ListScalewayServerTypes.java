@@ -125,7 +125,7 @@ public class ListScalewayServerTypes extends Script{
                     }
                     serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
                 }
-                provider.setServerTypes(serverTypes);
+                provider.setServerType(serverTypes);
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, provider);
                 } catch (Exception e) {

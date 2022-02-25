@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -231,6 +232,7 @@ public class CreateScalewayServer extends Script {
                     rootVolume.setIsBoot(serverRootVolumeObj.get("boot").getAsBoolean());
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
+                        server.setRootVolume(rootVolume);
                         serverTotalVolumesSize = Long.parseLong(rootVolume.getSize());
                         if(rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
                             serverTotalLocalVolumesSize = Long.valueOf(rootVolume.getSize());
@@ -242,43 +244,45 @@ public class CreateScalewayServer extends Script {
                 // Additional Volumes
                 if (serverVolumesObj.entrySet().size() > 1) {
                     Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-                    for (int i = 1; i < serverVolumesObj.entrySet().size(); i++) {
-                        String serverAdditionalVolumeId = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject().get("id").getAsString();
-                        if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult() != null) {
-                            // if additional volume exists in default repo
-                            try {
-                                ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult();
-                                serverAdditionalVolumes.put(String.valueOf(i), serverAdditionalVolume);
-                                serverTotalVolumesSize += Long.parseLong(serverAdditionalVolume.getSize());
-                                if(serverAdditionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
-                                    serverTotalLocalVolumesSize = Long.valueOf(serverAdditionalVolume.getSize());
+                    Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = serverVolumesObj.entrySet();
+                    for (Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
+                        if(!additionalVolumeEntry.getKey().equals("0")) { // key for root volume
+                            String serverAdditionalVolumeId = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject().get("id").getAsString();
+                            if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult() != null) {
+                                try{
+                                    ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverAdditionalVolumeId).getResult();
+                                    serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), serverAdditionalVolume);
+                                    serverTotalVolumesSize += Long.valueOf(serverAdditionalVolume.getSize());
+                                    if(serverAdditionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
+                                        serverTotalLocalVolumesSize = Long.valueOf(serverAdditionalVolume.getSize());
+                                    }
+                                } catch (Exception e) {
+                                    logger.error("Error retrieving additional volume", e.getMessage());
                                 }
-                            } catch (Exception e) {
-                                logger.error("Error retrieving additional volume", e.getMessage());
-                            }
-                        } else { // if additional volume does not exist in default repo - create new
-                            JsonObject serverAdditionalVolumeObj = serverVolumesObj.get(String.valueOf(i)).getAsJsonObject();
-                            ServerVolume additionalVolume = new ServerVolume();
-                            additionalVolume.setCreationDate(OffsetDateTime.parse(serverAdditionalVolumeObj.get("creation_date").getAsString()).toInstant());
-                            additionalVolume.setLastUpdated(OffsetDateTime.parse(serverAdditionalVolumeObj.get("modification_date").getAsString()).toInstant()); // Or set to now?
-                            additionalVolume.setProviderSideId(serverAdditionalVolumeId);
-                            additionalVolume.setUuid(serverAdditionalVolumeId);
-                            additionalVolume.setName(serverAdditionalVolumeObj.get("name").getAsString());
-                            additionalVolume.setState(serverAdditionalVolumeObj.get("state").getAsString());
-                            additionalVolume.setSize(String.valueOf(serverAdditionalVolumeObj.get("size").getAsLong()));
-                            additionalVolume.setZone(serverAdditionalVolumeObj.get("zone").getAsString());
-                            additionalVolume.setVolumeType(serverAdditionalVolumeObj.get("volume_type").getAsString());
-                            additionalVolume.setServer(serverId);
-                            additionalVolume.setIsBoot(serverAdditionalVolumeObj.get("boot").getAsBoolean());
-                            try {
-                                crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
-                                serverAdditionalVolumes.put(String.valueOf(i), additionalVolume);
-                                serverTotalVolumesSize += Long.parseLong(additionalVolume.getSize());
-                                if(additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
-                                    serverTotalLocalVolumesSize = Long.valueOf(additionalVolume.getSize());
+                            } else { // if additional volume does not exist in default repo - create new
+                                JsonObject serverAdditionalVolumeObj = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject();
+                                ServerVolume additionalVolume = new ServerVolume();
+                                additionalVolume.setCreationDate(OffsetDateTime.parse(serverAdditionalVolumeObj.get("creation_date").getAsString()).toInstant());
+                                additionalVolume.setLastUpdated(OffsetDateTime.parse(serverAdditionalVolumeObj.get("modification_date").getAsString()).toInstant());
+                                additionalVolume.setProviderSideId(serverAdditionalVolumeId);
+                                additionalVolume.setUuid(serverAdditionalVolumeId);
+                                additionalVolume.setName(serverAdditionalVolumeObj.get("name").getAsString());
+                                additionalVolume.setState(serverAdditionalVolumeObj.get("state").getAsString());
+                                additionalVolume.setSize(String.valueOf(serverAdditionalVolumeObj.get("size").getAsLong()));
+                                additionalVolume.setZone(serverAdditionalVolumeObj.get("zone").getAsString());
+                                additionalVolume.setVolumeType(serverAdditionalVolumeObj.get("volume_type").getAsString());
+                                additionalVolume.setServer(serverId);
+                                additionalVolume.setIsBoot(serverAdditionalVolumeObj.get("boot").getAsBoolean());
+                                try {
+                                    crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
+                                    serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
+                                    serverTotalVolumesSize += Long.parseLong(additionalVolume.getSize());
+                                    if(additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
+                                        serverTotalLocalVolumesSize = Long.valueOf(additionalVolume.getSize());
+                                    }
+                                } catch(Exception e) {
+                                    logger.error("error creating additional volume {} : {}", serverAdditionalVolumeId, e.getMessage());
                                 }
-                            } catch(Exception e) {
-                                logger.error("error creating additional volume {} : {}", serverAdditionalVolumeId, e.getMessage());
                             }
                         }
                     }
@@ -288,8 +292,6 @@ public class CreateScalewayServer extends Script {
                 server.setVolumeSize(String.valueOf(serverTotalVolumesSize));
                 server.setTotalLocalVolumesSize(String.valueOf(serverTotalLocalVolumesSize));
             }
-            
-            
 
             // Location Definition
             String locationDefinition = "zone_id/platform_id/cluster_id/hypervisor_id/node_id";
