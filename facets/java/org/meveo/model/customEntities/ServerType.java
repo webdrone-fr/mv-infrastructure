@@ -25,6 +25,8 @@ public class ServerType implements CustomEntity {
 
     private String volumeType;
 
+    private String size;
+
     private ServiceProvider provider;
 
     private String zone;
@@ -66,6 +68,14 @@ public class ServerType implements CustomEntity {
 
     public void setVolumeType(String volumeType) {
         this.volumeType = volumeType;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public ServiceProvider getProvider() {
