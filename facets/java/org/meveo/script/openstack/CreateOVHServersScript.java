@@ -88,7 +88,7 @@ public class CreateOVHServersScript extends Script {
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Request
-          	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential.getToken(), resp, "post");
+          	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential.getToken(), resp, "post", "server");
             Client client = ClientBuilder.newClient();
             //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
             //Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
@@ -105,7 +105,7 @@ public class CreateOVHServersScript extends Script {
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
               	String urlServer = "servers" + server.getUuid();
-                List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential.getToken(), null, "get");
+                List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential.getToken(), null, "get", "servers");
                 //WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
                 //Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
                 //String valueNewServ = newServReponse.readEntity(String.class);
@@ -119,7 +119,7 @@ public class CreateOVHServersScript extends Script {
                     // volume & flavor
                     String idFlavor = newServerObj.get("flavor").getAsJsonObject().get("id").getAsString();
                   	String urlFlavor = "flavors/" + idFlavor;
-                  	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null, "get");
+                  	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null, "get", "flavors");
                     //WebTarget targetVolume = client.target("https://compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     //Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     //String flavorValue = responseVolume.readEntity(String.class);
@@ -156,7 +156,7 @@ public class CreateOVHServersScript extends Script {
                     // Image
                     String idImage = newServerObj.get("image").getAsJsonObject().get("id").getAsString();
                   	String urlImage = "images/" + idImage;
-                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null, "get");
+                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null, "get", "images");
                     //WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
                     //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
                     //String ImageValue = responseImage.readEntity(String.class);
