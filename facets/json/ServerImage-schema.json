@@ -38,6 +38,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "state": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "State",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerImage_state",
+            "title": "ServerImage.state",
+            "type": "string",
+            "maxLength": 255
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
