@@ -49,6 +49,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "isPublic": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Is Public",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerImage_isPublic",
+            "title": "ServerImage.isPublic",
+            "type": "string"
+        },
         "state": {
             "storages": ["SQL"],
             "nullable": true,
