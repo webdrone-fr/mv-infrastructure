@@ -22,6 +22,8 @@ public class OpenstackAPI extends Script {
   
   	private String imageBaseAPI = "https://image.compute.gra11.cloud.ovh.net/v2/";
   
+  	private String identityBaseAPI = "https://auth.cloud.ovh.net/";
+  
   	public List<JsonObject> computeAPI(String url, String token, String jsonBody) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
