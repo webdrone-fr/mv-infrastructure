@@ -4,5 +4,15 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerImage",
     "title": "Server Image",
-    "type": "object"
+    "type": "object",
+    "properties": {"provider": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Provider",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ServerImage_provider",
+        "title": "ServerImage.provider",
+        "$ref": "#/definitions/ServiceProvider"
+    }}
 }
