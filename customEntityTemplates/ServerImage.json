@@ -1,0 +1,11 @@
+{
+  "code" : "ServerImage",
+  "name" : "Server Image",
+  "description" : "Configuration of images for servers",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
