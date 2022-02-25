@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.openstack.UpdateOVHServersScript",
+  "description" : "Update ovh dev server through openstack api",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
