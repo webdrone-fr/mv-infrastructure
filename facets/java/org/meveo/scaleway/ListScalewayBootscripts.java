@@ -52,22 +52,14 @@ public class ListScalewayBootscripts extends Script {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("bootscripts").getAsJsonArray();
                 for (JsonElement element : rootArray) {
                     JsonObject bootscriptObj = element.getAsJsonObject();
-                    Bootscript bootscript = new Bootscript();
-                    bootscript.setUuid(bootscriptObj.get("id").getAsString());
-                    bootscript.setZone(bootscriptObj.get("zone").getAsString());
-                    bootscript.setProviderSideId(bootscriptObj.get("id").getAsString());
-                    bootscript.setArch(bootscriptObj.get("architecture").getAsString());
-                    bootscript.setBootcmdargs(bootscriptObj.get("bootcmdargs").getAsString());
-                    bootscript.setDtb(bootscriptObj.get("dtb").getAsString());
-                    bootscript.setInitrd(bootscriptObj.get("initrd").getAsString());
-                    bootscript.setKernel(bootscriptObj.get("kernel").getAsString());
-                    bootscript.setOrganization(bootscriptObj.get("organization").getAsString());
-                    bootscript.setProject(bootscriptObj.get("project").getAsString());
-                    bootscript.setIsDefault(bootscriptObj.get("default").getAsBoolean());
-                    bootscript.setIsPublic(bootscriptObj.get("public").getAsBoolean());
-                    bootscript.setTitle(bootscriptObj.get("title").getAsString());
-                    logger.info("Bootscript Title : {}", bootscript.getTitle());
+                    String bootscriptId = bootscriptObj.get("id").getAsString();
+                    Bootscript bootscript = null;
                     try {
+                        if(crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
+                            bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
+                        } else {
+                            bootscript = ScalewaySetters.setBootScript(bootscriptObj, crossStorageApi, defaultRepo);
+                        }
                         crossStorageApi.createOrUpdate(defaultRepo, bootscript);
                     } catch (Exception e) {
                         logger.error("Error creating Bootscript {} : {}", bootscript.getTitle(), e.getMessage());

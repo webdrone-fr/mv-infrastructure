@@ -1,6 +1,5 @@
 package org.meveo.scaleway;
 
-import java.time.OffsetDateTime;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -52,24 +51,17 @@ public class ListScalewayVolumes extends Script{
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("volumes").getAsJsonArray();
                 for (JsonElement element : rootArray) {
                     JsonObject volumeObj = element.getAsJsonObject();
-                    ServerVolume volume = new ServerVolume();
-
-                    volume.setUuid(volumeObj.get("id").getAsString());
-                    volume.setProviderSideId(volumeObj.get("id").getAsString());
-                    volume.setName(volumeObj.get("name").getAsString());
-                    if (!volumeObj.get("server").isJsonNull()) {
-                        volume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
-                    }
-                    volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
-                    volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-                    volume.setVolumeType(volumeObj.get("volume_type").getAsString());
-                    volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
-                    volume.setZone(volumeObj.get("zone").getAsString());
-                    volume.setState(volumeObj.get("state").getAsString());
+                    String volumeId = volumeObj.get("id").getAsString();
+                    ServerVolume volume = null;
                     try {
+                        if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult() != null) {
+                            volume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult();
+                        } else {
+                            volume = ScalewaySetters.setServerVolume(volumeObj, crossStorageApi, defaultRepo);
+                        }
                         crossStorageApi.createOrUpdate(defaultRepo, volume);
                     } catch (Exception e) {
-                        logger.error("Error creating Server Volume : {}", volume.getProviderSideId(), e.getMessage());
+                        logger.error("Error creating Volume {}", volumeId, e.getMessage());
                     }
                 }
             }
