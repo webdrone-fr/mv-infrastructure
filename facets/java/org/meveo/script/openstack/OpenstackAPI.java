@@ -44,11 +44,17 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
-                for (JsonElement element : rootArray) {
-                    JsonObject JObject = element.getAsJsonObject();
-                    res.add(JObject);
-                }
+              	JsonParser jp = new JsonParser();
+              	//if (jp.parse(value).getAsJsonObject().getAsJsonArray(objReturn) instanceof JsonObject) {
+                	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
+                    for (JsonElement element : rootArray) {
+                        JsonObject JObject = element.getAsJsonObject();
+                        res.add(JObject);
+                    }
+                //} else {
+                //  	JsonObject obj = new JsonParser().parse(value).getAsJsonObject();
+                //  	res.add(obj);
+                //}
             }
             response.close();
         } else if (methodType.equalsIgnoreCase("delete")) {
