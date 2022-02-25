@@ -1,5 +1,6 @@
 {
     "storages": ["SQL"],
+    "default": "The type of the server (volume, ram, ...)",
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerType",
     "title": "Server Type",
