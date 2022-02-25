@@ -27,6 +27,8 @@ public class ServerImage implements CustomEntity {
 
     private String name;
 
+    private String state;
+
     private Instant creationDate;
 
     @Override()
@@ -68,6 +70,14 @@ public class ServerImage implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public Instant getCreationDate() {
