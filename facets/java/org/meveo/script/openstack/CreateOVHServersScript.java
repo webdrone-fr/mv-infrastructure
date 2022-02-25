@@ -88,46 +88,53 @@ public class CreateOVHServersScript extends Script {
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Request
-          	//List<JsonObject> servers = openstackAPI.computeAPI("servers", credential.getToken(), resp);
+          	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential.getToken(), resp, "post");
             Client client = ClientBuilder.newClient();
-            WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
-            Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
-            String value = response.readEntity(String.class);
-            Integer responseStatus = response.getStatus();
+            //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
+            //Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
+            //String value = response.readEntity(String.class);
+            //Integer responseStatus = response.getStatus();
             // Verification
           	String oldUuid = server.getUuid();
-            if (responseStatus < 300) {
-                JsonParser parserServer = new JsonParser();
-                JsonElement jsonServer = parserServer.parse(value);
-                JsonObject serverObj = jsonServer.getAsJsonObject();
+            //if (responseStatus < 300) {
+          	for (JsonObject serverObj : servers) {
+                //JsonParser parserServer = new JsonParser();
+                //JsonElement jsonServer = parserServer.parse(value);
+                //JsonObject serverObj = jsonServer.getAsJsonObject();
                 serverObj = serverObj.get("server").getAsJsonObject();
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
-                
-                WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
-                Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
-                String valueNewServ = newServReponse.readEntity(String.class);
-                if (response.getStatus() < 300) {
-                  	JsonElement jsonNewServer = parserServer.parse(valueNewServ);
-                  	JsonObject newServerObj = jsonNewServer.getAsJsonObject();
-                  	newServerObj = newServerObj.get("server").getAsJsonObject();
+              	String urlServer = "servers" + server.getUuid();
+                List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential.getToken(), null, "get");
+                //WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
+                //Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
+                //String valueNewServ = newServReponse.readEntity(String.class);
+                //if (newServReponse.getStatus() < 300) {
+              	for (JsonObject newServerObj : newServers) {
+                  	//JsonElement jsonNewServer = parserServer.parse(valueNewServ);
+                  	//JsonObject newServerObj = jsonNewServer.getAsJsonObject();
+                  	//newServerObj = newServerObj.get("server").getAsJsonObject();
                     // Status
                     server.setStatus(newServerObj.get("status").getAsString());
                     // volume & flavor
                     String idFlavor = newServerObj.get("flavor").getAsJsonObject().get("id").getAsString();
-                    WebTarget targetVolume = client.target("https://compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
-                    Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
-                    String flavorValue = responseVolume.readEntity(String.class);
-                    if (response.getStatus() < 300) {
-                        JsonParser parserFlavor = new JsonParser();
-                        JsonElement jsonFlavor = parserFlavor.parse(flavorValue);
-                        JsonObject flavorObj = jsonFlavor.getAsJsonObject();
-                        flavorObj = flavorObj.get("flavor").getAsJsonObject();
+                  	String urlFlavor = "flavors/" + idFlavor;
+                  	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null, "get");
+                    //WebTarget targetVolume = client.target("https://compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
+                    //Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
+                    //String flavorValue = responseVolume.readEntity(String.class);
+                    //if (responseVolume.getStatus() < 300) {
+                  	for (JsonObject flavorObj : flavors) {
+                        //JsonParser parserFlavor = new JsonParser();
+                        //JsonElement jsonFlavor = parserFlavor.parse(flavorValue);
+                        //JsonObject flavorObj = jsonFlavor.getAsJsonObject();
+                        //flavorObj = flavorObj.get("flavor").getAsJsonObject();
                         // flavor
                         server.setServerType(flavorObj.get("name").getAsString());
                         // volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
+                    //}
                     // public IP
                   	/*
                     JsonArray publicIpArray = newServerObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
@@ -148,21 +155,26 @@ public class CreateOVHServersScript extends Script {
                     server.setOrganization(newServerObj.get("tenant_id").getAsString());
                     // Image
                     String idImage = newServerObj.get("image").getAsJsonObject().get("id").getAsString();
-                    WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
-                    Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
-                    String ImageValue = responseImage.readEntity(String.class);
-                    if (!(ImageValue.startsWith("404"))) {
-                        JsonParser parser = new JsonParser();
-                        JsonElement jsonE = parser.parse(ImageValue);
-                        JsonObject ImageObj = jsonE.getAsJsonObject();
-                        if (ImageObj != null) {
-                            server.setImage(ImageObj.get("name").getAsString());
+                  	String urlImage = "images/" + idImage;
+                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null, "get");
+                    //WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
+                    //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
+                    //String ImageValue = responseImage.readEntity(String.class);
+                    //if (!(ImageValue.startsWith("404"))) {
+                  	for (JsonObject imageObj : images) {
+                        //JsonParser parser = new JsonParser();
+                        //JsonElement jsonE = parser.parse(ImageValue);
+                        //JsonObject ImageObj = jsonE.getAsJsonObject();
+                        if (imageObj != null) {
+                            server.setImage(imageObj.get("name").getAsString());
                         }
-                    } else {
-                        server.setImage("Image not found");
-                        log.error("Image with id : " + idImage + " cannot be found for the server : " + newServerObj.get("name").getAsString());
                     }
+                    //} else {
+                    //    server.setImage("Image not found");
+                    //    log.error("Image with id : " + idImage + " cannot be found for the server : " + newServerObj.get("name").getAsString());
+                    //}
                 }
+                //}
               	try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
                   	crossStorageApi.remove(defaultRepo, oldUuid, server.getClass().getSimpleName());
@@ -170,11 +182,12 @@ public class CreateOVHServersScript extends Script {
                 } catch (Exception ex) {
                     log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
                 }
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Error while creating the server : (code: " + response.getStatus() + ") " + server.getUuid()));
-                log.info("Error while creating the server : {}", server.getUuid());
             }
-            response.close();
+            //} else {
+            //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Error while creating the server : (code: " + response.getStatus() + ") " + server.getUuid()));
+            //    log.info("Error while creating the server : {}", server.getUuid());
+            //}
+            //response.close();
         }
     }
 }
