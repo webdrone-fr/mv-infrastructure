@@ -25,6 +25,8 @@ public class ServerImage implements CustomEntity {
 
     private ServiceProvider provider;
 
+    private String zone;
+
     private String name;
 
     private String state;
@@ -62,6 +64,14 @@ public class ServerImage implements CustomEntity {
 
     public void setProvider(ServiceProvider provider) {
         this.provider = provider;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public String getName() {
