@@ -42,7 +42,7 @@ public class ListOVHServersScript extends Script {
         super.execute(parameters);
     }
 
-    public void callOVH(Credential credential, ServiceProvider openstack) {
+    public void callOVH(Credential credential, ServiceProvider openstack) throws BusinessException {
         log.info("calling ListOVHServersScript");
         // Check the token
         checkOVHToken.checkOVHToken(credential, openstack);
@@ -50,7 +50,7 @@ public class ListOVHServersScript extends Script {
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
-            List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential.getToken(), null);
+            List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential.getToken(), null, "get");
             for (JsonElement element : servers) {
                 JsonObject serverObj = element.getAsJsonObject();
                 // Create new servers
@@ -67,7 +67,7 @@ public class ListOVHServersScript extends Script {
                 String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
                 String urlImage = "images/" + idImage;
                 log.info(urlImage);
-                List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null);
+                List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null, "get");
                 for (JsonObject imageElement : images) {
                     server.setImage(imageElement.get("name").getAsString());
                 }
@@ -91,7 +91,7 @@ public class ListOVHServersScript extends Script {
                 // volume & flavor
                 String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
                 String urlFlavor = "flavors/" + idFlavor;
-                List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null);
+                List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null, "get");
                 for (JsonObject flavor : flavors) {
                     server.setServerType(flavor.get("name").getAsString());
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
