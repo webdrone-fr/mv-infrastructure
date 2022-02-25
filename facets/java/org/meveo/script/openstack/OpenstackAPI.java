@@ -24,7 +24,7 @@ public class OpenstackAPI extends Script {
   
   	private String identityBaseAPI = "https://auth.cloud.ovh.net/";
   
-  	public List<JsonObject> computeAPI(String url, String token, String jsonBody, String methodType) throws BusinessException {
+  	public List<JsonObject> computeAPI(String url, String token, String jsonBody, String methodType, String objReturn) throws BusinessException {
       	List<JsonObject> res = new ArrayList<>();
         Client client = ClientBuilder.newClient();
       	if (methodType.equalsIgnoreCase("get")) {
@@ -45,7 +45,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-                String objectReturned = url.substring(0, url.indexOf("/"));
+                String objectReturned = url;
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
                 for (JsonElement element : rootArray) {
                     JsonObject JObject = element.getAsJsonObject();
@@ -66,7 +66,7 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
-  	public List<JsonObject> networkAPI(String url, String token, String jsonBody) {
+  	public List<JsonObject> networkAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.networkBaseAPI + url);
@@ -85,7 +85,7 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
-  	public List<JsonObject> imageAPI(String url, String token, String jsonBody) {
+  	public List<JsonObject> imageAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.imageBaseAPI + url);
@@ -104,7 +104,7 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
-  	public List<JsonObject> IdentityAPI(String url, String token, String jsonBody) {
+  	public List<JsonObject> IdentityAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.identityBaseAPI + url);
