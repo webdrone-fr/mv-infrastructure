@@ -24,24 +24,30 @@ public class OpenstackAPI extends Script {
   
   	private String identityBaseAPI = "https://auth.cloud.ovh.net/";
   
-  	public List<JsonObject> computeAPI(String url, String token, String jsonBody) {
+  	public List<JsonObject> computeAPI(String url, String token, String jsonBody, String methodType) throws BusinessException {
       	List<JsonObject> res = new ArrayList<>();
-		Client client = ClientBuilder.newClient();
-      	WebTarget target = client.target(this.computeBaseAPI + url);
-      	Response response = target.request().header("X-Auth-Token", token).get();
-      	String value = response.readEntity(String.class);
-          	//log.info(url);
-      		//log.info(String.valueOf(response.getStatus()));
-      	if (response.getStatus() < 300) {
-          	String objectReturned = url.substring(0, url.indexOf("/"));
-          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
-            for (JsonElement element : rootArray) {
-            	JsonObject JObject = element.getAsJsonObject();
-              	res.add(JObject);
+        Client client = ClientBuilder.newClient();
+      	if (methodType.equalsIgnoreCase("get")) {
+            WebTarget target = client.target(this.computeBaseAPI + url);
+            Response response = target.request().header("X-Auth-Token", token).get();
+            String value = response.readEntity(String.class);
+                //log.info(url);
+                //log.info(String.valueOf(response.getStatus()));
+            if (response.getStatus() < 300) {
+                String objectReturned = url.substring(0, url.indexOf("/"));
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+                for (JsonElement element : rootArray) {
+                    JsonObject JObject = element.getAsJsonObject();
+                    res.add(JObject);
+                }
             }
+            response.close();
+        } else if (methodType.equalsIgnoreCase("post")) {
+        } else if (methodType.equalsIgnoreCase("delete")) {
+        } else {
+          	throw new BusinessException("Cannot found " + methodType + " in method type request");
         }
-      	response.close();
-      	client.close();
+		client.close();
       	return res;
     }
   
