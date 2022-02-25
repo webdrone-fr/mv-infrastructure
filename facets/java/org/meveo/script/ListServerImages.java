@@ -18,6 +18,8 @@ import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.script.openstack.CheckOVHToken;
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.*;
 
 public class ListServerImages extends Script {
 
@@ -38,6 +40,7 @@ public class ListServerImages extends Script {
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
+        Client client = ClientBuilder.newClient();
       	ServiceProvider sp = new ServiceProvider();
       	String codeClass = sp.getClass().getSimpleName();
 		CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
@@ -49,10 +52,14 @@ public class ListServerImages extends Script {
               	ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
               	Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
               	checkOVHToken.checkOVHToken(credential, matchingProvider);
+              	//https://image.compute.gra11.cloud.ovh.net/v2/images
+              	WebTarget target = client.target("https://image.compute.gra11." + matchingProvider.getApiBaseUrl() + "/v2/images");
+              	Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
             }
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
         }
+      	client.close();
 	}
 	
 }
