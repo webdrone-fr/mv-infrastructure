@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
+import com.google.gson.*;
 import java.util.List;
 import java.util.ArrayList;
-import com.google.gson.*;
 
 public class OpenstackAPI extends Script {
 
