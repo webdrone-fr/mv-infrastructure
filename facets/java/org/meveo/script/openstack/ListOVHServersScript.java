@@ -51,12 +51,6 @@ public class ListOVHServersScript extends Script {
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
           	List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential.getToken(), null);
-            Client clientListServers = ClientBuilder.newClient();
-            //WebTarget targetListServer = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers/detail");
-            //Response response = targetListServer.request().header("X-Auth-Token", credential.getToken()).get();
-            //String value = response.readEntity(String.class);
-            //if (response.getStatus() < 300) {
-                //JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
                 for (JsonElement element : servers) {
                     JsonObject serverObj = element.getAsJsonObject();
                     // Create new servers
@@ -74,25 +68,9 @@ public class ListOVHServersScript extends Script {
                   	String urlImage = "images/" + idImage;
                   	log.info(urlImage);
                   	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null);
-                    //WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
-                    //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
-                    //String ImageValue = responseImage.readEntity(String.class);
                   	for (JsonObject imageElement : images) {
                       	server.setImage(imageElement.get("name").getAsString());
                     }
-                  	/*
-                    if (!(ImageValue.startsWith("404"))) {
-                        JsonParser parser = new JsonParser();
-                        JsonElement jsonE = parser.parse(ImageValue);
-                        JsonObject ImageObj = jsonE.getAsJsonObject();
-                        if (ImageObj != null) {
-                            server.setImage(ImageObj.get("name").getAsString());
-                        }
-                    } else {
-                        server.setImage("Image not found");
-                        log.error("Image with id : " + idImage + " cannot be found for the server : " + serverObj.get("name").getAsString());
-                    }
-                    */
                     // Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
                     server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
@@ -118,27 +96,12 @@ public class ListOVHServersScript extends Script {
                       	server.setServerType(flavor.get("name").getAsString());
                       	server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                     }
-                    /*WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
-                    Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
-                    String flavorValue = responseVolume.readEntity(String.class);
-                    if (responseVolume.getStatus() < 300) {
-                        JsonParser parser = new JsonParser();
-                        JsonElement jsonE = parser.parse(flavorValue);
-                        JsonObject flavorObj = jsonE.getAsJsonObject();
-                        flavorObj = flavorObj.get("flavor").getAsJsonObject();
-                        // flavor
-                        server.setServerType(flavorObj.get("name").getAsString());
-                        // volume
-                        server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
-                    }*/
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, server);
                     } catch (Exception ex) {
                         log.error("error creating server {} :{}", server.getUuid(), ex.getMessage());
                     }
                 }
-            //}
-            //response.close();
         }
     }
 }
