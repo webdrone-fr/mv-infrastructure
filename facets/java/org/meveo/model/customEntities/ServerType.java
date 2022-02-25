@@ -22,6 +22,8 @@ public class ServerType implements CustomEntity {
 
     private ServiceProvider provider;
 
+    private String name;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -45,6 +47,14 @@ public class ServerType implements CustomEntity {
 
     public void setProvider(ServiceProvider provider) {
         this.provider = provider;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override()
