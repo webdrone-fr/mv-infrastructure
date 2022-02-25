@@ -2,6 +2,7 @@
   "code" : "ServerImage",
   "name" : "Server Image",
   "description" : "Configuration of images for servers",
+  "customEntityCategoryCode" : "INFRA_TECH",
   "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
     "storeAsTable" : true
