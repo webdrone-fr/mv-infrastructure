@@ -1,5 +1,6 @@
 {
   "code" : "org.meveo.script.ListServerImages",
+  "description" : "List server images",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
