@@ -62,6 +62,14 @@ public class ListServerImages extends Script {
                   	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("images");
                   	for (JsonElement element : rootArray) {
                     	JsonObject imageObj = element.getAsJsonObject();
+                      	//Create a new image
+                      	ServerImage image = new ServerImage();
+                      	image.setUuid(imageObj.get("id").getAsString());
+                      	image.setName(imageObj.get("name").getAsString());
+						if (imageObj.get("visibility").getAsString() == "private")
+							image.setIsPublic(false);
+                        else
+							image.setIsPublic(true);
                     }
 				}
             }
