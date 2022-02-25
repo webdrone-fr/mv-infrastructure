@@ -23,6 +23,7 @@ import javax.ws.rs.core.*;
 import org.meveo.model.persistence.JacksonUtil;
 import com.google.gson.*;
 import java.time.OffsetDateTime;
+import org.meveo.script.openstack.OpenstackAPI;
 
 public class CreateOVHServersScript extends Script {
 
@@ -35,6 +36,8 @@ public class CreateOVHServersScript extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
+  
+  	private OpenstackAPI openstackAPI = new OpenstackAPI();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -85,6 +88,7 @@ public class CreateOVHServersScript extends Script {
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Request
+          	//List<JsonObject> servers = openstackAPI.computeAPI("servers", credential.getToken(), resp);
             Client client = ClientBuilder.newClient();
             WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
             Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
