@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "size": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Size",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerType_size",
+            "title": "ServerType.size",
+            "type": "string",
+            "maxLength": 255
+        },
         "provider": {
             "storages": ["SQL"],
             "nullable": true,
