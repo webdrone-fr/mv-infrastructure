@@ -20,6 +20,7 @@ import org.meveo.model.customEntities.Credential;
 import org.meveo.script.openstack.CheckOVHToken;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
+import com.google.gson.*;
 
 public class ListServerImages extends Script {
 
@@ -55,6 +56,10 @@ public class ListServerImages extends Script {
               	//https://image.compute.gra11.cloud.ovh.net/v2/images
               	WebTarget target = client.target("https://image.compute.gra11." + matchingProvider.getApiBaseUrl() + "/v2/images");
               	Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
+				String value = response.readEntity(String.class);
+              	if (response.getStatus() < 300) {
+                  	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("images");
+				}
             }
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
