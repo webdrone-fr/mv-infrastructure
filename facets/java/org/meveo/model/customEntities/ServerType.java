@@ -33,6 +33,8 @@ public class ServerType implements CustomEntity {
 
     private String name;
 
+    private Boolean isPublic;
+
     private String state;
 
     private Instant creationDate;
@@ -100,6 +102,14 @@ public class ServerType implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public String getState() {
