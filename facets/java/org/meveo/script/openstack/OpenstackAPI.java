@@ -39,6 +39,7 @@ public class OpenstackAPI extends Script {
             }
         }
       	response.close();
+      	client.close();
       	return res;
     }
   
@@ -57,6 +58,7 @@ public class OpenstackAPI extends Script {
             }
         }
       	response.close();
+      	client.close();
       	return res;
     }
   
@@ -75,6 +77,7 @@ public class OpenstackAPI extends Script {
             }
         }
       	response.close();
+      	client.close();
       	return res;
     }
   
@@ -93,6 +96,7 @@ public class OpenstackAPI extends Script {
             }
         }
       	response.close();
+      	client.close();
       	return res;
     }
 	
