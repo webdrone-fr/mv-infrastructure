@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
+import org.meveo.model.customEntities.ServiceProvider;
+import java.util.ArrayList;
 
 public class ListServerImages extends Script {
 
@@ -23,6 +25,7 @@ public class ListServerImages extends Script {
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
+      	ArrayList<ServiceProvider> providers = new ArrayList<>();
 	}
 	
 }
