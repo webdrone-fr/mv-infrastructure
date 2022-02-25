@@ -39,7 +39,7 @@ public class ListServerImages extends Script {
       	try {
       		List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
         } catch (EntityDoesNotExistsException ex) {
-          	
+          	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
         }
 	}
 	
