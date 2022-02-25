@@ -17,6 +17,17 @@
             "title": "ServerImage.lastUpdated",
             "type": "string"
         },
+        "size": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Size",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerImage_size",
+            "title": "ServerImage.size",
+            "type": "string",
+            "maxLength": 255
+        },
         "provider": {
             "storages": ["SQL"],
             "nullable": true,
