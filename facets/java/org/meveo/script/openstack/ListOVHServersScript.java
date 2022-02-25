@@ -51,8 +51,8 @@ public class ListOVHServersScript extends Script {
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
             List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential.getToken(), null, "get");
-            for (JsonElement element : servers) {
-                JsonObject serverObj = element.getAsJsonObject();
+            for (JsonObject serverObj : servers) {
+                //JsonObject serverObj = element.getAsJsonObject();
                 // Create new servers
                 Server server = new Server();
                 // UUID
