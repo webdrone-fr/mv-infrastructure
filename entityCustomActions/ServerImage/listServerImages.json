@@ -1,0 +1,1 @@
+{"code":"listServerImages","appliesTo":"CE_ServerImage","label":"LIst Server Images","script":"org.meveo.script.ListServerImages","applicableToEntityList":true,"applicableToEntityInstance":false}
