@@ -43,7 +43,9 @@ public class ListServerImages extends Script {
           	for(Map<String, Object> provider : providers) {
           		log.info(provider.toString());
               	String baseURL = provider.get("apiBaseUrl").toString();
+              	ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
               	Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
+              	
             }
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
