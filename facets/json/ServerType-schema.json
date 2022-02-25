@@ -48,6 +48,17 @@
             "title": "ServerType.state",
             "type": "string",
             "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerType_creationDate",
+            "title": "ServerType.creationDate",
+            "type": "string"
         }
     }
 }
