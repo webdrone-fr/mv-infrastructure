@@ -67,7 +67,7 @@ public class ListServerImages extends Script {
                       	image.setUuid(imageObj.get("id").getAsString());
                       	image.setName(imageObj.get("name").getAsString());
                       	log.info(imageObj.get("visibility").getAsString());
-						if (imageObj.get("visibility").getAsString() == "private")
+						if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
 							image.setIsPublic(false);
                         else
 							image.setIsPublic(true);
