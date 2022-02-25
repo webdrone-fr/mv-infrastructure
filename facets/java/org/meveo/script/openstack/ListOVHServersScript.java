@@ -50,13 +50,14 @@ public class ListOVHServersScript extends Script {
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
+          	List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential.getToken(), null);
             Client clientListServers = ClientBuilder.newClient();
-            WebTarget targetListServer = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers/detail");
-            Response response = targetListServer.request().header("X-Auth-Token", credential.getToken()).get();
-            String value = response.readEntity(String.class);
-            if (response.getStatus() < 300) {
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
-                for (JsonElement element : rootArray) {
+            //WebTarget targetListServer = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/servers/detail");
+            //Response response = targetListServer.request().header("X-Auth-Token", credential.getToken()).get();
+            //String value = response.readEntity(String.class);
+            //if (response.getStatus() < 300) {
+                //JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("servers");
+                for (JsonElement element : servers) {
                     JsonObject serverObj = element.getAsJsonObject();
                     // Create new servers
                     Server server = new Server();
@@ -106,7 +107,7 @@ public class ListOVHServersScript extends Script {
                     WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
-                    if (response.getStatus() < 300) {
+                    if (responseVolume.getStatus() < 300) {
                         JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(flavorValue);
                         JsonObject flavorObj = jsonE.getAsJsonObject();
@@ -122,8 +123,8 @@ public class ListOVHServersScript extends Script {
                         log.error("error creating server {} :{}", server.getUuid(), ex.getMessage());
                     }
                 }
-            }
-            response.close();
+            //}
+            //response.close();
         }
     }
 }
