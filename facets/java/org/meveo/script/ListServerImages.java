@@ -38,6 +38,7 @@ public class ListServerImages extends Script {
 		CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
       	try {
       		List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
+          	log.info(providers.toString());
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
         }
