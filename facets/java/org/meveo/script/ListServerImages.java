@@ -10,7 +10,11 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.model.customEntities.ServiceProvider;
-import java.util.ArrayList;
+import java.util.List;
+import org.meveo.persistence.CrossStorageService;
+import org.meveo.model.customEntities.CustomEntityTemplate;
+import org.meveo.service.custom.CustomEntityTemplateService;
+import org.meveo.api.exception.EntityDoesNotExistsException;
 
 public class ListServerImages extends Script {
 
@@ -21,11 +25,22 @@ public class ListServerImages extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
+  
+  	private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
+
+    private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
 	
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
-      	ArrayList<ServiceProvider> providers = new ArrayList<>();
+      	ServiceProvider sp = new ServiceProvider();
+      	String codeClass = sp.getClass().getSimpleName();
+		CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
+      	try {
+      	List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
+        } catch (EntityDoesNotExistsException ex) {
+          	
+        }
 	}
 	
 }
