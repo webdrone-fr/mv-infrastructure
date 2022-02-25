@@ -24,7 +24,7 @@ public class OpenstackAPI extends Script {
   
   	private String identityBaseAPI = "https://auth.cloud.ovh.net/";
   
-  	public List<JsonObject> computeAPI(String url, String zone, String token, String jsonBody, int pute, List putee) {
+  	public List<JsonObject> computeAPI(String url, String token, String jsonBody) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.computeBaseAPI + url);
@@ -41,7 +41,7 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
-  	public List<JsonObject> networkAPI(String url, String zone, String token, String jsonBody) {
+  	public List<JsonObject> networkAPI(String url, String token, String jsonBody) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.networkBaseAPI + url);
@@ -58,7 +58,7 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
-  	public List<JsonObject> imageAPI(String url, String zone, String token, String jsonBody) {
+  	public List<JsonObject> imageAPI(String url, String token, String jsonBody) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.imageBaseAPI + url);
@@ -75,7 +75,7 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
-  	public List<JsonObject> IdentityAPI(String url, String zone, String token, String jsonBody) {
+  	public List<JsonObject> IdentityAPI(String url, String token, String jsonBody) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.identityBaseAPI + url);
