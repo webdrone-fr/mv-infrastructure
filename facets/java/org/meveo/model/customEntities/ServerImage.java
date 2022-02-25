@@ -23,6 +23,8 @@ public class ServerImage implements CustomEntity {
 
     private Instant lastUpdated;
 
+    private String size;
+
     private ServiceProvider provider;
 
     private String zone;
@@ -58,6 +60,14 @@ public class ServerImage implements CustomEntity {
 
     public void setLastUpdated(Instant lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public ServiceProvider getProvider() {
