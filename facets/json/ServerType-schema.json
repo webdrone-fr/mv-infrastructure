@@ -26,6 +26,17 @@
             "title": "ServerType.name",
             "type": "string",
             "maxLength": 255
+        },
+        "state": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "State",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerType_state",
+            "title": "ServerType.state",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
