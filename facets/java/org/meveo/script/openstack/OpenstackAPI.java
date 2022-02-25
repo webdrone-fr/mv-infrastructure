@@ -44,8 +44,9 @@ public class OpenstackAPI extends Script {
             response.close();
         } else if (methodType.equalsIgnoreCase("post")) {
         } else if (methodType.equalsIgnoreCase("delete")) {
+        } else if (methodType.equalsIgnoreCase("put")) {
         } else {
-          	throw new BusinessException("Cannot found " + methodType + " in method type request");
+          	throw new BusinessException("Cannot found " + methodType + " in method type request. Available methods : get, post, delete, put");
         }
 		client.close();
       	return res;
