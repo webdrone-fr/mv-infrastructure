@@ -21,6 +21,7 @@ import org.meveo.script.openstack.CheckOVHToken;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 import com.google.gson.*;
+import org.meveo.model.customEntities.ServerImage;
 
 public class ListServerImages extends Script {
 
@@ -59,6 +60,9 @@ public class ListServerImages extends Script {
 				String value = response.readEntity(String.class);
               	if (response.getStatus() < 300) {
                   	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("images");
+                  	for (JsonElement element : rootArray) {
+                    	JsonObject imageObj = element.getAsJsonObject();
+                    }
 				}
             }
         } catch (EntityDoesNotExistsException ex) {
