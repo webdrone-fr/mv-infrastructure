@@ -34,6 +34,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
                 String objectReturned = url.substring(0, url.indexOf("/"));
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+              	log.info(rootArray.toString());
                 for (JsonElement element : rootArray) {
                     JsonObject JObject = element.getAsJsonObject();
                     res.add(JObject);
