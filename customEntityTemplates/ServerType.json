@@ -1,6 +1,7 @@
 {
   "code" : "ServerType",
   "name" : "Server Type",
+  "description" : "The type of the server (volume, ram, ...)",
   "customEntityCategoryCode" : "INFRA_TECH",
   "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
