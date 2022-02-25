@@ -1,6 +1,8 @@
 package org.meveo.scaleway;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -13,8 +15,8 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.PublicIp;
-import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -34,7 +36,7 @@ public class ListScalewayFlexibleIps extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
+        ServiceProvider provider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -47,6 +49,8 @@ public class ListScalewayFlexibleIps extends Script{
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
 
+        List<String> publicIpRecords = new ArrayList<String>();
+
         for(String zone : zones) {
             WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/ips");
             Response response = CredentialHelperService.setCredential(target.request(), credential).get();
@@ -56,56 +60,34 @@ public class ListScalewayFlexibleIps extends Script{
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("ips").getAsJsonArray();
                 for (JsonElement element : rootArray) {
-                    JsonObject flexibleIp = element.getAsJsonObject();
+                    JsonObject publicIpObj = element.getAsJsonObject();
+                    String publicIpId = publicIpObj.get("id").getAsString();
                     PublicIp publicIp = new PublicIp();
-
-                    // default values
-                    // Need creation + update date? - update possible
-                    publicIp.setProviderSideId(flexibleIp.get("id").getAsString());
-                    publicIp.setUuid(flexibleIp.get("id").getAsString());
-                    publicIp.setIpVFourAddress(flexibleIp.get("address").getAsString());
-                    publicIp.setOrganization(flexibleIp.get("organization").getAsString());
-                    publicIp.setProject(flexibleIp.get("project").getAsString());
-                    publicIp.setZone(flexibleIp.get("zone").getAsString());
-                    publicIp.setProvider(provider);
-
-                    // reverse - nullable
-                    if (!flexibleIp.get("reverse").isJsonNull()) {
-                        publicIp.setReverse(flexibleIp.get("reverse").getAsString());
-                    }
-
-                    // Server
-                    if (!flexibleIp.get("server").isJsonNull()) {
-                        String serverName = flexibleIp.get("server").getAsJsonObject().get("name").getAsString();
-                        if(serverName.startsWith("dev-")) {
-                            String serverId = flexibleIp.get("server").getAsJsonObject().get("id").getAsString();
-                            try {
-                                Server server = crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult();
-                                publicIp.setServer(server);
-                            } catch (Exception e) {
-                                logger.error("Error retrieving server {}", serverId, e.getMessage());
-                            }
-                        }
-                    }
-
-                    // Tags
-                    if (!flexibleIp.get("tags").isJsonNull()) {
-                        JsonArray imageTagsArr = flexibleIp.get("tags").getAsJsonArray();
-                        ArrayList<String> imageTags = new ArrayList<String>();
-                        for (JsonElement tag : imageTagsArr) {
-                            imageTags.add(tag.getAsString());
-                        }
-                        publicIp.setTags(imageTags);
-                    }
-
                     try {
-                        if (flexibleIp.get("server").isJsonNull() || flexibleIp.get("server").getAsJsonObject().get("name").getAsString().startsWith("dev-")) {
-                            crossStorageApi.createOrUpdate(defaultRepo, publicIp);
-                            logger.info("Public IP : {} imported successfully", publicIp.getIpVFourAddress());
+                        if(crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult() != null) {
+                            publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
+                        } else {
+                            publicIp = ScalewaySetters.setPublicIp(publicIpObj, provider, crossStorageApi, defaultRepo);
                         }
+                        crossStorageApi.createOrUpdate(defaultRepo, publicIp);
+                        Map<String, String> publicIpRecord = new HashMap<String, String>();
+                        String address = publicIpObj.get("address").getAsString();
+                        String serverName = null;
+                        if (!publicIpObj.get("server").isJsonNull()) {
+                            serverName = publicIpObj.get("server").getAsJsonObject().get("name").getAsString();
+                        }
+                        publicIpRecord.put(address, serverName);
+                        publicIpRecords.add(String.valueOf(publicIpRecord));
+
                     } catch (Exception e) {
-                        logger.error("error creating public ip {} : {}", publicIp.getUuid(), e.getMessage());
+                        logger.error("Error retrieving public ip : {}", publicIpId, e.getMessage());
                     }
+                }
+                try {
+                    provider.setPublicIp(publicIpRecords);
+                    crossStorageApi.createOrUpdate(defaultRepo, provider);
+                } catch (Exception e) {
+                    logger.error("Error retrieving public ip records for provider : {}", provider.getCode(), e.getMessage());
                 }
             }
             response.close();
