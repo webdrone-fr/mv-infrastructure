@@ -43,6 +43,20 @@ public class OpenstackAPI extends Script {
             }
             response.close();
         } else if (methodType.equalsIgnoreCase("post")) {
+            WebTarget target = client.target(this.computeBaseAPI + url);
+            Response response = target.request().header("X-Auth-Token", token).post(Entity.json(jsonBody));
+            String value = response.readEntity(String.class);
+                //log.info(url);
+                //log.info(String.valueOf(response.getStatus()));
+            if (response.getStatus() < 300) {
+                String objectReturned = url.substring(0, url.indexOf("/"));
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+                for (JsonElement element : rootArray) {
+                    JsonObject JObject = element.getAsJsonObject();
+                    res.add(JObject);
+                }
+            }
+            response.close();
         } else if (methodType.equalsIgnoreCase("delete")) {
         } else if (methodType.equalsIgnoreCase("put")) {
         } else {
