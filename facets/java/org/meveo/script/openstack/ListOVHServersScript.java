@@ -66,7 +66,7 @@ public class ListOVHServersScript extends Script {
                 // image
                 String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
                 String urlImage = "images/" + idImage;
-                log.info(urlImage);
+                //log.info(urlImage);
                 List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null);
                 for (JsonObject imageElement : images) {
                     server.setImage(imageElement.get("name").getAsString());
