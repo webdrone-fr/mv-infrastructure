@@ -70,6 +70,11 @@ public class ListServerImages extends Script {
 							image.setIsPublic(false);
                         else
 							image.setIsPublic(true);
+                        try {
+                            crossStorageApi.createOrUpdate(defaultRepo, image);
+                        } catch (Exception ex) {
+                            log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+                        }
                     }
 				}
             }
