@@ -23,6 +23,8 @@ public class ServerType implements CustomEntity {
 
     private Instant lastUpdated;
 
+    private String volumeType;
+
     private ServiceProvider provider;
 
     private String zone;
@@ -56,6 +58,14 @@ public class ServerType implements CustomEntity {
 
     public void setLastUpdated(Instant lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public String getVolumeType() {
+        return volumeType;
+    }
+
+    public void setVolumeType(String volumeType) {
+        this.volumeType = volumeType;
     }
 
     public ServiceProvider getProvider() {
