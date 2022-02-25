@@ -113,7 +113,12 @@ public class ListOVHServersScript extends Script {
                     // volume & flavor
                     String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
                   	String urlFlavor = "flavors/" + idFlavor;
-                    WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
+                  	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null);
+                  	for (JsonObject flavor : flavors) {
+                      	server.setServerType(flavor.get("name").getAsString());
+                      	server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
+                    }
+                    /*WebTarget targetVolume = clientListServers.target("https://compute." + zone + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
                     String flavorValue = responseVolume.readEntity(String.class);
                     if (responseVolume.getStatus() < 300) {
@@ -125,7 +130,7 @@ public class ListOVHServersScript extends Script {
                         server.setServerType(flavorObj.get("name").getAsString());
                         // volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
-                    }
+                    }*/
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, server);
                     } catch (Exception ex) {
