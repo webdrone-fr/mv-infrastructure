@@ -32,8 +32,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-                String objectReturned = url.substring(0, url.indexOf("/"));
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                 for (JsonElement element : rootArray) {
                     JsonObject JObject = element.getAsJsonObject();
                     res.add(JObject);
@@ -45,8 +44,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-                String objectReturned = url;
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                 for (JsonElement element : rootArray) {
                     JsonObject JObject = element.getAsJsonObject();
                     res.add(JObject);
@@ -73,8 +71,7 @@ public class OpenstackAPI extends Script {
       	Response response = target.request().header("X-Auth-Token", token).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
-          	String objectReturned = url.substring(0, url.indexOf("/"));
-          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
             for (JsonElement element : rootArray) {
             	JsonObject JObject = element.getAsJsonObject();
               	res.add(JObject);
@@ -92,8 +89,7 @@ public class OpenstackAPI extends Script {
       	Response response = target.request().header("X-Auth-Token", token).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
-          	String objectReturned = url.substring(0, url.indexOf("/"));
-          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
             for (JsonElement element : rootArray) {
             	JsonObject JObject = element.getAsJsonObject();
               	res.add(JObject);
@@ -111,8 +107,7 @@ public class OpenstackAPI extends Script {
       	Response response = target.request().header("X-Auth-Token", token).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
-          	String objectReturned = url.substring(0, url.indexOf("/"));
-          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objectReturned);
+          	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
             for (JsonElement element : rootArray) {
             	JsonObject JObject = element.getAsJsonObject();
               	res.add(JObject);
