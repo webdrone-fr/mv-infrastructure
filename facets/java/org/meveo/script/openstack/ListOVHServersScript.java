@@ -71,9 +71,14 @@ public class ListOVHServersScript extends Script {
                     server.setOrganization(serverObj.get("tenant_id").getAsString());
                     // image
                     String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                    WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
-                    Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
-                    String ImageValue = responseImage.readEntity(String.class);
+                  	List<JsonObject> images = openstackAPI.computeAPI("images/" + idImage, credential.getToken(), null);
+                    //WebTarget targetImage = clientListServers.target("https://image.compute." + zone + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
+                    //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
+                    //String ImageValue = responseImage.readEntity(String.class);
+                  	for (JsonObject imageElement : images) {
+                      	server.setImage(imageElement.get("name").getAsString());
+                    }
+                  	/*
                     if (!(ImageValue.startsWith("404"))) {
                         JsonParser parser = new JsonParser();
                         JsonElement jsonE = parser.parse(ImageValue);
@@ -85,6 +90,7 @@ public class ListOVHServersScript extends Script {
                         server.setImage("Image not found");
                         log.error("Image with id : " + idImage + " cannot be found for the server : " + serverObj.get("name").getAsString());
                     }
+                    */
                     // Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
                     server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
