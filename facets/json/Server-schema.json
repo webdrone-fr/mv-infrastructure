@@ -100,6 +100,16 @@
             "type": "string",
             "maxLength": 100
         },
+        "securityGroup": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Security Group",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_securityGroup",
+            "title": "Server.securityGroup",
+            "$ref": "#/definitions/SecurityGroup"
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
