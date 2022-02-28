@@ -11,7 +11,7 @@ import javax.ws.rs.core.*;
 import com.google.gson.*;
 import java.util.List;
 import java.util.ArrayList;
-import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Credential;
 
 public class OpenstackAPI extends Script {
 
@@ -35,12 +35,12 @@ public class OpenstackAPI extends Script {
      * @return the list of json object
      * @throws if the methodType used is not supported
      */
-  	public List<JsonObject> computeAPI(String url, String token, String jsonBody, String methodType, String objReturn) throws BusinessException {
+  	public List<JsonObject> computeAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) throws BusinessException {
       	List<JsonObject> res = new ArrayList<>();
         Client client = ClientBuilder.newClient();
       	if (methodType.equalsIgnoreCase("get")) {
             WebTarget target = client.target(this.computeBaseAPI + url);
-            Response response = target.request().header("X-Auth-Token", token).get();
+            Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
@@ -93,11 +93,11 @@ public class OpenstackAPI extends Script {
      * @return the list of json object
      * @throws if the methodType used is not supported
      */
-  	public List<JsonObject> networkAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
+  	public List<JsonObject> networkAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.networkBaseAPI + url);
-      	Response response = target.request().header("X-Auth-Token", token).get();
+      	Response response = target.request().header("X-Auth-Token", token.getToken()).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
           	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
@@ -121,11 +121,11 @@ public class OpenstackAPI extends Script {
      * @return the list of json object
      * @throws if the methodType used is not supported
      */
-  	public List<JsonObject> imageAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
+  	public List<JsonObject> imageAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.imageBaseAPI + url);
-      	Response response = target.request().header("X-Auth-Token", token).get();
+      	Response response = target.request().header("X-Auth-Token", token.getToken()).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
           	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
@@ -149,11 +149,11 @@ public class OpenstackAPI extends Script {
      * @return the list of json object
      * @throws if the methodType used is not supported
      */
-  	public List<JsonObject> IdentityAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
+  	public List<JsonObject> IdentityAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
       	WebTarget target = client.target(this.identityBaseAPI + url);
-      	Response response = target.request().header("X-Auth-Token", token).get();
+      	Response response = target.request().header("X-Auth-Token", token.getToken()).get();
       	String value = response.readEntity(String.class);
       	if (response.getStatus() < 300) {
           	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
