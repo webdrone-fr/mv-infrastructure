@@ -101,7 +101,7 @@ public class CreateOVHServersScript extends Script {
                 //JsonParser parserServer = new JsonParser();
                 //JsonElement jsonServer = parserServer.parse(value);
                 //JsonObject serverObj = jsonServer.getAsJsonObject();
-                serverObj = serverObj.get("server").getAsJsonObject();
+                //serverObj = serverObj.get("server").getAsJsonObject();
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
               	String urlServer = "servers" + server.getUuid();
