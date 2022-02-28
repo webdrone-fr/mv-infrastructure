@@ -91,7 +91,7 @@ public class UpdateOVHServersScript extends Script {
                 JsonElement jsonE = parser.parse(ImageValue);
                 JsonObject ImageObj = jsonE.getAsJsonObject();
                 if (ImageObj != null) {
-                    oldServ.put("image", ImageObj.get("name").getAsString());
+                    //oldServ.put("image", ImageObj.get("name").getAsString());
                 }
             } else {
                 oldServ.put("image", "Image not found");
@@ -118,7 +118,7 @@ public class UpdateOVHServersScript extends Script {
                 JsonObject flavorObj = jsonE.getAsJsonObject();
                 flavorObj = flavorObj.get("flavor").getAsJsonObject();
                 // flavor
-                oldServ.put("serverType", flavorObj.get("name").getAsString());
+                //oldServ.put("serverType", flavorObj.get("name").getAsString());
                 // volume
                 oldServ.put("volumeSize", flavorObj.get("disk").getAsString() + " GiB");
             }
