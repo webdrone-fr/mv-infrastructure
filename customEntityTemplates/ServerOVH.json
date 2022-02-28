@@ -1,0 +1,12 @@
+{
+  "code" : "ServerOVH",
+  "superTemplate" : "Server",
+  "name" : "Server OVH",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
