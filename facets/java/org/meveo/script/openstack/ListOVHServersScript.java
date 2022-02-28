@@ -79,6 +79,7 @@ public class ListOVHServersScript extends Script {
                 server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
                 // zone
                 server.setZone(zone);
+              	server.setLocation(zone);
                 // public IP
                 JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
                 for (JsonElement ip : publicIpArray) {
