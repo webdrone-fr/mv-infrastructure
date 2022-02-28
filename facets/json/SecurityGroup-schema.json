@@ -61,6 +61,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "project": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Project",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_project",
+            "title": "SecurityGroup.project",
+            "type": "string",
+            "maxLength": 255
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
