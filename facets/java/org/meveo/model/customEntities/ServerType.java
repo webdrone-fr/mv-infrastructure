@@ -20,8 +20,6 @@ public class ServerType implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String state;
-
     private Instant creationDate;
 
     @Override()
@@ -39,14 +37,6 @@ public class ServerType implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public Instant getCreationDate() {
