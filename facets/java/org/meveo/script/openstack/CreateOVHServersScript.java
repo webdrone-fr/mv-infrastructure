@@ -104,7 +104,7 @@ public class CreateOVHServersScript extends Script {
                 //serverObj = serverObj.get("server").getAsJsonObject();
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
-              	String urlServer = "servers" + server.getUuid();
+              	String urlServer = "servers/" + server.getUuid();
                 List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential, null, "get", "servers");
           		log.info(newServers.toString());
                 //WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
