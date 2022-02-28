@@ -92,20 +92,27 @@ public class OpenstackAPI extends Script {
      * @return the list of json object
      * @throws if the methodType used is not supported
      */
-    public List<JsonObject> networkAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) {
+    public List<JsonObject> networkAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) throws BusinessException {
         List<JsonObject> res = new ArrayList<>();
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(this.networkBaseAPI + url);
-        Response response = target.request().header("X-Auth-Token", token.getToken()).get();
-        String value = response.readEntity(String.class);
-        if (response.getStatus() < 300) {
-            JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
-            for (JsonElement element : rootArray) {
-                JsonObject JObject = element.getAsJsonObject();
-                res.add(JObject);
+      	if (methodType.equalsIgnoreCase("get")) {
+            WebTarget target = client.target(this.networkBaseAPI + url);
+            Response response = target.request().header("X-Auth-Token", token.getToken()).get();
+            String value = response.readEntity(String.class);
+            if (response.getStatus() < 300) {
+                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
+                for (JsonElement element : rootArray) {
+                    JsonObject JObject = element.getAsJsonObject();
+                    res.add(JObject);
+                }
             }
+        	response.close();
+        } else if (methodType.equalsIgnoreCase("post")) {
+        } else if (methodType.equalsIgnoreCase("delete")) {
+        } else if (methodType.equalsIgnoreCase("put")) {
+        } else {
+            throw new BusinessException("Cannot found " + methodType + " in method type request. Available methods : get, post, delete, put");
         }
-        response.close();
         client.close();
         return res;
     }
