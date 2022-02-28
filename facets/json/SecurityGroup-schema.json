@@ -5,15 +5,28 @@
     "id": "SecurityGroup",
     "title": "Security Group",
     "type": "object",
-    "properties": {"name": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Name",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_SecurityGroup_name",
-        "title": "SecurityGroup.name",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_providerSideId",
+            "title": "SecurityGroup.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_name",
+            "title": "SecurityGroup.name",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
