@@ -236,6 +236,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "rootVolume": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Root Volume",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_rootVolume",
+            "title": "Server.rootVolume",
+            "$ref": "#/definitions/ServerVolume"
+        },
         "location": {
             "storages": ["SQL"],
             "nullable": true,
