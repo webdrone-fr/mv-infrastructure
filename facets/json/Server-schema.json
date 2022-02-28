@@ -113,7 +113,7 @@
             "storages": ["SQL"],
             "nullable": true,
             "uniqueItems": true,
-            "description": "Server Action",
+            "description": "Allowed Action on Server",
             "readOnly": true,
             "versionable": false,
             "id": "CE_Server_serverAction",
