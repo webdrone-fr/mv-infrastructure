@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import org.meveo.api.persistence.CrossStorageApi;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
+import org.meveo.script.openstack.OpenstackAPI;
 
 public class DeleteOVHServerScript extends Script {
 
@@ -27,6 +28,8 @@ public class DeleteOVHServerScript extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
+  
+  	private OpenstackAPI openstackAPI = new OpenstackAPI();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -48,9 +51,9 @@ public class DeleteOVHServerScript extends Script {
             // Build and execute
             Client client = ClientBuilder.newClient();
             log.info("uuid used {}", server.getUuid());
-            WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
-            Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
-            if (response.getStatus() < 300) {
+            //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
+            //Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
+            //if (response.getStatus() < 300) {
                 server.setStatus("DELETED");
                 server.setCreationDate(null);
                 server.setLastUpdate(null);
@@ -61,7 +64,7 @@ public class DeleteOVHServerScript extends Script {
                 } catch (Exception ex) {
                     log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
                 }
-            }
+            //}
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "The server you're trying to delete is not a dev server : " + server.getInstanceName()));
         }
