@@ -68,7 +68,7 @@ public class ListOVHServersScript extends Script {
                 String urlImage = "images/" + idImage;
                 List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "images");
                 for (JsonObject imageElement : images) {
-                    server.setImage(imageElement.get("name").getAsString());
+                    //server.setImage(imageElement.get("name").getAsString());
                 }
                 // Set the creation & updated date
                 server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
@@ -92,7 +92,7 @@ public class ListOVHServersScript extends Script {
                 String urlFlavor = "flavors/" + idFlavor;
                 List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavors");
                 for (JsonObject flavor : flavors) {
-                    server.setServerType(flavor.get("name").getAsString());
+                    //server.setServerType(flavor.get("name").getAsString());
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                 }
                 try {
