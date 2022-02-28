@@ -50,7 +50,7 @@ public class ListOVHServersScript extends Script {
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
-            List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential.getToken(), null, "get", "servers");
+            List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential, null, "get", "servers");
             for (JsonObject serverObj : servers) {
                 //JsonObject serverObj = element.getAsJsonObject();
                 // Create new servers
@@ -66,7 +66,7 @@ public class ListOVHServersScript extends Script {
                 // image
                 String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
                 String urlImage = "images/" + idImage;
-                List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential.getToken(), null, "get", "images");
+                List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "images");
                 for (JsonObject imageElement : images) {
                     server.setImage(imageElement.get("name").getAsString());
                 }
@@ -90,7 +90,7 @@ public class ListOVHServersScript extends Script {
                 // volume & flavor
                 String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
                 String urlFlavor = "flavors/" + idFlavor;
-                List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential.getToken(), null, "get", "flavors");
+                List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavors");
                 for (JsonObject flavor : flavors) {
                     server.setServerType(flavor.get("name").getAsString());
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
