@@ -59,11 +59,11 @@ public class OpenstackAPI extends Script {
               	// Si oui JsonArray
               	// Si non JsonObject direct
               	//if (jp.parse(value).getAsJsonObject().getAsJsonArray(objReturn) instanceof JsonObject) {
-                	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
-                    for (JsonElement element : rootArray) {
-                        JsonObject JObject = element.getAsJsonObject();
-                        res.add(JObject);
-                    }
+                JsonParser parserServer = new JsonParser();
+                JsonElement jsonServer = parserServer.parse(value);
+                JsonObject serverObj = jsonServer.getAsJsonObject();
+                serverObj = serverObj.get(objReturn).getAsJsonObject();
+              	res.add(serverObj);
                 //} else {
                 //  	JsonObject obj = new JsonParser().parse(value).getAsJsonObject();
                 //  	res.add(obj);
