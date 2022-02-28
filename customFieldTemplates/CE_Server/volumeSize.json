@@ -15,13 +15,13 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Volume used:3;field:4",
+  "guiPosition" : "tab:Set OVH server:2;field:5",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],
   "summary" : false,
   "audited" : false,
   "persisted" : true,
-  "filter" : false,
-  "unique" : false
+  "unique" : false,
+  "filter" : false
 }
