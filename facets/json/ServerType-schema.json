@@ -6,16 +6,6 @@
     "title": "Server Type",
     "type": "object",
     "properties": {
-        "provider": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Provider",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_ServerType_provider",
-            "title": "ServerType.provider",
-            "$ref": "#/definitions/ServiceProvider"
-        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
