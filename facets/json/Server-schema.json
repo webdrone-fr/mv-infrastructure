@@ -106,17 +106,6 @@
                 "maxLength": 255
             }
         },
-        "volumeSize": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume Size",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_volumeSize",
-            "title": "Server.volumeSize",
-            "type": "string",
-            "maxLength": 20
-        },
         "provider": {
             "storages": ["SQL"],
             "nullable": true,
