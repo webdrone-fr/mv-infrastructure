@@ -104,7 +104,7 @@ public class CreateOVHServersScript extends Script {
           			log.info(flavors.toString());
                   	for (JsonObject flavorObj : flavors) {
                         // flavor
-                        server.setServerType(flavorObj.get("name").getAsString());
+                        //server.setServerType(flavorObj.get("name").getAsString());
                         // volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
@@ -133,7 +133,7 @@ public class CreateOVHServersScript extends Script {
           			log.info(images.toString());
                   	for (JsonObject imageObj : images) {
                         if (imageObj != null) {
-                            server.setImage(imageObj.get("name").getAsString());
+                            //server.setImage(imageObj.get("name").getAsString());
                         }
                     }
                 }
