@@ -11,6 +11,7 @@ import javax.ws.rs.core.*;
 import com.google.gson.*;
 import java.util.List;
 import java.util.ArrayList;
+import org.meveo.credentials.CredentialHelperService;
 
 public class OpenstackAPI extends Script {
 
@@ -24,6 +25,16 @@ public class OpenstackAPI extends Script {
   
   	private String identityBaseAPI = "https://auth.cloud.ovh.net/";
   
+  	/**
+     * Do all of compute api call
+     * @param url the path of the call
+     * @param token the token currently used by the api
+     * @param jsonBody of the request. Can be null if no body is needed
+     * @param methodType GET, POST, DELETE, PUT
+     * @param objReturn to return is the json response
+     * @return the list of json object
+     * @throws if the methodType used is not supported
+     */
   	public List<JsonObject> computeAPI(String url, String token, String jsonBody, String methodType, String objReturn) throws BusinessException {
       	List<JsonObject> res = new ArrayList<>();
         Client client = ClientBuilder.newClient();
@@ -72,6 +83,16 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
+	/**
+     * Do all of network api call
+     * @param url the path of the call
+     * @param token the token currently used by the api
+     * @param jsonBody of the request. Can be null if no body is needed
+     * @param methodType GET, POST, DELETE, PUT
+     * @param objReturn to return is the json response
+     * @return the list of json object
+     * @throws if the methodType used is not supported
+     */
   	public List<JsonObject> networkAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
@@ -90,6 +111,16 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
+	/**
+     * Do all of image api call
+     * @param url the path of the call
+     * @param token the token currently used by the api
+     * @param jsonBody of the request. Can be null if no body is needed
+     * @param methodType GET, POST, DELETE, PUT
+     * @param objReturn to return is the json response
+     * @return the list of json object
+     * @throws if the methodType used is not supported
+     */
   	public List<JsonObject> imageAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
@@ -108,6 +139,16 @@ public class OpenstackAPI extends Script {
       	return res;
     }
   
+	/**
+     * Do all of identity api call
+     * @param url the path of the call
+     * @param token the token currently used by the api
+     * @param jsonBody of the request. Can be null if no body is needed
+     * @param methodType GET, POST, DELETE, PUT
+     * @param objReturn to return is the json response
+     * @return the list of json object
+     * @throws if the methodType used is not supported
+     */
   	public List<JsonObject> IdentityAPI(String url, String token, String jsonBody, String methodType, String objReturn) {
       	List<JsonObject> res = new ArrayList<>();
 		Client client = ClientBuilder.newClient();
