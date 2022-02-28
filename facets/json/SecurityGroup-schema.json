@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_zone",
+            "title": "SecurityGroup.zone",
+            "type": "string",
+            "maxLength": 255
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
