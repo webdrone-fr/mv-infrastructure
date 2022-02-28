@@ -15,6 +15,8 @@ import javax.faces.context.FacesContext;
 import org.meveo.api.persistence.CrossStorageApi;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
+import java.util.List;
+import com.google.gson.*;
 import org.meveo.script.openstack.OpenstackAPI;
 
 public class DeleteOVHServerScript extends Script {
@@ -51,6 +53,8 @@ public class DeleteOVHServerScript extends Script {
             // Build and execute
             Client client = ClientBuilder.newClient();
             log.info("uuid used {}", server.getUuid());
+          	String url = "servers/" + server.getUuid();
+          	List<JsonObject> servers = openstackAPI.computeAPI(url, credential, null, "delete", null);
             //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
             //Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
             //if (response.getStatus() < 300) {
