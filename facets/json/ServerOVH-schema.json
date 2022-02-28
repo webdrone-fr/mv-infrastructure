@@ -5,5 +5,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerOVH",
     "title": "Server OVH",
-    "type": "object"
+    "type": "object",
+    "properties": {"KeyName": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Key Name",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ServerOVH_KeyName",
+        "title": "ServerOVH.KeyName",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
