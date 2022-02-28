@@ -215,6 +215,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "location": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Location",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_location",
+            "title": "Server.location",
+            "type": "string",
+            "maxLength": 255
+        },
         "imageRef": {
             "storages": ["SQL"],
             "nullable": true,
