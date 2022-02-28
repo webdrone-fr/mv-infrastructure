@@ -30,8 +30,8 @@ public class DeleteOVHServerScript extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
 
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
-  
-  	private OpenstackAPI openstackAPI = new OpenstackAPI();
+
+    private OpenstackAPI openstackAPI = new OpenstackAPI();
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -53,22 +53,18 @@ public class DeleteOVHServerScript extends Script {
             // Build and execute
             Client client = ClientBuilder.newClient();
             log.info("uuid used {}", server.getUuid());
-          	String url = "servers/" + server.getUuid();
-          	List<JsonObject> servers = openstackAPI.computeAPI(url, credential, null, "delete", null);
-            //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
-            //Response response = target.request().header("X-Auth-Token", credential.getToken()).delete();
-            //if (response.getStatus() < 300) {
-                server.setStatus("DELETED");
-                server.setCreationDate(null);
-                server.setLastUpdate(null);
-                server.setPublicIp(null);
-                server.setDomainName(null);
-                try {
-                    crossStorageApi.createOrUpdate(defaultRepo, server);
-                } catch (Exception ex) {
-                    log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
-                }
-            //}
+            String url = "servers/" + server.getUuid();
+            List<JsonObject> servers = openstackAPI.computeAPI(url, credential, null, "delete", null);
+            server.setStatus("DELETED");
+            server.setCreationDate(null);
+            server.setLastUpdate(null);
+            server.setPublicIp(null);
+            server.setDomainName(null);
+            try {
+                crossStorageApi.createOrUpdate(defaultRepo, server);
+            } catch (Exception ex) {
+                log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
+            }
         } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "The server you're trying to delete is not a dev server : " + server.getInstanceName()));
         }
