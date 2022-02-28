@@ -1,6 +1,6 @@
 {
   "code" : "serverAction",
-  "description" : "Server Action",
+  "description" : "Allowed Action on Server",
   "fieldType" : "STRING",
   "accountLevel" : "CE_Server",
   "appliesTo" : "CE_Server",
@@ -22,6 +22,6 @@
   "summary" : false,
   "audited" : false,
   "persisted" : true,
-  "filter" : false,
-  "unique" : false
+  "unique" : false,
+  "filter" : false
 }
