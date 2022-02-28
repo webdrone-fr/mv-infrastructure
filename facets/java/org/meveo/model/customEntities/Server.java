@@ -58,8 +58,6 @@ public class Server implements CustomEntity {
 
     private String name;
 
-    private String volumeId;
-
     private String flavorRef;
 
     private String imageRef;
@@ -227,14 +225,6 @@ public class Server implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getVolumeId() {
-        return volumeId;
-    }
-
-    public void setVolumeId(String volumeId) {
-        this.volumeId = volumeId;
     }
 
     public String getFlavorRef() {
