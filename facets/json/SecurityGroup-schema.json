@@ -83,6 +83,22 @@
             "type": "string",
             "maxLength": 255
         },
+        "rules": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_SecurityGroup_rules_item",
+                "title": "SecurityGroup.rules item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Rules",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_rules",
+            "title": "SecurityGroup.rules",
+            "type": "object"
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
