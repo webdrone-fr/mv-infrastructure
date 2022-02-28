@@ -30,6 +30,12 @@ public class ListScalewayVolumes extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        String action = null;
+        if (parameters.get(CONTEXT_ACTION)!= null) {
+            action = parameters.get(CONTEXT_ACTION).toString();
+        } else {
+            action = "listRefresh";
+        }
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -38,7 +44,8 @@ public class ListScalewayVolumes extends Script{
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
@@ -57,7 +64,7 @@ public class ListScalewayVolumes extends Script{
                         if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult() != null) {
                             volume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult();
                         } else {
-                            volume = ScalewaySetters.setServerVolume(volumeObj, crossStorageApi, defaultRepo);
+                            volume = ScalewaySetters.setServerVolume(volumeObj, action, crossStorageApi, defaultRepo);
                         }
                         crossStorageApi.createOrUpdate(defaultRepo, volume);
                     } catch (Exception e) {

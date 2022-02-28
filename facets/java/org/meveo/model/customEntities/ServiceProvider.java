@@ -24,11 +24,9 @@ public class ServiceProvider implements CustomEntity {
 
     private String apiBaseUrl;
 
-    private Map<String, String> image = new HashMap<>();
+    private Map<String, String> images = new HashMap<>();
 
     private String code;
-
-    private Map<String, String> zone = new HashMap<>();
 
     private Map<String, String> organization = new HashMap<>();
 
@@ -37,6 +35,8 @@ public class ServiceProvider implements CustomEntity {
     private String description;
 
     private List<String> publicIp = new ArrayList<>();
+
+    private List<String> zones = new ArrayList<>();
 
     private List<String> status = new ArrayList<>();
 
@@ -65,12 +65,12 @@ public class ServiceProvider implements CustomEntity {
         this.apiBaseUrl = apiBaseUrl;
     }
 
-    public Map<String, String> getImage() {
-        return image;
+    public Map<String, String> getImages() {
+        return images;
     }
 
-    public void setImage(Map<String, String> image) {
-        this.image = image;
+    public void setImages(Map<String, String> images) {
+        this.images = images;
     }
 
     public String getCode() {
@@ -79,14 +79,6 @@ public class ServiceProvider implements CustomEntity {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public Map<String, String> getZone() {
-        return zone;
-    }
-
-    public void setZone(Map<String, String> zone) {
-        this.zone = zone;
     }
 
     public Map<String, String> getOrganization() {
@@ -119,6 +111,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setPublicIp(List<String> publicIp) {
         this.publicIp = publicIp;
+    }
+
+    public List<String> getZones() {
+        return zones;
+    }
+
+    public void setZones(List<String> zones) {
+        this.zones = zones;
     }
 
     public List<String> getStatus() {

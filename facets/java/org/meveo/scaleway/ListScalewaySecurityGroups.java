@@ -1,7 +1,6 @@
 package org.meveo.scaleway;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -14,6 +13,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.SecurityGroup;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -33,6 +33,8 @@ public class ListScalewaySecurityGroups extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        String action = parameters.get(CONTEXT_ACTION).toString();
+        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
         
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -41,7 +43,8 @@ public class ListScalewaySecurityGroups extends Script {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
@@ -54,44 +57,18 @@ public class ListScalewaySecurityGroups extends Script {
                 JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().get("security_groups").getAsJsonArray();
                 for (JsonElement element: rootArray) {
                     JsonObject secGroupObj = element.getAsJsonObject();
-                    SecurityGroup securityGroup = new SecurityGroup();
-
-                    securityGroup.setUuid(secGroupObj.get("id").getAsString());
-                    securityGroup.setProviderSideId(secGroupObj.get("id").getAsString());
-                    securityGroup.setName(secGroupObj.get("name").getAsString());
-                    securityGroup.setDescription(secGroupObj.get("description").getAsString());
-                    securityGroup.setCreationDate(OffsetDateTime.parse(secGroupObj.get("creation_date").getAsString()).toInstant());
-                    securityGroup.setLastUpdated(OffsetDateTime.parse(secGroupObj.get("modification_date").getAsString()).toInstant());
-                    securityGroup.setOrganization(secGroupObj.get("organization").getAsString());
-                    securityGroup.setProject(secGroupObj.get("project").getAsString());
-                    securityGroup.setStateful(secGroupObj.get("stateful").getAsBoolean());
-                    securityGroup.setState(secGroupObj.get("state").getAsString());
-                    securityGroup.setInboundDefaultPolicy(secGroupObj.get("inbound_default_policy").getAsString());
-                    securityGroup.setOutboundDefaultPolicy(secGroupObj.get("outbound_default_policy").getAsString());
-                    securityGroup.setProjectDefault(secGroupObj.get("project_default").getAsBoolean());
-                    securityGroup.setEnableDefaultSecurity(secGroupObj.get("enable_default_security").getAsBoolean());
-                    securityGroup.setZone(zone);
-
-                    // Servers
-                    if(!secGroupObj.get("servers").isJsonNull()) {
-                        JsonArray serversArr = secGroupObj.get("servers").getAsJsonArray();
-                        ArrayList<String> servers = new ArrayList<String>();
-                        for (JsonElement serverEl : serversArr) {
-                            JsonObject serverObj = serverEl.getAsJsonObject();
-                            String serverId = serverObj.get("id").getAsString();
-                            String serverInstanceName = serverObj.get("name").getAsString();
-                            // if(serverInstanceName.startsWith("dev-") && crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
-                            //     servers.add(serverId);
-                            // }
-                            servers.add(serverId+" : "+serverInstanceName);
-                        }
-                        securityGroup.setServers(servers);
-                    }
+                    SecurityGroup securityGroup = null;
+                    String securityGroupId = secGroupObj.get("id").getAsString();
 
                     try {
+                        if(crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult()!= null){
+                            securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
+                        } else {
+                            securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, action, crossStorageApi, defaultRepo);
+                        }
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
-                    } catch (Exception e) {
-                        logger.error("Error retrieving Security Group {} : {}", securityGroup.getName(), e.getMessage());
+                    } catch(Exception e){
+                        logger.error("Error retrieving security group : ", securityGroupId, e.getMessage());
                     }
                 }
             }

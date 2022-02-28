@@ -1,6 +1,5 @@
 package org.meveo.scaleway;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,10 +141,9 @@ public class UpdateScalewayVolume extends Script {
                     } else {
                         logger.info("Server Total Volume size : {}; Min Total Volume size : {}; Max Total Volume Size : {}", serverTotalLocalVolumesSizeStr, serverMinVolumeSizeReqStr, serverMaxVolumeSizeReqStr);
                     }
-                    
                 } else {
                     logger.error("b_ssd volume type currently unavailable for server type : {}", serverType);
-                    throw new BusinessException("Invalid volume type for server type"+serverType);
+                    throw new BusinessException("Invalid volume type for server type : "+serverType);
                 }
             }
             body.put("name", volumeName);
@@ -165,12 +163,7 @@ public class UpdateScalewayVolume extends Script {
 
         if(response.getStatus()<300) {
             JsonObject volumeObj = new JsonParser().parse(value).getAsJsonObject().get("volume").getAsJsonObject();
-            volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-            volume.setState(volumeObj.get("state").getAsString());
-            volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
-            if (!volumeObj.get("server").isJsonNull()) {
-                volume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
-            }
+            volume = ScalewaySetters.setServerVolume(volumeObj, action, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, volume);
             } catch (Exception e) {

@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -32,6 +33,7 @@ public class ListScalewayServers extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
         
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -41,7 +43,8 @@ public class ListScalewayServers extends Script {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
@@ -57,16 +60,16 @@ public class ListScalewayServers extends Script {
                     ScalewayServer server = null;
                     String name = serverObj.get("name").getAsString(); // used for check
                     String serverId = serverObj.get("id").getAsString();
-                    if (name.startsWith("dev-")) { // type necessary?
+                    if (name.startsWith("dev-")) {
                         try {
                             if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult() != null) {
                                 server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
                             } else {
-                                server = ScalewaySetters.setScalewayServer(serverObj, provider, crossStorageApi, defaultRepo);
+                                server = ScalewaySetters.setScalewayServer(serverObj, action, provider, crossStorageApi, defaultRepo);
                             }
                             crossStorageApi.createOrUpdate(defaultRepo, server);
                         } catch (Exception e) {
-                            logger.error("Error retrieving server : {}", serverId, e.getMessage());
+                            logger.error("Error retrieving server : {}", serverId, e);
                         }
                     }
                 }

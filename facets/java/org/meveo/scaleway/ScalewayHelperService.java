@@ -14,6 +14,7 @@ import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerVolume;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.slf4j.Logger;
@@ -174,5 +175,61 @@ public class ScalewayHelperService extends Script{
         }
         response.close();
         return serverDetailsObj;
+    }
+
+    public static JsonObject getProviderServerTypes(String zone, ServiceProvider provider, Credential credential) throws BusinessException {
+        JsonObject serverTypesObj = new JsonObject();
+        String providerId = provider.getUuid();
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/servers");
+        Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+        String value = response.readEntity(String.class);
+
+        if (response.getStatus() < 300) {
+        serverTypesObj = new JsonParser().parse(value).getAsJsonObject().get("servers").getAsJsonObject();
+        } else {
+            throw new BusinessException("Error retrieving server types for provider : "+providerId);
+        }
+        response.close();
+        return serverTypesObj;
+    }
+
+    public static JsonArray getProviderImages(String zone, ServiceProvider provider, Credential credential) throws BusinessException {
+        JsonArray imagesArr = new JsonArray();
+        String providerId = provider.getUuid();
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/images");
+        Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+        String value = response.readEntity(String.class);
+
+        if (response.getStatus() < 300) {
+            imagesArr = new JsonParser().parse(value).getAsJsonObject().get("images").getAsJsonArray();
+        } else {
+            throw new BusinessException("Error retrieving images for provider : "+providerId);
+        }
+        response.close();
+        return imagesArr;
+    }
+
+    public static JsonArray getProviderPublicIps(String zone, ServiceProvider provider, Credential credential) throws BusinessException {
+        JsonArray ipsArr = new JsonArray();
+        String providerId = provider.getUuid();
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/ips");
+        Response response = CredentialHelperService.setCredential(target.request(), credential).get();
+        String value = response.readEntity(String.class);
+        if (response.getStatus() < 300) {
+            ipsArr = new JsonParser().parse(value).getAsJsonObject().get("ips").getAsJsonArray();
+        } else {
+            throw new BusinessException("Error retrieving public ips for provider : "+providerId);
+        }
+        response.close();
+        return ipsArr;
     }
 }

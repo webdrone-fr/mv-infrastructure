@@ -3,6 +3,7 @@ package org.meveo.scaleway;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,14 +28,28 @@ public class ScalewaySetters extends Script{
     private static final Logger logger = LoggerFactory.getLogger(ScalewayHelperService.class);
 
 
-    public static ServerVolume setServerVolume(JsonObject volumeObj, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static ServerVolume setServerVolume(JsonObject volumeObj, String action, CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String volumeId = volumeObj.get("id").getAsString();
-        ServerVolume volume = new ServerVolume();
-        volume.setUuid(volumeId);
+        ServerVolume volume = null;
+        if(action.startsWith("update")) {
+            try {
+                volume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult();
+            } catch(Exception e) {
+                logger.error("Error retrieving volume : {}", volumeId, e.getMessage());
+            }
+        } else if(action.startsWith("list")) {
+            volume = new ServerVolume();
+            volume.setUuid(volumeId);
+        } else {
+            volume = new ServerVolume();
+        }
+
         volume.setProviderSideId(volumeId);
         volume.setName(volumeObj.get("name").getAsString());
+        String server = null;
         if (!volumeObj.get("server").isJsonNull()) {
-            volume.setServer(volumeObj.get("server").getAsJsonObject().get("id").getAsString());
+            server = volumeObj.get("server").getAsJsonObject().get("id").getAsString();
+            volume.setServer(server);
         }
         volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
         volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
@@ -45,17 +60,28 @@ public class ScalewaySetters extends Script{
         try {
             crossStorageApi.createOrUpdate(defaultRepo, volume);
         } catch (Exception e) {
-            logger.error("Error creating volume : {}", volumeId, e.getMessage());
+            logger.error("Error setting volume : {}", volumeId, e.getMessage());
         }
         return volume;
     }
 
-    public static ServerImage setServerImage(JsonObject imageObj, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static ServerImage setServerImage(JsonObject imageObj, String action, CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String imageId = imageObj.get("id").getAsString();
-        ServerImage image = new ServerImage();
-        image.setName(imageObj.get("name").getAsString());
-        image.setUuid(imageId);
+        ServerImage image = null;
+        if(action.startsWith("update")) {
+            try {
+                image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
+            } catch(Exception e) {
+                logger.error("Error retrieving image : {}", imageId, e.getMessage());
+            }
+        } else if(action.startsWith("list")) {
+            image = new ServerImage();
+            image.setUuid(imageId);
+        } else {
+            image = new ServerImage();
+        }
         image.setProviderSideId(imageId);
+        image.setName(imageObj.get("name").getAsString());
         image.setCreationDate(OffsetDateTime.parse(imageObj.get("creation_date").getAsString()).toInstant());
         image.setLastUpdated(OffsetDateTime.parse(imageObj.get("modification_date").getAsString()).toInstant());
         image.setProject(imageObj.get("project").getAsString());
@@ -77,14 +103,11 @@ public class ScalewaySetters extends Script{
         if (!imageObj.get("root_volume").isJsonNull()) {
             JsonObject rootVolumeObj = imageObj.get("root_volume").getAsJsonObject();
             String rootVolumeId = rootVolumeObj.get("id").getAsString();
-            ServerVolume rootVolume = null;
             try {
                 if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult() != null) {
-                    rootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult();
-                } else {
-                    rootVolume = setServerVolume(rootVolumeObj, crossStorageApi, defaultRepo);
+                    ServerVolume rootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult();
+                    image.setRootVolume(rootVolume);
                 }
-                image.setRootVolume(rootVolume);
             } catch (Exception e) {
                 logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e.getMessage());
             }
@@ -101,9 +124,7 @@ public class ScalewaySetters extends Script{
                 try {
                     if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
                         additionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                    } else {
-                        additionalVolume = setServerVolume(additionalVolumeObj, crossStorageApi, defaultRepo);
-                    }
+                    } 
                     additionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
                 } catch (Exception e) {
                     logger.error("Error retrieving additional volume : {} for image : {}", additionalVolumeId, imageId, e.getMessage());
@@ -119,8 +140,6 @@ public class ScalewaySetters extends Script{
             try {
                 if(crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
                     bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
-                } else {
-                    bootscript = setBootScript(bootscriptObj, crossStorageApi, defaultRepo);
                 }
                 image.setDefaultBootscript(bootscript);
             } catch (Exception e) {
@@ -139,15 +158,26 @@ public class ScalewaySetters extends Script{
         try {
             crossStorageApi.createOrUpdate(defaultRepo, image);
         } catch (Exception e) {
-            logger.error("Error creating image : {}", imageId, e.getMessage());
+            logger.error("Error setting image : {}", imageId, e.getMessage());
         }
         return image;
     }
 
-    public static Bootscript setBootScript(JsonObject bootscriptObj, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static Bootscript setBootScript(JsonObject bootscriptObj, String action,  CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String bootscriptId = bootscriptObj.get("id").getAsString();
-        Bootscript bootscript = new Bootscript();
-        bootscript.setUuid(bootscriptId);
+        Bootscript bootscript = null;
+        if(action.startsWith("update")) {
+            try {
+                bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
+            } catch(Exception e) {
+                logger.error("Error retrieving bootscript : {}", bootscriptId, e.getMessage());
+            }
+        } else if(action.startsWith("list")) {
+            bootscript = new Bootscript();
+            bootscript.setUuid(bootscriptId);
+        } else {
+            bootscript = new Bootscript();
+        }
         bootscript.setZone(bootscriptObj.get("zone").getAsString());
         bootscript.setProviderSideId(bootscriptId);
         bootscript.setArch(bootscriptObj.get("architecture").getAsString());
@@ -163,20 +193,31 @@ public class ScalewaySetters extends Script{
         try {
             crossStorageApi.createOrUpdate(defaultRepo, bootscript);
         } catch (Exception e) {
-            logger.error("Error creating Bootscript {} : {}", bootscript.getTitle(), bootscriptId, e.getMessage());
+            logger.error("Error setting Bootscript {} : {}", bootscript.getTitle(), bootscriptId, e.getMessage());
         }
         return bootscript;
     }
 
-    public static ScalewayServer setScalewayServer(JsonObject serverObj, ServiceProvider provider, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static ScalewayServer setScalewayServer(JsonObject serverObj, String action, ServiceProvider provider, CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String serverId = serverObj.get("id").getAsString();
-        ScalewayServer server = new ScalewayServer();
-        // Default server values
-        server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
-        server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
-        server.setUuid(serverId);
+        ScalewayServer server = null;
+
+        if(action.startsWith("update")) {
+            try {
+                server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
+            } catch(Exception e) {
+                logger.error("Error retrieving server : {}", serverId, e.getMessage());
+            }
+        } else if(action.startsWith("list")) {
+            server = new ScalewayServer();
+            server.setUuid(serverId);
+        } else {
+            server = new ScalewayServer();
+        }
         server.setProviderSideId(serverId);
         server.setInstanceName(serverObj.get("name").getAsString());
+        server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
+        server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
         server.setServerType(serverObj.get("commercial_type").getAsString());
         server.setZone(serverObj.get("zone").getAsString());
         server.setProvider(provider);
@@ -207,7 +248,7 @@ public class ScalewaySetters extends Script{
                 if(crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult() != null) {
                     image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
                 } else {
-                    image = setServerImage(imageObj, crossStorageApi, defaultRepo);
+                    image = setServerImage(imageObj, action, crossStorageApi, defaultRepo);
                 }
                 server.setImage(image);
             } catch (Exception e) {
@@ -227,7 +268,7 @@ public class ScalewaySetters extends Script{
                 if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult() != null) {
                     rootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult();
                 } else {
-                    rootVolume = setServerVolume(rootVolumeObj, crossStorageApi, defaultRepo);
+                    rootVolume = setServerVolume(rootVolumeObj, action, crossStorageApi, defaultRepo);
                 }
                 server.setRootVolume(rootVolume);
                 serverTotalVolumesSize = Long.valueOf(rootVolume.getSize());
@@ -250,7 +291,7 @@ public class ScalewaySetters extends Script{
                             if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
                                 additionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
                             } else {
-                                additionalVolume = setServerVolume(additionalVolumeObj, crossStorageApi, defaultRepo);
+                                additionalVolume = setServerVolume(additionalVolumeObj, action, crossStorageApi, defaultRepo);
                             }
                             serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
                             serverTotalVolumesSize += Long.valueOf(additionalVolume.getSize());
@@ -271,8 +312,8 @@ public class ScalewaySetters extends Script{
         // Server Actions
         ArrayList<String> actions = new ArrayList<String>();
         JsonArray serverActionsArr = serverObj.get("allowed_actions").getAsJsonArray();
-        for (JsonElement action : serverActionsArr) {
-            actions.add(action.getAsString());
+        for (JsonElement serverAction : serverActionsArr) {
+            actions.add(serverAction.getAsString());
         }
         server.setServerActions(actions);
         // Location Definition
@@ -335,7 +376,7 @@ public class ScalewaySetters extends Script{
                 if(crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
                     bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
                 } else {
-                    bootscript = setBootScript(bootscriptObj, crossStorageApi, defaultRepo);
+                    bootscript = setBootScript(bootscriptObj, action, crossStorageApi, defaultRepo);
                 }
             server.setBootscript(bootscript);
             } catch (Exception e) {
@@ -374,19 +415,27 @@ public class ScalewaySetters extends Script{
         try {
             crossStorageApi.createOrUpdate(defaultRepo, server);
         } catch (Exception e) {
-            logger.error("Error creating Server : {}", serverId, e.getMessage());
+            logger.error("Error setting Server : {}", serverId, e.getMessage());
         }
         return server;
     }
 
-    public static PublicIp setPublicIp(JsonObject publicIpObj,  ServiceProvider provider, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static PublicIp setPublicIp(JsonObject publicIpObj, String action, ServiceProvider provider, CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String publicIpId = publicIpObj.get("id").getAsString();
-        PublicIp publicIp = new PublicIp();
-
-        // default values
-        // Need creation + update date? - update possible
+        PublicIp publicIp = null;
+        if(action.startsWith("update")) {
+            try {
+                publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
+            } catch (Exception e) {
+                logger.error("Error retrieving public ip : {}", publicIpId, e.getMessage());
+            }
+        } else if (action.startsWith("list")) {
+            publicIp = new PublicIp();
+            publicIp.setUuid(publicIpId);
+        } else {
+            publicIp = new PublicIp();
+        }
         publicIp.setProviderSideId(publicIpId);
-        publicIp.setUuid(publicIpId);
         publicIp.setIpVFourAddress(publicIpObj.get("address").getAsString());
         publicIp.setOrganization(publicIpObj.get("organization").getAsString());
         publicIp.setProject(publicIpObj.get("project").getAsString());
@@ -418,8 +467,123 @@ public class ScalewaySetters extends Script{
         try {
             crossStorageApi.createOrUpdate(defaultRepo, publicIp);
         } catch (Exception e) {
-            logger.error("Error creating public ip : {}", publicIpId, e.getMessage());
+            logger.error("Error setting public ip : {}", publicIpId, e.getMessage());
         }
         return publicIp;
+    }
+
+    public static SecurityGroup setSecurityGroup(JsonObject securityGroupObj, String action, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+        String securityGroupId = securityGroupObj.get("id").getAsString();
+        SecurityGroup securityGroup = null;
+        if(action.startsWith("update")){
+            try {
+
+            } catch (Exception e) {
+                logger.error("Error retrieving security group : {}", securityGroupId, e.getMessage());
+            }
+        } else if(action.startsWith("list")) {
+            securityGroup = new SecurityGroup();
+            securityGroup.setUuid(securityGroupId);
+        } else {
+            securityGroup = new SecurityGroup();
+        }
+        securityGroup.setProviderSideId(securityGroupId);
+        securityGroup.setName(securityGroupObj.get("name").getAsString());
+        securityGroup.setDescription(securityGroupObj.get("description").getAsString());
+        securityGroup.setCreationDate(OffsetDateTime.parse(securityGroupObj.get("creation_date").getAsString()).toInstant());
+        securityGroup.setLastUpdated(OffsetDateTime.parse(securityGroupObj.get("modification_date").getAsString()).toInstant());
+        securityGroup.setOrganization(securityGroupObj.get("organization").getAsString());
+        securityGroup.setProject(securityGroupObj.get("project").getAsString());
+        securityGroup.setStateful(securityGroupObj.get("stateful").getAsBoolean());
+        securityGroup.setState(securityGroupObj.get("state").getAsString());
+        securityGroup.setInboundDefaultPolicy(securityGroupObj.get("inbound_default_policy").getAsString());
+        securityGroup.setOutboundDefaultPolicy(securityGroupObj.get("outbound_default_policy").getAsString());
+        securityGroup.setProjectDefault(securityGroupObj.get("project_default").getAsBoolean());
+        securityGroup.setEnableDefaultSecurity(securityGroupObj.get("enable_default_security").getAsBoolean());
+        securityGroup.setZone(securityGroupObj.get("zone").getAsString());
+
+         // Servers
+         if(!securityGroupObj.get("servers").isJsonNull()) {
+            JsonArray serversArr = securityGroupObj.get("servers").getAsJsonArray();
+            ArrayList<String> servers = new ArrayList<String>();
+            for (JsonElement serverEl : serversArr) {
+                JsonObject serverObj = serverEl.getAsJsonObject();
+                String serverId = serverObj.get("id").getAsString();
+                String serverInstanceName = serverObj.get("name").getAsString();
+                // if(serverInstanceName.startsWith("dev-") && crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
+                //     servers.add(serverId);
+                // }
+                servers.add(serverId+" : "+serverInstanceName);
+            }
+            securityGroup.setServers(servers);
+        }
+        return securityGroup;
+    }
+
+    public static Map<String, Object> setServerType(JsonObject serverTypeObj) {
+        Map<String, Object> serverType = new HashMap<String, Object>();
+        serverType.put("hourly_price", serverTypeObj.get("hourly_price").getAsLong());
+        serverType.put("ncpus", serverTypeObj.get("ncpus").getAsLong());
+        serverType.put("ram", serverTypeObj.get("ram").getAsLong());
+        serverType.put("arch", serverTypeObj.get("arch").getAsString());
+        serverType.put("baremetal", serverTypeObj.get("baremetal").getAsBoolean());
+        if(!serverTypeObj.get("alt_names").isJsonNull()) {
+            JsonArray altNamesArr = serverTypeObj.get("alt_names").getAsJsonArray();
+            List<String> altNames = new ArrayList<String>();
+            for(JsonElement altName :altNamesArr){
+                altNames.add(altName.getAsString());
+            }
+            serverType.put("alt_names", altNames);
+        }
+        if(!serverTypeObj.get("per_volume_constraint").isJsonNull()) {
+            Map<String, Object> perVolumeConstraint = new HashMap<String, Object>();
+            JsonObject perVolumeConstraintObj = serverTypeObj.get("per_volume_constraint").getAsJsonObject();
+            Set<Map.Entry<String, JsonElement>> perVolumeConstraintEntries = perVolumeConstraintObj.entrySet();
+            for(Map.Entry<String, JsonElement> perVolumeConstraintEntry : perVolumeConstraintEntries) {
+                Map<String, Long> perVolumeConstraints = new HashMap<String, Long>();
+                JsonObject volumeConstraintsObj = perVolumeConstraintEntry.getValue().getAsJsonObject();
+                perVolumeConstraints.put("min_size", volumeConstraintsObj.get("min_size").getAsLong());
+                perVolumeConstraints.put("max_size", volumeConstraintsObj.get("max_size").getAsLong());
+                perVolumeConstraint.put(perVolumeConstraintEntry.getKey(), perVolumeConstraints);
+            }
+            serverType.put("per_volume_constraint", perVolumeConstraint);
+        }
+        if(!serverTypeObj.get("volumes_constraint").isJsonNull()) {
+            Map<String, Long> volumesConstraint = new HashMap<String, Long>();
+            JsonObject volumesConstraintObj = serverTypeObj.get("volumes_constraint").getAsJsonObject();
+            volumesConstraint.put("min_size", volumesConstraintObj.get("min_size").getAsLong());
+            volumesConstraint.put("max_size", volumesConstraintObj.get("max_size").getAsLong());
+            serverType.put("volumes_constraint", volumesConstraint);
+        }
+        if(!serverTypeObj.get("gpu").isJsonNull()){
+            serverType.put("gpu", serverTypeObj.get("gpu").getAsLong());
+        }
+        if (!serverTypeObj.get("network").isJsonNull()) {
+            Map<String, Object> network = new HashMap<String, Object>();
+            JsonObject networkObj = serverTypeObj.get("network").getAsJsonObject();
+            JsonArray interfacesArr = networkObj.get("interfaces").getAsJsonArray();
+            List<Object> interfaces = new ArrayList<Object>();
+            for (JsonElement interfaceEl : interfacesArr) {
+                Map<String, Long> networkInterface = new HashMap<String, Long>();
+                JsonObject interfaceObj = interfaceEl.getAsJsonObject();
+                if(!interfaceObj.get("internal_bandwidth").isJsonNull()) {
+                    networkInterface.put("internal_bandwidth", interfaceObj.get("internal_bandwidth").getAsLong());
+                }
+                if(!interfaceObj.get("internet_bandwidth").isJsonNull()) {
+                    networkInterface.put("internet_bandwidth", interfaceObj.get("internet_bandwidth").getAsLong());
+                }
+                interfaces.add(networkInterface);
+            }
+            network.put("interfaces", interfaces);
+            if(!networkObj.get("sum_internal_bandwidth").isJsonNull()) {
+                network.put("sum_internal_bandwidth", networkObj.get("sum_internal_bandwidth").getAsLong());
+            }
+            if(!networkObj.get("sum_internet_bandwidth").isJsonNull()) {
+                network.put("sum_internet_bandwidth", networkObj.get("sum_internet_bandwidth").getAsLong());
+            }
+            network.put("ipv6_support", networkObj.get("ipv6_support").getAsBoolean());
+            serverType.put("network", network);
+        }
+        return serverType;
     }
 }

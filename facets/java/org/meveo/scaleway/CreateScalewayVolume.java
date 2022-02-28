@@ -1,6 +1,5 @@
 package org.meveo.scaleway;
 
-import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,12 +109,7 @@ public class CreateScalewayVolume extends Script{
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
         if (response.getStatus()<300) {
             JsonObject volumeObj = new JsonParser().parse(value).getAsJsonObject().get("volume").getAsJsonObject();
-            volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
-            volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-            volume.setProviderSideId(volumeObj.get("id").getAsString());
-            volume.setName(volumeObj.get("name").getAsString());
-            volume.setState(volumeObj.get("state").getAsString());
-            volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
+            volume = ScalewaySetters.setServerVolume(volumeObj, action, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, volume);
             } catch (Exception e) {

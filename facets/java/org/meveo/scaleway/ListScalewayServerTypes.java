@@ -36,6 +36,7 @@ public class ListScalewayServerTypes extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ServiceProvider provider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -45,7 +46,8 @@ public class ListScalewayServerTypes extends Script{
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for(String zone : zones) {

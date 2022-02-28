@@ -50,7 +50,6 @@ public class UpdateScalewaySecurityGroup extends Script{
         String securityGroupId = securityGroup.getProviderSideId();
         logger.info("action : {}, security group ID : {}", action, securityGroupId);
 
-
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);

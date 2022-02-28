@@ -36,6 +36,7 @@ public class ListScalewayFlexibleIps extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ServiceProvider provider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -45,7 +46,8 @@ public class ListScalewayFlexibleIps extends Script{
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
 
@@ -62,12 +64,12 @@ public class ListScalewayFlexibleIps extends Script{
                 for (JsonElement element : rootArray) {
                     JsonObject publicIpObj = element.getAsJsonObject();
                     String publicIpId = publicIpObj.get("id").getAsString();
-                    PublicIp publicIp = new PublicIp();
+                    PublicIp publicIp = null;
                     try {
                         if(crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult() != null) {
                             publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
                         } else {
-                            publicIp = ScalewaySetters.setPublicIp(publicIpObj, provider, crossStorageApi, defaultRepo);
+                            publicIp = ScalewaySetters.setPublicIp(publicIpObj, action, provider, crossStorageApi, defaultRepo);
                         }
                         crossStorageApi.createOrUpdate(defaultRepo, publicIp);
                         Map<String, String> publicIpRecord = new HashMap<String, String>();
@@ -78,7 +80,6 @@ public class ListScalewayFlexibleIps extends Script{
                         }
                         publicIpRecord.put(address, serverName);
                         publicIpRecords.add(String.valueOf(publicIpRecord));
-
                     } catch (Exception e) {
                         logger.error("Error retrieving public ip : {}", publicIpId, e.getMessage());
                     }

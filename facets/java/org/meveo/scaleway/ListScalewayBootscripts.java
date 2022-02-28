@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -12,6 +13,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -31,6 +33,8 @@ public class ListScalewayBootscripts extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
+        String action = parameters.get(CONTEXT_ACTION).toString();
         
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -39,7 +43,8 @@ public class ListScalewayBootscripts extends Script {
             logger.info("Using Credential {} with username {}", credential.getUuid(), credential.getUsername());
         }
 
-        String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
@@ -58,7 +63,7 @@ public class ListScalewayBootscripts extends Script {
                         if(crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
                             bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
                         } else {
-                            bootscript = ScalewaySetters.setBootScript(bootscriptObj, crossStorageApi, defaultRepo);
+                            bootscript = ScalewaySetters.setBootScript(bootscriptObj, action, crossStorageApi, defaultRepo);
                         }
                         crossStorageApi.createOrUpdate(defaultRepo, bootscript);
                     } catch (Exception e) {

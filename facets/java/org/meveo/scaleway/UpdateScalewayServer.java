@@ -1,11 +1,9 @@
 package org.meveo.scaleway;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
@@ -15,12 +13,10 @@ import com.google.gson.*;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
-import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
-import org.meveo.model.customEntities.SecurityGroup;
-import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerVolume;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
@@ -51,10 +47,19 @@ public class UpdateScalewayServer extends Script {
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
+        } else if(server.getProvider()==null) {
+            throw new BusinessException("Invalid Server Provider");
         }
         
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
+        ServiceProvider provider = null;
+        String providerId = server.getProvider().getUuid();
+        try {
+            provider = crossStorageApi.find(defaultRepo, providerId, ServiceProvider.class);
+        }catch (Exception e) {
+            logger.error("Error retrieving provider for server : ", serverId, e.getMessage());
+        }
         logger.info("action : {}, server ID : {}", action, serverId);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -169,204 +174,11 @@ public class UpdateScalewayServer extends Script {
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         if(response.getStatus() < 300) {
             JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
-
-            // Default Server Values
-            server.setLastUpdate(Instant.now());
-            server.setInstanceName(serverObj.get("name").getAsString());
-            server.setServerType(serverObj.get("commercial_type").getAsString());
-            server.setOrganization(serverObj.get("organization").getAsString());
-            server.setStatus(serverObj.get("state").getAsString());
-            server.setDomainName(serverObj.get("hostname").getAsString());
-            server.setSergentUrl(server.getDomainName() + ":8001/sergent");
-
-            // Public IP
-            if (!serverObj.get("public_ip").isJsonNull()) {
-                server.setPublicIp(serverObj.get("public_ip").getAsJsonObject().get("address").getAsString());
-            }
-
-            // Image
-            if (!serverObj.get("image").isJsonNull()) {
-                String serverImageId = serverObj.get("image").getAsJsonObject().get("id").getAsString();
-                try {
-                    ServerImage serverImage = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", serverImageId).getResult();
-                    server.setImage(serverImage);
-                } catch (Exception e) {
-                    logger.error("Error retrieving image", e.getMessage());
-                }
-            }
-
-            // Volumes
-            JsonObject serverVolumesObj = serverObj.get("volumes").getAsJsonObject();
-            Long serverTotalVolumesSize = 0L;
-            Long serverTotalLocalVolumesSize = 0L;
-            if (serverVolumesObj.entrySet().size() >= 1) {
-                // Root Volume
-                String serverRootVolumeId = serverVolumesObj.get("0").getAsJsonObject().get("id").getAsString();
-                if (crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult() != null) {
-                    try {
-                        ServerVolume serverRootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", serverRootVolumeId).getResult();
-                        server.setRootVolume(serverRootVolume);
-                        serverTotalVolumesSize = Long.valueOf(serverRootVolume.getSize());
-                        if(serverRootVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
-                            serverTotalLocalVolumesSize = Long.valueOf(serverRootVolume.getSize());
-                        }
-                    } catch (Exception e) {
-                        logger.error("Error retrieving root volume", e.getMessage());
-                    }
-                }
-                // Additional Volumes
-                if (serverVolumesObj.entrySet().size() > 1) {
-                    Map<String, ServerVolume> serverAdditionalVolumes = new HashMap<String, ServerVolume>();
-                    Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = serverVolumesObj.entrySet();
-                    for (Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
-                        if(!additionalVolumeEntry.getKey().equals("0")) { // key for root volume
-                            String additionalVolumeId = serverVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject().get("id").getAsString();
-                            try{
-                                ServerVolume serverAdditionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
-                                serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), serverAdditionalVolume);
-                                serverTotalVolumesSize += Long.valueOf(serverAdditionalVolume.getSize());
-                                if(serverAdditionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
-                                    serverTotalLocalVolumesSize = Long.valueOf(serverAdditionalVolume.getSize());
-                                }
-                            } catch (Exception e) {
-                                logger.error("Error retrieving additional volume", e.getMessage());
-                            }
-                        }
-                    }
-                    server.setAdditionalVolumes(serverAdditionalVolumes);
-                }
-                server.setVolumeSize(String.valueOf(serverTotalVolumesSize));
-                server.setTotalLocalVolumesSize(String.valueOf(serverTotalLocalVolumesSize));
-            }
-
-            // Location Definition
-            String locationDefinition = "zone_id/platform_id/cluster_id/hypervisor_id/node_id";
-            server.setLocationDefinition(locationDefinition);
-
-            // Location
-            if (!serverObj.get("location").isJsonNull()) {
-                JsonObject serverLocationObj = serverObj.get("location").getAsJsonObject();
-                String serverLocation = 
-                    serverLocationObj.get("zone_id")+"/"+
-                    serverLocationObj.get("platform_id")+"/"+
-                    serverLocationObj.get("cluster_id")+"/"+
-                    serverLocationObj.get("hypervisor_id")+"/"+
-                    serverLocationObj.get("node_id");
-                server.setLocation(serverLocation);
-            }
-
-            // Security Group CET
-            if (!serverObj.get("security_group").isJsonNull()) {
-                JsonObject securityGroupObj = serverObj.get("security_group").getAsJsonObject();
-                String securityGroupId = securityGroupObj.get("id").getAsString();
-                if (crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult() != null) {
-                    try {
-                        SecurityGroup securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
-                        server.setSecurityGroup(securityGroup);
-                    } catch(Exception e) {
-                        logger.error("Error retrieving security group", e.getMessage());
-                    }
-                } else {
-                    SecurityGroup newSecurityGroup = new SecurityGroup();
-                    newSecurityGroup.setUuid(securityGroupId);
-                    newSecurityGroup.setProviderSideId(securityGroupId);
-                    newSecurityGroup.setName(securityGroupObj.get("name").getAsString());
-                    newSecurityGroup.setZone(zone);
-                    try {
-                        crossStorageApi.createOrUpdate(defaultRepo, newSecurityGroup);
-                        server.setSecurityGroup(newSecurityGroup);
-                    }catch (Exception e) {
-                        logger.error("Error creating new security group", e.getMessage());
-                    }
-                }
-            }
-
-            // Server Actions
-            JsonArray allowedActions = serverObj.get("allowed_actions").getAsJsonArray();
-            ArrayList<String> serverActions = new ArrayList<String>();
-            for (JsonElement allowedAction : allowedActions) {
-                serverActions.add(allowedAction.getAsString());
-            }
-            server.setServerActions(serverActions);
-            
-            // Scaleway specific values
-            server.setDynamicIpRequired(serverObj.get("dynamic_ip_required").getAsBoolean());
-            server.setArch(serverObj.get("arch").getAsString());
-            server.setProject(serverObj.get("project").getAsString());
-            server.setBootType(serverObj.get("boot_type").getAsString());
-            server.setIsProtected(serverObj.get("protected").getAsBoolean());
-
-            // Private IP
-            if (!serverObj.get("private_ip").isJsonNull()) {
-                server.setPrivateIp(serverObj.get("private_ip").getAsString());
-            }
-
-            // Ipv6
-            server.setEnableIPvSix(serverObj.get("enable_ipv6").getAsBoolean());
-            if(!serverObj.get("ipv6").isJsonNull()) {
-                server.setIpVSix(serverObj.get("ipv6").getAsJsonObject().get("address").getAsString());
-            }
-
-            // Maintenances
-            if (!serverObj.get("maintenances").isJsonNull()) {
-                ArrayList<String> maintenances = new ArrayList<String>();
-                JsonArray maintenancesArr = serverObj.get("maintenances").getAsJsonArray();
-                for (JsonElement maintenance : maintenancesArr) {
-                    maintenances.add(maintenance.getAsString()); // could be Objects
-                }
-                server.setMaintenances(maintenances); // Array
-            }
-
-            // Bootscript
-            if(!serverObj.get("bootscript").isJsonNull()) {
-                JsonObject bootscriptObj = serverObj.get("bootscript").getAsJsonObject();
-                String bootscriptId = bootscriptObj.get("id").getAsString();
-                if (crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
-                    try {
-                        Bootscript bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
-                        server.setBootscript(bootscript);
-                    } catch (Exception e) {
-                        logger.error("Error retrieving bootscript", e.getMessage());
-                    }
-                } else {
-                    Bootscript newBootscript = new Bootscript();
-                    newBootscript.setUuid(bootscriptId);
-                    newBootscript.setProviderSideId(bootscriptId);
-                    newBootscript.setArch(bootscriptObj.get("architecture").getAsString());
-                    newBootscript.setBootcmdargs(bootscriptObj.get("bootcmdargs").getAsString());
-                    newBootscript.setIsDefault(bootscriptObj.get("default").getAsBoolean());
-                    newBootscript.setDtb(bootscriptObj.get("dtb").getAsString());
-                    newBootscript.setInitrd(bootscriptObj.get("initrd").getAsString());
-                    newBootscript.setKernel(bootscriptObj.get("kernel").getAsString());
-                    newBootscript.setOrganization(bootscriptObj.get("organization").getAsString());
-                    newBootscript.setProject(bootscriptObj.get("project").getAsString());
-                    newBootscript.setIsPublic(bootscriptObj.get("public").getAsBoolean());
-                    newBootscript.setTitle(bootscriptObj.get("title").getAsString());
-                    newBootscript.setZone(bootscriptObj.get("zone").getAsString());
-                    try {
-                        crossStorageApi.createOrUpdate(defaultRepo, newBootscript);
-                        server.setBootscript(newBootscript);
-                    } catch (Exception e) {
-                        logger.error("Error creating bootscript for server : ", server.getUuid(), e.getMessage());
-                    }
-                }
-            }
-
-            // Private NICs
-            if (!serverObj.get("private_nics").isJsonNull()) {
-                JsonArray nicsArr = serverObj.get("private_nics").getAsJsonArray();
-                ArrayList<String> nicIds = new ArrayList<String>();
-                for (JsonElement nic : nicsArr) {
-                    JsonObject privateNic = nic.getAsJsonObject();
-                    nicIds.add(privateNic.get("id").getAsString());
-                }
-                server.setPrivateNics(nicIds);
-            }
-
+            server = ScalewaySetters.setScalewayServer(serverObj, action, provider, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, server);
             } catch (Exception e) {
-                logger.error("error updating Server {} :{}", server.getUuid(), e.getMessage());
+                logger.error("error updating Server : {}", server.getUuid(), e.getMessage());
             }
         }
         response.close();
