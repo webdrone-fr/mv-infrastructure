@@ -20,8 +20,6 @@ public class ServerType implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Boolean isPublic;
-
     private String state;
 
     private Instant creationDate;
@@ -41,14 +39,6 @@ public class ServerType implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
     }
 
     public String getState() {
