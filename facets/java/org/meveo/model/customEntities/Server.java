@@ -26,8 +26,6 @@ public class Server implements CustomEntity {
 
     private List<String> serverAction = new ArrayList<>();
 
-    private String volumeState;
-
     private String instanceName;
 
     private String keyName;
@@ -95,14 +93,6 @@ public class Server implements CustomEntity {
 
     public void setServerAction(List<String> serverAction) {
         this.serverAction = serverAction;
-    }
-
-    public String getVolumeState() {
-        return volumeState;
-    }
-
-    public void setVolumeState(String volumeState) {
-        this.volumeState = volumeState;
     }
 
     public String getInstanceName() {
