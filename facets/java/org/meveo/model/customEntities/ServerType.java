@@ -3,8 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import java.time.Instant;
 import org.meveo.model.customEntities.ServiceProvider;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerType implements CustomEntity {
@@ -20,8 +20,6 @@ public class ServerType implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
-
-    private Instant lastUpdated;
 
     private String volumeType;
 
@@ -54,14 +52,6 @@ public class ServerType implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public Instant getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public void setLastUpdated(Instant lastUpdated) {
-        this.lastUpdated = lastUpdated;
     }
 
     public String getVolumeType() {
