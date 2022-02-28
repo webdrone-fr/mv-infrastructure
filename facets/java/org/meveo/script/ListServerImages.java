@@ -22,6 +22,7 @@ import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 import com.google.gson.*;
 import org.meveo.model.customEntities.ServerImage;
+import org.meveo.script.openstack.OpenstackAPI;
 
 public class ListServerImages extends Script {
 
@@ -38,6 +39,8 @@ public class ListServerImages extends Script {
     private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
   
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
+  
+  	private OpenstackAPI openstackAPI = new OpenstackAPI();
 	
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
@@ -54,30 +57,31 @@ public class ListServerImages extends Script {
               	ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
               	Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
               	checkOVHToken.checkOVHToken(credential, matchingProvider);
+              	List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "images");
               	//https://image.compute.gra11.cloud.ovh.net/v2/images
-              	WebTarget target = client.target("https://image.compute.gra11." + matchingProvider.getApiBaseUrl() + "/v2/images");
-              	Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
-				String value = response.readEntity(String.class);
-              	if (response.getStatus() < 300) {
-                  	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("images");
-                  	for (JsonElement element : rootArray) {
-                    	JsonObject imageObj = element.getAsJsonObject();
-                      	//Create a new image
-                      	ServerImage image = new ServerImage();
-                      	image.setUuid(imageObj.get("id").getAsString());
-                      	image.setName(imageObj.get("name").getAsString());
-                      	log.info(imageObj.get("visibility").getAsString());
-						if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
-							image.setIsPublic(false);
-                        else
-							image.setIsPublic(true);
-                        try {
-                            crossStorageApi.createOrUpdate(defaultRepo, image);
-                        } catch (Exception ex) {
-                            log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
-                        }
-                    }
-				}
+              	//WebTarget target = client.target("https://image.compute.gra11." + matchingProvider.getApiBaseUrl() + "/v2/images");
+              	//Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
+				//String value = response.readEntity(String.class);
+              	//if (response.getStatus() < 300) {
+                //  	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("images");
+                     	for (JsonObject imageObj : images) {
+                            //JsonObject imageObj = element.getAsJsonObject();
+                            //Create a new image
+                            ServerImage image = new ServerImage();
+                            image.setUuid(imageObj.get("id").getAsString());
+                            image.setName(imageObj.get("name").getAsString());
+                            log.info(imageObj.get("visibility").getAsString());
+                            if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
+                                image.setIsPublic(false);
+                            else
+                                image.setIsPublic(true);
+                            try {
+                                crossStorageApi.createOrUpdate(defaultRepo, image);
+                            } catch (Exception ex) {
+                                log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+                            }
+						}
+				//}
             }
         } catch (EntityDoesNotExistsException ex) {
           	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
