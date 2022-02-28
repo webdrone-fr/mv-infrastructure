@@ -57,7 +57,7 @@ public class ListServerImages extends Script {
               	ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
               	Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
               	checkOVHToken.checkOVHToken(credential, matchingProvider);
-              	List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "images");
+              	List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
               	//https://image.compute.gra11.cloud.ovh.net/v2/images
               	//WebTarget target = client.target("https://image.compute.gra11." + matchingProvider.getApiBaseUrl() + "/v2/images");
               	//Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
