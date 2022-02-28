@@ -21,8 +21,6 @@ public class ServerType implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String size;
-
     private ServiceProvider provider;
 
     private String zone;
@@ -50,14 +48,6 @@ public class ServerType implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     public ServiceProvider getProvider() {
