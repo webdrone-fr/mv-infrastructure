@@ -102,6 +102,11 @@ public class ListOVHServersScript extends Script {
                 }
               	//Security Group
               	//TODO
+              	//Root volume
+              	//TODO
+              	//Additional volume
+              	//TODO
+              	
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
                 } catch (Exception ex) {
