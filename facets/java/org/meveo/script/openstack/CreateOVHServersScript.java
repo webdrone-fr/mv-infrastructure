@@ -18,8 +18,6 @@ import javax.faces.context.FacesContext;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.client.*;
-import javax.ws.rs.core.*;
 import org.meveo.model.persistence.JacksonUtil;
 import com.google.gson.*;
 import java.time.OffsetDateTime;
@@ -89,32 +87,14 @@ public class CreateOVHServersScript extends Script {
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Request
           	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential, resp, "post", "server");
-            Client client = ClientBuilder.newClient();
-            //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
-            //Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
-            //String value = response.readEntity(String.class);
-            //Integer responseStatus = response.getStatus();
-            // Verification
           	String oldUuid = server.getUuid();
-            //if (responseStatus < 300) {
           	for (JsonObject serverObj : servers) {
-                //JsonParser parserServer = new JsonParser();
-                //JsonElement jsonServer = parserServer.parse(value);
-                //JsonObject serverObj = jsonServer.getAsJsonObject();
-                //serverObj = serverObj.get("server").getAsJsonObject();
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
               	String urlServer = "servers/" + server.getUuid();
                 List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential, null, "get", "server");
           		log.info(newServers.toString());
-                //WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
-                //Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
-                //String valueNewServ = newServReponse.readEntity(String.class);
-                //if (newServReponse.getStatus() < 300) {
               	for (JsonObject newServerObj : newServers) {
-                  	//JsonElement jsonNewServer = parserServer.parse(valueNewServ);
-                  	//JsonObject newServerObj = jsonNewServer.getAsJsonObject();
-                  	//newServerObj = newServerObj.get("server").getAsJsonObject();
                     // Status
                     server.setStatus(newServerObj.get("status").getAsString());
                     // volume & flavor
@@ -122,21 +102,12 @@ public class CreateOVHServersScript extends Script {
                   	String urlFlavor = "flavors/" + idFlavor;
                   	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavor");
           			log.info(flavors.toString());
-                    //WebTarget targetVolume = client.target("https://compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
-                    //Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
-                    //String flavorValue = responseVolume.readEntity(String.class);
-                    //if (responseVolume.getStatus() < 300) {
                   	for (JsonObject flavorObj : flavors) {
-                        //JsonParser parserFlavor = new JsonParser();
-                        //JsonElement jsonFlavor = parserFlavor.parse(flavorValue);
-                        //JsonObject flavorObj = jsonFlavor.getAsJsonObject();
-                        //flavorObj = flavorObj.get("flavor").getAsJsonObject();
                         // flavor
                         server.setServerType(flavorObj.get("name").getAsString());
                         // volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
-                    //}
                     // public IP
                   	/*
                     JsonArray publicIpArray = newServerObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
@@ -160,24 +131,12 @@ public class CreateOVHServersScript extends Script {
                   	String urlImage = "images/" + idImage;
                   	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "image");
           			log.info(images.toString());
-                    //WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
-                    //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
-                    //String ImageValue = responseImage.readEntity(String.class);
-                    //if (!(ImageValue.startsWith("404"))) {
                   	for (JsonObject imageObj : images) {
-                        //JsonParser parser = new JsonParser();
-                        //JsonElement jsonE = parser.parse(ImageValue);
-                        //JsonObject ImageObj = jsonE.getAsJsonObject();
                         if (imageObj != null) {
                             server.setImage(imageObj.get("name").getAsString());
                         }
                     }
-                    //} else {
-                    //    server.setImage("Image not found");
-                    //    log.error("Image with id : " + idImage + " cannot be found for the server : " + newServerObj.get("name").getAsString());
-                    //}
                 }
-                //}
               	try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
                   	crossStorageApi.remove(defaultRepo, oldUuid, server.getClass().getSimpleName());
@@ -186,11 +145,6 @@ public class CreateOVHServersScript extends Script {
                     log.error("error updating server {} :{}", server.getUuid(), ex.getMessage());
                 }
             }
-            //} else {
-            //    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Error while creating the server : (code: " + response.getStatus() + ") " + server.getUuid()));
-            //    log.info("Error while creating the server : {}", server.getUuid());
-            //}
-            //response.close();
         }
     }
 }
