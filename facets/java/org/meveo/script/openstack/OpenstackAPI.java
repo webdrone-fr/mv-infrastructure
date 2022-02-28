@@ -229,7 +229,7 @@ public class OpenstackAPI extends Script {
      * @return the list of json object
      * @throws if the methodType used is not supported
      */
-    public List<JsonObject> IdentityAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) {
+    public List<JsonObject> IdentityAPI(String url, Credential token, String jsonBody, String methodType, String objReturn) throws BusinessException {
         List<JsonObject> res = new ArrayList<>();
         Client client = ClientBuilder.newClient();
       	if (methodType.equalsIgnoreCase("get")) {
@@ -277,6 +277,8 @@ public class OpenstackAPI extends Script {
             response.close();
         } else if (methodType.equalsIgnoreCase("put")) {
           	//TODO
+        } else {
+            throw new BusinessException("Cannot found " + methodType + " in method type request. Available methods : get, post, delete, put");
         }
         client.close();
         return res;
