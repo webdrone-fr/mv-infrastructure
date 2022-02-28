@@ -1,0 +1,12 @@
+{
+  "code" : "ServerVolume",
+  "name" : "Server Volume",
+  "description" : "Volume configuration for the server",
+  "customEntityCategoryCode" : "INFRA_TECH",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
