@@ -6,17 +6,6 @@
     "title": "Server Type",
     "type": "object",
     "properties": {
-        "isPublic": {
-            "storages": ["SQL"],
-            "default": "false",
-            "nullable": true,
-            "description": "Is Public",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerType_isPublic",
-            "title": "ServerType.isPublic",
-            "type": "string"
-        },
         "state": {
             "storages": ["SQL"],
             "nullable": true,
