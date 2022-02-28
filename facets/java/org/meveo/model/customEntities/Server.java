@@ -38,6 +38,8 @@ public class Server implements CustomEntity {
 
     private List<String> networks = new ArrayList<>();
 
+    private String volumeSize;
+
     private ServiceProvider provider;
 
     private String zone;
@@ -137,6 +139,14 @@ public class Server implements CustomEntity {
 
     public void setNetworks(List<String> networks) {
         this.networks = networks;
+    }
+
+    public String getVolumeSize() {
+        return volumeSize;
+    }
+
+    public void setVolumeSize(String volumeSize) {
+        this.volumeSize = volumeSize;
     }
 
     public ServiceProvider getProvider() {
