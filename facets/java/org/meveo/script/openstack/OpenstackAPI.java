@@ -61,11 +61,18 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-                JsonParser parserServer = new JsonParser();
-                JsonElement jsonServer = parserServer.parse(value);
-                JsonObject serverObj = jsonServer.getAsJsonObject();
-                serverObj = serverObj.get(objReturn).getAsJsonObject();
-                res.add(serverObj);
+              	String isList = "\"" + objReturn + "s\": [";
+                if (value.contains(isList)) {
+                    JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
+                    for (JsonElement element : rootArray) {
+                        JsonObject JObject = element.getAsJsonObject();
+                        res.add(JObject);
+                    }
+                } else {
+                    JsonObject JObject = new JsonParser().parse(value).getAsJsonObject();
+                    JObject = JObject.get(objReturn).getAsJsonObject();
+                  	res.add(JObject);
+                }
             }
             response.close();
         } else if (methodType.equalsIgnoreCase("delete")) {
@@ -100,14 +107,39 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-                JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
-                for (JsonElement element : rootArray) {
-                    JsonObject JObject = element.getAsJsonObject();
-                    res.add(JObject);
+              	String isList = "\"" + objReturn + "s\": [";
+                if (value.contains(isList)) {
+                    JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
+                    for (JsonElement element : rootArray) {
+                        JsonObject JObject = element.getAsJsonObject();
+                        res.add(JObject);
+                    }
+                } else {
+                    JsonObject JObject = new JsonParser().parse(value).getAsJsonObject();
+                    JObject = JObject.get(objReturn).getAsJsonObject();
+                  	res.add(JObject);
                 }
             }
         	response.close();
         } else if (methodType.equalsIgnoreCase("post")) {
+            WebTarget target = client.target(this.networkBaseAPI + url);
+            Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
+            String value = response.readEntity(String.class);
+            if (response.getStatus() < 300) {
+              	String isList = "\"" + objReturn + "s\": [";
+                if (value.contains(isList)) {
+                    JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
+                    for (JsonElement element : rootArray) {
+                        JsonObject JObject = element.getAsJsonObject();
+                        res.add(JObject);
+                    }
+                } else {
+                    JsonObject JObject = new JsonParser().parse(value).getAsJsonObject();
+                    JObject = JObject.get(objReturn).getAsJsonObject();
+                  	res.add(JObject);
+                }
+            }
+        	response.close();
         } else if (methodType.equalsIgnoreCase("delete")) {
         } else if (methodType.equalsIgnoreCase("put")) {
         } else {
