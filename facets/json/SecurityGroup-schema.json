@@ -27,6 +27,17 @@
             "title": "SecurityGroup.name",
             "type": "string",
             "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_creationDate",
+            "title": "SecurityGroup.creationDate",
+            "type": "string"
         }
     }
 }
