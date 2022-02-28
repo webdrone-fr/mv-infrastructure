@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
 import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,6 +38,8 @@ public class Server implements CustomEntity {
     private String locationDefinition;
 
     private String publicIp;
+
+    private SecurityGroup securityGroup;
 
     private Instant creationDate;
 
@@ -145,6 +148,14 @@ public class Server implements CustomEntity {
 
     public void setPublicIp(String publicIp) {
         this.publicIp = publicIp;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
     }
 
     public Instant getCreationDate() {
