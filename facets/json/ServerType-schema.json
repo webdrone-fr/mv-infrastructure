@@ -6,17 +6,6 @@
     "title": "Server Type",
     "type": "object",
     "properties": {
-        "lastUpdated": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Last Updated",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerType_lastUpdated",
-            "title": "ServerType.lastUpdated",
-            "type": "string"
-        },
         "volumeType": {
             "storages": ["SQL"],
             "nullable": true,
