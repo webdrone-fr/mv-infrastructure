@@ -34,6 +34,8 @@ public class Server implements CustomEntity {
 
     private String sergentUrl;
 
+    private String locationDefinition;
+
     private String publicIp;
 
     private Instant creationDate;
@@ -127,6 +129,14 @@ public class Server implements CustomEntity {
 
     public void setSergentUrl(String sergentUrl) {
         this.sergentUrl = sergentUrl;
+    }
+
+    public String getLocationDefinition() {
+        return locationDefinition;
+    }
+
+    public void setLocationDefinition(String locationDefinition) {
+        this.locationDefinition = locationDefinition;
     }
 
     public String getPublicIp() {
