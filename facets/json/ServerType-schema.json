@@ -6,17 +6,6 @@
     "title": "Server Type",
     "type": "object",
     "properties": {
-        "volumeType": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume Type",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerType_volumeType",
-            "title": "ServerType.volumeType",
-            "type": "string",
-            "maxLength": 255
-        },
         "size": {
             "storages": ["SQL"],
             "nullable": true,
