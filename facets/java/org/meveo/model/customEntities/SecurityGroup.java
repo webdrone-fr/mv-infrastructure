@@ -24,6 +24,8 @@ public class SecurityGroup implements CustomEntity {
 
     private String providerSideId;
 
+    private String organization;
+
     private String name;
 
     private String description;
@@ -61,6 +63,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setProviderSideId(String providerSideId) {
         this.providerSideId = providerSideId;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     public String getName() {
