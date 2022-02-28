@@ -6,17 +6,6 @@
     "title": "Server Type",
     "type": "object",
     "properties": {
-        "name": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Name",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerType_name",
-            "title": "ServerType.name",
-            "type": "string",
-            "maxLength": 255
-        },
         "isPublic": {
             "storages": ["SQL"],
             "default": "false",
