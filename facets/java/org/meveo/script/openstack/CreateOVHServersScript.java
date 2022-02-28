@@ -105,7 +105,7 @@ public class CreateOVHServersScript extends Script {
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
               	String urlServer = "servers/" + server.getUuid();
-                List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential, null, "get", "servers");
+                List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential, null, "get", "server");
           		log.info(newServers.toString());
                 //WebTarget targetNewServ = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers/" + server.getUuid());
                 //Response newServReponse = targetNewServ.request().header("X-Auth-Token", credential.getToken()).get();
@@ -120,7 +120,7 @@ public class CreateOVHServersScript extends Script {
                     // volume & flavor
                     String idFlavor = newServerObj.get("flavor").getAsJsonObject().get("id").getAsString();
                   	String urlFlavor = "flavors/" + idFlavor;
-                  	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavors");
+                  	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavor");
           			log.info(flavors.toString());
                     //WebTarget targetVolume = client.target("https://compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2.1/flavors/" + idFlavor);
                     //Response responseVolume = targetVolume.request().header("X-Auth-Token", credential.getToken()).get();
@@ -158,7 +158,7 @@ public class CreateOVHServersScript extends Script {
                     // Image
                     String idImage = newServerObj.get("image").getAsJsonObject().get("id").getAsString();
                   	String urlImage = "images/" + idImage;
-                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "images");
+                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "image");
           			log.info(images.toString());
                     //WebTarget targetImage = client.target("https://image.compute." + server.getZone() + "." + openstack.getApiBaseUrl() + "/v2/images/" + idImage);
                     //Response responseImage = targetImage.request().header("X-Auth-Token", credential.getToken()).get();
