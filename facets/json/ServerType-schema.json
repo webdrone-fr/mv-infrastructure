@@ -6,17 +6,6 @@
     "title": "Server Type",
     "type": "object",
     "properties": {
-        "zone": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Zone",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerType_zone",
-            "title": "ServerType.zone",
-            "type": "string",
-            "maxLength": 255
-        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
