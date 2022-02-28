@@ -1,0 +1,12 @@
+{
+  "code" : "SecurityGroup",
+  "name" : "Security Group",
+  "description" : "Security group of the server",
+  "customEntityCategoryCode" : "INFRA_TECH",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
