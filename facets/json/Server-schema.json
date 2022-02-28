@@ -6,6 +6,16 @@
     "title": "Server",
     "type": "object",
     "properties": {
+        "image": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Image",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_image",
+            "title": "Server.image",
+            "$ref": "#/definitions/ServerImage"
+        },
         "providerSideId": {
             "storages": ["SQL"],
             "nullable": true,
