@@ -74,6 +74,7 @@ public class OpenstackAPI extends Script {
             String value = response.readEntity(String.class);
             response.close();
         } else if (methodType.equalsIgnoreCase("put")) {
+          	//TODO
         } else {
             throw new BusinessException("Cannot found " + methodType + " in method type request. Available methods : get, post, delete, put");
         }
