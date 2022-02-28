@@ -6,6 +6,17 @@
     "title": "Security Group",
     "type": "object",
     "properties": {
+        "lastUpdated": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last Updated",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_lastUpdated",
+            "title": "SecurityGroup.lastUpdated",
+            "type": "string"
+        },
         "providerSideId": {
             "storages": ["SQL"],
             "nullable": true,
