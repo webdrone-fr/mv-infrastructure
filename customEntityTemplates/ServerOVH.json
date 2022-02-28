@@ -2,6 +2,7 @@
   "code" : "ServerOVH",
   "superTemplate" : "Server",
   "name" : "Server OVH",
+  "description" : "Cet for OVH server",
   "customEntityCategoryCode" : "INFRA",
   "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
