@@ -58,6 +58,7 @@ public class ListOVHServersScript extends Script {
                 ServerOVH server = new ServerOVH();
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
+              	server.setProviderSideId(serverObj.get("id").getAsString());
                 // server name
                 server.setInstanceName(serverObj.get("name").getAsString());
                 // domain name
@@ -71,7 +72,7 @@ public class ListOVHServersScript extends Script {
                 for (JsonObject imageElement : images) {
                     //server.setImage(imageElement.get("name").getAsString());
                   	ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("uuid", imageElement.get("id").getAsString()).getResult();
-                  	//server.setImage(image);
+                  	server.setImage(image);
                 }
                 // Set the creation & updated date
                 server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
