@@ -89,7 +89,6 @@ public class CreateOVHServersScript extends Script {
             String resp = JacksonUtil.toStringPrettyPrinted(master);
             // Request
           	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential, resp, "post", "server");
-          	log.info(servers.toString());
             Client client = ClientBuilder.newClient();
             //WebTarget target = client.target("https://compute." + server.getZone() + ".cloud.ovh.net/v2.1/servers");
             //Response response = target.request("application/json").header("X-Auth-Token", credential.getToken()).post(Entity.json(resp));
