@@ -15,7 +15,7 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Server action:4;field:1",
+  "guiPosition" : "tab:Set OVH server:2;field:5",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],
