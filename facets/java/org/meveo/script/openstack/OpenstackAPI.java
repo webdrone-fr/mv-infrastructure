@@ -44,6 +44,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
@@ -63,6 +64,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
@@ -109,6 +111,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
@@ -128,6 +131,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
@@ -194,6 +198,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
@@ -240,6 +245,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
@@ -259,6 +265,7 @@ public class OpenstackAPI extends Script {
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
+                  	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
                         JsonObject JObject = element.getAsJsonObject();
