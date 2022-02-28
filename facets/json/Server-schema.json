@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_providerSideId",
+            "title": "Server.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "serverAction": {
             "storages": ["SQL"],
             "nullable": true,
