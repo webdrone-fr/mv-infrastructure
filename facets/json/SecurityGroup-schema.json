@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "organization": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Organization",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_SecurityGroup_organization",
+            "title": "SecurityGroup.organization",
+            "type": "string",
+            "maxLength": 255
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
