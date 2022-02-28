@@ -20,6 +20,8 @@ public class SecurityGroup implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Instant lastUpdated;
+
     private String providerSideId;
 
     private String name;
@@ -41,6 +43,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Instant getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public String getProviderSideId() {
