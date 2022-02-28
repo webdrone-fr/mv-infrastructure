@@ -4,6 +4,8 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
+import java.util.Map;
+import java.util.HashMap;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SecurityGroup implements CustomEntity {
@@ -33,6 +35,8 @@ public class SecurityGroup implements CustomEntity {
     private String description;
 
     private String project;
+
+    private Map<String, String> rules = new HashMap<>();
 
     private Instant creationDate;
 
@@ -107,6 +111,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public Map<String, String> getRules() {
+        return rules;
+    }
+
+    public void setRules(Map<String, String> rules) {
+        this.rules = rules;
     }
 
     public Instant getCreationDate() {
