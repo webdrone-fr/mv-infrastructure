@@ -24,6 +24,8 @@ public class Server implements CustomEntity {
 
     private String image;
 
+    private String providerSideId;
+
     private List<String> serverAction = new ArrayList<>();
 
     private String instanceName;
@@ -83,6 +85,14 @@ public class Server implements CustomEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
     }
 
     public List<String> getServerAction() {
