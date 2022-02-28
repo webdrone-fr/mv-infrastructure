@@ -53,7 +53,7 @@ public class OpenstackAPI extends Script {
         } else if (methodType.equalsIgnoreCase("post")) {
           	log.info("EXECUTION DE LA REQUETE");
             WebTarget target = client.target(this.computeBaseAPI + url);
-            Response response = target.request().header("X-Auth-Token", token).post(Entity.json(jsonBody));
+            Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
               	// Regarder si la reponse cotient <"servers": [>
@@ -73,7 +73,7 @@ public class OpenstackAPI extends Script {
             response.close();
         } else if (methodType.equalsIgnoreCase("delete")) {
             WebTarget target = client.target(this.computeBaseAPI + url);
-            Response response = target.request().header("X-Auth-Token", token).delete();
+            Response response = target.request().header("X-Auth-Token", token.getToken()).delete();
             String value = response.readEntity(String.class);
             response.close();
         } else if (methodType.equalsIgnoreCase("put")) {
