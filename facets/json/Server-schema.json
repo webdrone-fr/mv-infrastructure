@@ -44,6 +44,21 @@
                 "maxLength": 255
             }
         },
+        "additionalVolumes": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_Server_additionalVolumes_item",
+                "title": "Server.additionalVolumes item",
+                "$ref": "#/definitions/ServerVolume"
+            }},
+            "nullable": true,
+            "description": "Additional Volumes",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_Server_additionalVolumes",
+            "title": "Server.additionalVolumes",
+            "type": "object"
+        },
         "instanceName": {
             "storages": ["SQL"],
             "nullable": true,
