@@ -30,6 +30,8 @@ public class SecurityGroup implements CustomEntity {
 
     private String description;
 
+    private String project;
+
     private Instant creationDate;
 
     @Override()
@@ -87,6 +89,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public Instant getCreationDate() {
