@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
 import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.customEntities.ServerVolume;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -62,6 +63,8 @@ public class Server implements CustomEntity {
     private String name;
 
     private String flavorRef;
+
+    private ServerVolume rootVolume;
 
     private String location;
 
@@ -244,6 +247,14 @@ public class Server implements CustomEntity {
 
     public void setFlavorRef(String flavorRef) {
         this.flavorRef = flavorRef;
+    }
+
+    public ServerVolume getRootVolume() {
+        return rootVolume;
+    }
+
+    public void setRootVolume(ServerVolume rootVolume) {
+        this.rootVolume = rootVolume;
     }
 
     public String getLocation() {
