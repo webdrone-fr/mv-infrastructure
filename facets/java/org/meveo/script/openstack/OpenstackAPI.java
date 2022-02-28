@@ -42,7 +42,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -61,7 +61,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -107,7 +107,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -126,7 +126,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -172,7 +172,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -191,7 +191,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -237,7 +237,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
@@ -256,7 +256,7 @@ public class OpenstackAPI extends Script {
             Response response = target.request().header("X-Auth-Token", token.getToken()).post(Entity.json(jsonBody));
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
-              	String isList = "\"" + objReturn + "\": [";
+              	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
                     for (JsonElement element : rootArray) {
