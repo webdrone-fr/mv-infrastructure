@@ -34,17 +34,6 @@
                 "maxLength": 255
             }
         },
-        "volumeState": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume State",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_volumeState",
-            "title": "Server.volumeState",
-            "type": "string",
-            "maxLength": 255
-        },
         "instanceName": {
             "storages": ["SQL"],
             "nullable": true,
