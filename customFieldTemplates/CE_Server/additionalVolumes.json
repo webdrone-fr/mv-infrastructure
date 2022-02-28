@@ -15,7 +15,7 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Server:0;field:18",
+  "guiPosition" : "tab:Server:0;field:17",
   "identifier" : false,
   "mapKeyType" : "STRING",
   "storages" : [ "SQL" ],
