@@ -58,6 +58,8 @@ public class Server implements CustomEntity {
 
     private String flavorRef;
 
+    private String location;
+
     private String imageRef;
 
     private String status;
@@ -221,6 +223,14 @@ public class Server implements CustomEntity {
 
     public void setFlavorRef(String flavorRef) {
         this.flavorRef = flavorRef;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getImageRef() {
