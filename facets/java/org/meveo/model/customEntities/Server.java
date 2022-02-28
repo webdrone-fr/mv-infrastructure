@@ -3,14 +3,14 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.model.customEntities.ServerImage;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.customEntities.ServerImage;
 import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
-import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -27,27 +27,13 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private ServerImage image;
-
     private String providerSideId;
 
-    private List<String> serverAction = new ArrayList<>();
-
-    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
-
     private String instanceName;
-
-    private String keyName;
 
     private String sergentUrl;
 
     private String locationDefinition;
-
-    private String publicIp;
-
-    private SecurityGroup securityGroup;
-
-    private Instant creationDate;
 
     private List<String> networks = new ArrayList<>();
 
@@ -57,11 +43,27 @@ public class Server implements CustomEntity {
 
     private String zone;
 
+    private ServerImage image;
+
+    private List<String> serverAction = new ArrayList<>();
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
+
+    private String keyName;
+
+    private String publicIp;
+
+    private SecurityGroup securityGroup;
+
+    private Instant creationDate;
+
     private String domainName;
 
     private Instant lastUpdate;
 
     private String organization;
+
+    private String serverType;
 
     private String name;
 
@@ -92,14 +94,6 @@ public class Server implements CustomEntity {
         this.storages = storages;
     }
 
-    public ServerImage getImage() {
-        return image;
-    }
-
-    public void setImage(ServerImage image) {
-        this.image = image;
-    }
-
     public String getProviderSideId() {
         return providerSideId;
     }
@@ -108,36 +102,12 @@ public class Server implements CustomEntity {
         this.providerSideId = providerSideId;
     }
 
-    public List<String> getServerAction() {
-        return serverAction;
-    }
-
-    public void setServerAction(List<String> serverAction) {
-        this.serverAction = serverAction;
-    }
-
-    public Map<String, ServerVolume> getAdditionalVolumes() {
-        return additionalVolumes;
-    }
-
-    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
-        this.additionalVolumes = additionalVolumes;
-    }
-
     public String getInstanceName() {
         return instanceName;
     }
 
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
-    }
-
-    public String getKeyName() {
-        return keyName;
-    }
-
-    public void setKeyName(String keyName) {
-        this.keyName = keyName;
     }
 
     public String getSergentUrl() {
@@ -154,30 +124,6 @@ public class Server implements CustomEntity {
 
     public void setLocationDefinition(String locationDefinition) {
         this.locationDefinition = locationDefinition;
-    }
-
-    public String getPublicIp() {
-        return publicIp;
-    }
-
-    public void setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-    }
-
-    public SecurityGroup getSecurityGroup() {
-        return securityGroup;
-    }
-
-    public void setSecurityGroup(SecurityGroup securityGroup) {
-        this.securityGroup = securityGroup;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
     }
 
     public List<String> getNetworks() {
@@ -212,6 +158,62 @@ public class Server implements CustomEntity {
         this.zone = zone;
     }
 
+    public ServerImage getImage() {
+        return image;
+    }
+
+    public void setImage(ServerImage image) {
+        this.image = image;
+    }
+
+    public List<String> getServerAction() {
+        return serverAction;
+    }
+
+    public void setServerAction(List<String> serverAction) {
+        this.serverAction = serverAction;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
+    }
+
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public String getDomainName() {
         return domainName;
     }
@@ -234,6 +236,14 @@ public class Server implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getServerType() {
+        return serverType;
+    }
+
+    public void setServerType(String serverType) {
+        this.serverType = serverType;
     }
 
     public String getName() {
