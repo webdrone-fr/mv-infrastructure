@@ -1,0 +1,8 @@
+{
+    "storages": ["SQL"],
+    "allOf": [{"$ref": "#/definitions/Server"}],
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "ServerOVH",
+    "title": "Server OVH",
+    "type": "object"
+}
