@@ -12,7 +12,8 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import org.meveo.model.customEntities.ServiceProvider;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServerOVH;
+import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
@@ -54,7 +55,7 @@ public class ListOVHServersScript extends Script {
             for (JsonObject serverObj : servers) {
                 //JsonObject serverObj = element.getAsJsonObject();
                 // Create new servers
-                Server server = new Server();
+                ServerOVH server = new ServerOVH();
                 // UUID
                 server.setUuid(serverObj.get("id").getAsString());
                 // server name
@@ -69,6 +70,8 @@ public class ListOVHServersScript extends Script {
                 List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "images");
                 for (JsonObject imageElement : images) {
                     //server.setImage(imageElement.get("name").getAsString());
+                  	ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("uuid", imageElement.get("id").getAsString()).getResult();
+                  	//server.setImage(image);
                 }
                 // Set the creation & updated date
                 server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
