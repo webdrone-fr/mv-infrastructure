@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
+import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.persistence.CEIUtils;
 
 public class PopulateServerProvider extends Script {
 
@@ -23,6 +25,7 @@ public class PopulateServerProvider extends Script {
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
+		ServiceProvider serverProvider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
 	}
 	
 }
