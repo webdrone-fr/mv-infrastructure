@@ -6,17 +6,6 @@
     "title": "Server Flavor",
     "type": "object",
     "properties": {
-        "vcpu": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Virtual Processor",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerFlavor_vcpu",
-            "title": "ServerFlavor.vcpu",
-            "type": "string",
-            "maxLength": 255
-        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
