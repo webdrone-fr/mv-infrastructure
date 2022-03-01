@@ -15,7 +15,7 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Server Flavor:0;field:4",
+  "guiPosition" : "tab:Server Flavor:0;field:3",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],
