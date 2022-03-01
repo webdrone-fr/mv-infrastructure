@@ -6,17 +6,6 @@
     "title": "Server Flavor",
     "type": "object",
     "properties": {
-        "isFlex": {
-            "storages": ["SQL"],
-            "default": "false",
-            "nullable": true,
-            "description": "isFlex",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerFlavor_isFlex",
-            "title": "ServerFlavor.isFlex",
-            "type": "string"
-        },
         "disk": {
             "storages": ["SQL"],
             "nullable": true,
