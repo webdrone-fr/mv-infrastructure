@@ -23,6 +23,8 @@ public class ServerFlavor implements CustomEntity {
 
     private String name;
 
+    private String ram;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -54,6 +56,14 @@ public class ServerFlavor implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRam() {
+        return ram;
+    }
+
+    public void setRam(String ram) {
+        this.ram = ram;
     }
 
     @Override()
