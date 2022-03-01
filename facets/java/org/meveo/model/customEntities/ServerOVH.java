@@ -20,8 +20,6 @@ public class ServerOVH extends Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String KeyName;
-
     @Override()
     public String getUuid() {
         return uuid;
@@ -37,14 +35,6 @@ public class ServerOVH extends Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getKeyName() {
-        return KeyName;
-    }
-
-    public void setKeyName(String KeyName) {
-        this.KeyName = KeyName;
     }
 
     @Override()
