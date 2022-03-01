@@ -19,8 +19,6 @@ public class ServerFlavor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String disk;
-
     private String vcpu;
 
     private String name;
@@ -42,14 +40,6 @@ public class ServerFlavor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getDisk() {
-        return disk;
-    }
-
-    public void setDisk(String disk) {
-        this.disk = disk;
     }
 
     public String getVcpu() {
