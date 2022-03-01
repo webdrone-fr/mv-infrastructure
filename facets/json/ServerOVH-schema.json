@@ -79,6 +79,16 @@
             "type": "string",
             "maxLength": 20
         },
+        "network": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Network",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerOVH_network",
+            "title": "ServerOVH.network",
+            "$ref": "#/definitions/ServerNetwork"
+        },
         "provider": {
             "storages": ["SQL"],
             "nullable": true,
