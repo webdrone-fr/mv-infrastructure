@@ -225,7 +225,7 @@
             "versionable": false,
             "id": "CE_Server_serverType",
             "title": "Server.serverType",
-            "enum": ["38e49eca-b3cf-42ec-94c4-fd29a316477e"]
+            "enum": []
         },
         "name": {
             "storages": ["SQL"],
