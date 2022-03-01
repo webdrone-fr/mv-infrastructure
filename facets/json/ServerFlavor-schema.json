@@ -6,17 +6,6 @@
     "title": "Server Flavor",
     "type": "object",
     "properties": {
-        "disk": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume (in GiB)",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerFlavor_disk",
-            "title": "ServerFlavor.disk",
-            "type": "string",
-            "maxLength": 255
-        },
         "vcpu": {
             "storages": ["SQL"],
             "nullable": true,
