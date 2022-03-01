@@ -69,7 +69,7 @@ public class ListScalewayServersScript extends Script {
                     }
                 }
                 if (serverObj.has("image") && !serverObj.get("image").isJsonNull()) {
-                    server.setImage(serverObj.get("image").getAsJsonObject().get("name").getAsString());
+                    //server.setImage(serverObj.get("image").getAsJsonObject().get("name").getAsString());
                 }
                 server.setCreationDate(OffsetDateTime.parse(serverObj.get("creation_date").getAsString()).toInstant());
                 server.setLastUpdate(OffsetDateTime.parse(serverObj.get("modification_date").getAsString()).toInstant());
