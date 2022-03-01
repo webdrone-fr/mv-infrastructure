@@ -1,6 +1,7 @@
 {
   "code" : "ServerFlavor",
   "name" : "Server Flavor",
+  "description" : "Flavor configuration for ovh server (volume, flex, ram, ...)",
   "customEntityCategoryCode" : "INFRA_TECH",
   "availableStorages" : [ "SQL" ],
   "sqlStorageConfiguration" : {
