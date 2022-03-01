@@ -9,9 +9,7 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "listValues" : {
-    "38e49eca-b3cf-42ec-94c4-fd29a316477e" : "b2-7"
-  },
+  "listValues" : { },
   "allowEdit" : false,
   "hideOnNew" : false,
   "contentTypes" : [ ],
