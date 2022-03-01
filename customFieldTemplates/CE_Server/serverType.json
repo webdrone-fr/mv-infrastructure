@@ -9,7 +9,14 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "listValues" : { },
+  "listValues" : {
+    "32d76492-f964-47d9-8c0d-563baad8577f" : "win-c2-120",
+    "38e49eca-b3cf-42ec-94c4-fd29a316477e" : "b2-7",
+    "4819bd55-ce54-474e-a7b3-d1bef5350eca" : "win-i1-180",
+    "55e4b499-53ef-48b6-9240-96c73c066b94" : "win-b2-15",
+    "b04f5f0c-857c-4460-b90a-5b75baa104c3" : "r2-240-flex",
+    "e7b58d55-d69b-4f96-9f53-41b304874556" : "b2-15-flex"
+  },
   "allowEdit" : false,
   "hideOnNew" : false,
   "contentTypes" : [ ],
