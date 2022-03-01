@@ -195,16 +195,6 @@
             "title": "ServerOVH.creationDate",
             "type": "string"
         },
-        "flavor": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Flavor",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_ServerOVH_flavor",
-            "title": "ServerOVH.flavor",
-            "$ref": "#/definitions/ServerFlavor"
-        },
         "domainName": {
             "storages": ["SQL"],
             "nullable": true,
