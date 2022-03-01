@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.ServerNetwork;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.customEntities.ServerImage;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class ServerOVH extends Server implements CustomEntity {
     private List<String> networks = new ArrayList<>();
 
     private String volumeSize;
+
+    private ServerNetwork network;
 
     private ServiceProvider provider;
 
@@ -146,6 +149,14 @@ public class ServerOVH extends Server implements CustomEntity {
 
     public void setVolumeSize(String volumeSize) {
         this.volumeSize = volumeSize;
+    }
+
+    public ServerNetwork getNetwork() {
+        return network;
+    }
+
+    public void setNetwork(ServerNetwork network) {
+        this.network = network;
     }
 
     public ServiceProvider getProvider() {
