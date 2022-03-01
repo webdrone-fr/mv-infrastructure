@@ -35,7 +35,6 @@ public class PopulateServerProvider extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
         ServiceProvider serverProvider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance) parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
-      	log.info(serverProvider.getApiBaseUrl());
         switch(serverProvider.getApiBaseUrl()) {
             case "cloud.ovh.net":
             	//Populate server types
