@@ -3,5 +3,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerFlavor",
     "title": "Server Flavor",
-    "type": "object"
+    "type": "object",
+    "properties": {"name": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Name",
+        "readOnly": true,
+        "versionable": false,
+        "id": "CE_ServerFlavor_name",
+        "title": "ServerFlavor.name",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
