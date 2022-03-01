@@ -17,6 +17,7 @@ import org.meveo.model.customEntities.Credential;
 import org.meveo.credentials.CredentialHelperService;
 import com.google.gson.JsonObject;
 import java.util.List;
+import java.util.HashMap;
 
 public class PopulateServerProvider extends Script {
 
@@ -40,6 +41,9 @@ public class PopulateServerProvider extends Script {
             	String url = "flavors/detail";
         		Credential credential = CredentialHelperService.getCredential(serverProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
             	List<JsonObject> flavors = openstackAPI.computeAPI(url, credential, null, "get", "flavor");
+            	for (JsonObject flavor : flavors) {
+                  	HashMap<String, String> serverTypes = new HashMap<String, String>();
+                }
             default:
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "WArning : ", "No populate found for " + serverProvider.getApiBaseUrl()));
         }
