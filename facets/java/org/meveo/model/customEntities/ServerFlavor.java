@@ -19,6 +19,8 @@ public class ServerFlavor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String vcpu;
+
     private String name;
 
     @Override()
@@ -36,6 +38,14 @@ public class ServerFlavor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getVcpu() {
+        return vcpu;
+    }
+
+    public void setVcpu(String vcpu) {
+        this.vcpu = vcpu;
     }
 
     public String getName() {
