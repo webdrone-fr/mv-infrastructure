@@ -1,5 +1,6 @@
 {
     "storages": ["SQL"],
+    "default": "Flavor configuration for ovh server (volume, flex, ram, ...)",
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerFlavor",
     "title": "Server Flavor",
