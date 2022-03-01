@@ -105,7 +105,7 @@ public class PopulateProviderFields extends Script {
                         publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
                     } else {
                         String action = "listProviderPublicIps";
-                        publicIp = ScalewaySetters.setPublicIp(publicIpObj, action, provider, crossStorageApi, defaultRepo);
+                        publicIp = ScalewaySetters.setPublicIp(publicIpObj, publicIp, action, provider, crossStorageApi, defaultRepo);
                     }
                     crossStorageApi.createOrUpdate(defaultRepo, publicIp);
 

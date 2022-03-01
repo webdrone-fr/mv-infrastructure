@@ -64,7 +64,7 @@ public class ListScalewaySecurityGroups extends Script {
                         if(crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult()!= null){
                             securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
                         } else {
-                            securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, action, crossStorageApi, defaultRepo);
+                            securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, securityGroup, action, crossStorageApi, defaultRepo);
                         }
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
                     } catch(Exception e){

@@ -1,6 +1,5 @@
 package org.meveo.scaleway;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,70 +60,8 @@ public class ListScalewayServerTypes extends Script{
                 Map<String, String> serverTypes = new HashMap<String, String>();
                 Set<Map.Entry<String, JsonElement>> entries = serverTypesObj.entrySet();
                 for(Map.Entry<String, JsonElement> entry: entries) {
-                    Map<String, Object> serverType = new HashMap<String, Object>();
                     JsonObject serverTypeObj = entry.getValue().getAsJsonObject();
-                    serverType.put("hourly_price", serverTypeObj.get("hourly_price").getAsLong());
-                    serverType.put("ncpus", serverTypeObj.get("ncpus").getAsLong());
-                    serverType.put("ram", serverTypeObj.get("ram").getAsLong());
-                    serverType.put("arch", serverTypeObj.get("arch").getAsString());
-                    serverType.put("baremetal", serverTypeObj.get("baremetal").getAsBoolean());
-                    if(!serverTypeObj.get("alt_names").isJsonNull()) {
-                        JsonArray altNamesArr = serverTypeObj.get("alt_names").getAsJsonArray();
-                        List<String> altNames = new ArrayList<String>();
-                        for(JsonElement altName :altNamesArr){
-                            altNames.add(altName.getAsString());
-                        }
-                        serverType.put("alt_names", altNames);
-                    }
-                    if(!serverTypeObj.get("per_volume_constraint").isJsonNull()) {
-                        Map<String, Object> perVolumeConstraint = new HashMap<String, Object>();
-                        JsonObject perVolumeConstraintObj = serverTypeObj.get("per_volume_constraint").getAsJsonObject();
-                        Set<Map.Entry<String, JsonElement>> perVolumeConstraintEntries = perVolumeConstraintObj.entrySet();
-                        for(Map.Entry<String, JsonElement> perVolumeConstraintEntry : perVolumeConstraintEntries) {
-                            Map<String, Long> perVolumeConstraints = new HashMap<String, Long>();
-                            JsonObject volumeConstraintsObj = perVolumeConstraintEntry.getValue().getAsJsonObject();
-                            perVolumeConstraints.put("min_size", volumeConstraintsObj.get("min_size").getAsLong());
-                            perVolumeConstraints.put("max_size", volumeConstraintsObj.get("max_size").getAsLong());
-                            perVolumeConstraint.put(perVolumeConstraintEntry.getKey(), perVolumeConstraints);
-                        }
-                        serverType.put("per_volume_constraint", perVolumeConstraint);
-                    }
-                    if(!serverTypeObj.get("volumes_constraint").isJsonNull()) {
-                        Map<String, Long> volumesConstraint = new HashMap<String, Long>();
-                        JsonObject volumesConstraintObj = serverTypeObj.get("volumes_constraint").getAsJsonObject();
-                        volumesConstraint.put("min_size", volumesConstraintObj.get("min_size").getAsLong());
-                        volumesConstraint.put("max_size", volumesConstraintObj.get("max_size").getAsLong());
-                        serverType.put("volumes_constraint", volumesConstraint);
-                    }
-                    if(!serverTypeObj.get("gpu").isJsonNull()){
-                        serverType.put("gpu", serverTypeObj.get("gpu").getAsLong());
-                    }
-                    if (!serverTypeObj.get("network").isJsonNull()) {
-                        Map<String, Object> network = new HashMap<String, Object>();
-                        JsonObject networkObj = serverTypeObj.get("network").getAsJsonObject();
-                        JsonArray interfacesArr = networkObj.get("interfaces").getAsJsonArray();
-                        List<Object> interfaces = new ArrayList<Object>();
-                        for (JsonElement interfaceEl : interfacesArr) {
-                            Map<String, Long> networkInterface = new HashMap<String, Long>();
-                            JsonObject interfaceObj = interfaceEl.getAsJsonObject();
-                            if(!interfaceObj.get("internal_bandwidth").isJsonNull()) {
-                                networkInterface.put("internal_bandwidth", interfaceObj.get("internal_bandwidth").getAsLong());
-                            }
-                            if(!interfaceObj.get("internet_bandwidth").isJsonNull()) {
-                                networkInterface.put("internet_bandwidth", interfaceObj.get("internet_bandwidth").getAsLong());
-                            }
-                            interfaces.add(networkInterface);
-                        }
-                        network.put("interfaces", interfaces);
-                        if(!networkObj.get("sum_internal_bandwidth").isJsonNull()) {
-                            network.put("sum_internal_bandwidth", networkObj.get("sum_internal_bandwidth").getAsLong());
-                        }
-                        if(!networkObj.get("sum_internet_bandwidth").isJsonNull()) {
-                            network.put("sum_internet_bandwidth", networkObj.get("sum_internet_bandwidth").getAsLong());
-                        }
-                        network.put("ipv6_support", networkObj.get("ipv6_support").getAsBoolean());
-                        serverType.put("network", network);
-                    }
+                    Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
                     serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
                 }
                 provider.setServerType(serverTypes);

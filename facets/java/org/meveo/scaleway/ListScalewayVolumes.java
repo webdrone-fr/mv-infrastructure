@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -12,6 +13,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ServerVolume;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -30,6 +32,7 @@ public class ListScalewayVolumes extends Script{
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
         String action = null;
         if (parameters.get(CONTEXT_ACTION)!= null) {
             action = parameters.get(CONTEXT_ACTION).toString();
@@ -64,11 +67,11 @@ public class ListScalewayVolumes extends Script{
                         if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult() != null) {
                             volume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult();
                         } else {
-                            volume = ScalewaySetters.setServerVolume(volumeObj, action, crossStorageApi, defaultRepo);
+                            volume = ScalewaySetters.setServerVolume(volumeObj, volume, action, crossStorageApi, defaultRepo);
                         }
                         crossStorageApi.createOrUpdate(defaultRepo, volume);
                     } catch (Exception e) {
-                        logger.error("Error creating Volume {}", volumeId, e.getMessage());
+                        logger.error("Error retrieving Volume {}", volumeId, e.getMessage());
                     }
                 }
             }

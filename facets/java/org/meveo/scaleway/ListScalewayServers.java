@@ -65,7 +65,7 @@ public class ListScalewayServers extends Script {
                             if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult() != null) {
                                 server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
                             } else {
-                                server = ScalewaySetters.setScalewayServer(serverObj, action, provider, crossStorageApi, defaultRepo);
+                                server = ScalewaySetters.setScalewayServer(serverObj, server, action, provider, crossStorageApi, defaultRepo);
                             }
                             crossStorageApi.createOrUpdate(defaultRepo, server);
                         } catch (Exception e) {
