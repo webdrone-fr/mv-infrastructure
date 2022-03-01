@@ -19,6 +19,8 @@ public class ServerFlavor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean isFlex;
+
     private String disk;
 
     private String vcpu;
@@ -42,6 +44,14 @@ public class ServerFlavor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getIsFlex() {
+        return isFlex;
+    }
+
+    public void setIsFlex(Boolean isFlex) {
+        this.isFlex = isFlex;
     }
 
     public String getDisk() {
