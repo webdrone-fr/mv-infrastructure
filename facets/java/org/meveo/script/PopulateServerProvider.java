@@ -11,6 +11,8 @@ import org.meveo.model.storage.Repository;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 public class PopulateServerProvider extends Script {
 
@@ -26,6 +28,12 @@ public class PopulateServerProvider extends Script {
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
 		ServiceProvider serverProvider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
+      	switch(serverProvider.getApiBaseUrl()) {
+          case "cloud.ovh.net":
+          	  break;
+          default:
+              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "WArning : ", "No populate found for " + serverProvider.getApiBaseUrl()));
+        }
 	}
 	
 }
