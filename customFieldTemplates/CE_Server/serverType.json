@@ -9,7 +9,9 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "listValues" : { },
+  "listValues" : {
+    "38e49eca-b3cf-42ec-94c4-fd29a316477e" : "b2-7"
+  },
   "allowEdit" : false,
   "hideOnNew" : false,
   "contentTypes" : [ ],
@@ -22,6 +24,6 @@
   "summary" : false,
   "audited" : false,
   "persisted" : true,
-  "unique" : false,
-  "filter" : false
+  "filter" : false,
+  "unique" : false
 }
