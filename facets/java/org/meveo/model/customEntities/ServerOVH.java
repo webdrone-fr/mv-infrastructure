@@ -12,7 +12,6 @@ import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
-import org.meveo.model.customEntities.ServerFlavor;
 import org.meveo.model.customEntities.Server;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -61,8 +60,6 @@ public class ServerOVH extends Server implements CustomEntity {
     private SecurityGroup securityGroup;
 
     private Instant creationDate;
-
-    private ServerFlavor flavor;
 
     private String domainName;
 
@@ -229,14 +226,6 @@ public class ServerOVH extends Server implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public ServerFlavor getFlavor() {
-        return flavor;
-    }
-
-    public void setFlavor(ServerFlavor flavor) {
-        this.flavor = flavor;
     }
 
     public String getDomainName() {
