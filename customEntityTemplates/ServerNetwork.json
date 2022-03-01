@@ -1,0 +1,12 @@
+{
+  "code" : "ServerNetwork",
+  "name" : "Server Network",
+  "description" : "Network for ovh server",
+  "customEntityCategoryCode" : "INFRA_TECH",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
