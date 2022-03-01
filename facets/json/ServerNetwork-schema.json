@@ -50,7 +50,7 @@
             "nullable": true,
             "format": "date-time",
             "description": "Creation Date",
-            "readOnly": false,
+            "readOnly": true,
             "versionable": false,
             "id": "CE_ServerNetwork_creationDate",
             "title": "ServerNetwork.creationDate",
