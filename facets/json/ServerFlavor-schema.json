@@ -1,0 +1,7 @@
+{
+    "storages": ["SQL"],
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "ServerFlavor",
+    "title": "Server Flavor",
+    "type": "object"
+}
