@@ -1,0 +1,11 @@
+{
+  "code" : "ServerFlavor",
+  "name" : "Server Flavor",
+  "customEntityCategoryCode" : "INFRA_TECH",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
