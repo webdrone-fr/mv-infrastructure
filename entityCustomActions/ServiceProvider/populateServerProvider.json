@@ -1,0 +1,1 @@
+{"code":"populateServerProvider","description":"Populate fields of server provider (server types)","appliesTo":"CE_ServiceProvider","label":"Populate Server Provider","script":"org.meveo.script.PopulateServerProvider","guiPosition":"tab:Server Types:2;action:1","applicableToEntityList":false,"applicableToEntityInstance":true}
