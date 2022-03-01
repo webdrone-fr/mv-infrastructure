@@ -1,7 +1,6 @@
 package org.meveo.script;
 
 import java.util.Map;
-
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 import org.slf4j.Logger;
@@ -13,6 +12,11 @@ import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import org.meveo.script.openstack.OpenstackAPI;
+import org.meveo.model.customEntities.Credential;
+import org.meveo.credentials.CredentialHelperService;
+import com.google.gson.JsonObject;
+import java.util.List;
 
 public class PopulateServerProvider extends Script {
 
@@ -23,17 +27,21 @@ public class PopulateServerProvider extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
-	
-	@Override
-	public void execute(Map<String, Object> parameters) throws BusinessException {
-		super.execute(parameters);
-		ServiceProvider serverProvider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
-      	switch(serverProvider.getApiBaseUrl()) {
-          case "cloud.ovh.net":
-          	  break;
-          default:
-              FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "WArning : ", "No populate found for " + serverProvider.getApiBaseUrl()));
+  
+  	private OpenstackAPI openstackAPI = new OpenstackAPI();
+
+    @Override
+    public void execute(Map<String, Object> parameters) throws BusinessException {
+        super.execute(parameters);
+        ServiceProvider serverProvider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance) parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
+        switch(serverProvider.getApiBaseUrl()) {
+            case "cloud.ovh.net":
+            	//Populate server types
+            	String url = "flavors/detail";
+        		Credential credential = CredentialHelperService.getCredential(serverProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
+            	List<JsonObject> flavors = openstackAPI.computeAPI(url, credential, null, "get", "flavor");
+            default:
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "WArning : ", "No populate found for " + serverProvider.getApiBaseUrl()));
         }
-	}
-	
+    }
 }
