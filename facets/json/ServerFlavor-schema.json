@@ -26,6 +26,17 @@
             "title": "ServerFlavor.name",
             "type": "string",
             "maxLength": 255
+        },
+        "ram": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Random-Access Memory",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerFlavor_ram",
+            "title": "ServerFlavor.ram",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
