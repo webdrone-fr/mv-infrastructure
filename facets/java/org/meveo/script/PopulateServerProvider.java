@@ -52,7 +52,7 @@ public class PopulateServerProvider extends Script {
                   	log.error("error updating server {} :{}", serverProvider.getUuid(), ex.getMessage());
                 }
             default:
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "WArning : ", "No populate found for " + serverProvider.getApiBaseUrl()));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : No populate found for " + serverProvider.getApiBaseUrl(), null));
         }
     }
 }
