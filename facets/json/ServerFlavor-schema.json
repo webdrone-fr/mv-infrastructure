@@ -4,15 +4,28 @@
     "id": "ServerFlavor",
     "title": "Server Flavor",
     "type": "object",
-    "properties": {"name": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Name",
-        "readOnly": true,
-        "versionable": false,
-        "id": "CE_ServerFlavor_name",
-        "title": "ServerFlavor.name",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "vcpu": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Virtual Processor",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerFlavor_vcpu",
+            "title": "ServerFlavor.vcpu",
+            "type": "string",
+            "maxLength": 255
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerFlavor_name",
+            "title": "ServerFlavor.name",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
