@@ -4,16 +4,5 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerFlavor",
     "title": "Server Flavor",
-    "type": "object",
-    "properties": {"ram": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Random-Access Memory",
-        "readOnly": true,
-        "versionable": false,
-        "id": "CE_ServerFlavor_ram",
-        "title": "ServerFlavor.ram",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "type": "object"
 }
