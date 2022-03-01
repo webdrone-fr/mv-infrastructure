@@ -19,8 +19,6 @@ public class ServerFlavor implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String ram;
-
     @Override()
     public String getUuid() {
         return uuid;
@@ -36,14 +34,6 @@ public class ServerFlavor implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getRam() {
-        return ram;
-    }
-
-    public void setRam(String ram) {
-        this.ram = ram;
     }
 
     @Override()
