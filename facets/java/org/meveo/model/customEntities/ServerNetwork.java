@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerNetwork implements CustomEntity {
@@ -18,6 +19,8 @@ public class ServerNetwork implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
+
+    private List<String> subnet = new ArrayList<>();
 
     private String name;
 
@@ -36,6 +39,14 @@ public class ServerNetwork implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public List<String> getSubnet() {
+        return subnet;
+    }
+
+    public void setSubnet(List<String> subnet) {
+        this.subnet = subnet;
     }
 
     public String getName() {
