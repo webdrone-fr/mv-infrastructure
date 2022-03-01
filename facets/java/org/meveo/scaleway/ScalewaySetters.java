@@ -28,20 +28,19 @@ public class ScalewaySetters extends Script{
     private static final Logger logger = LoggerFactory.getLogger(ScalewayHelperService.class);
 
 
-    public static ServerVolume setServerVolume(JsonObject volumeObj, ServerVolume volume,String action, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static ServerVolume setServerVolume(JsonObject volumeObj, ServerVolume volume, String action, CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String volumeId = volumeObj.get("id").getAsString();
          if(action.startsWith("list") || action.equalsIgnoreCase("createNew")) {
             volume = new ServerVolume();
             volume.setUuid(volumeId);
         }
-
         volume.setProviderSideId(volumeId);
         volume.setName(volumeObj.get("name").getAsString());
         String server = null;
         if (!volumeObj.get("server").isJsonNull()) {
             server = volumeObj.get("server").getAsJsonObject().get("id").getAsString();
-            volume.setServer(server);
         }
+        volume.setServer(server);
         volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
         volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
         volume.setVolumeType(volumeObj.get("volume_type").getAsString());

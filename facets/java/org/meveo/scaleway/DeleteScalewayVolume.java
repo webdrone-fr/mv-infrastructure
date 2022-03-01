@@ -63,7 +63,7 @@ public class DeleteScalewayVolume extends Script {
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         if (response.getStatus()<300) {
             volume.setLastUpdated(Instant.now());
-            logger.info("volume {} deleted at: {}", volume.getUuid(), volume.getLastUpdated());
+            logger.info("volume : {} deleted at: {}", volume.getUuid(), volume.getLastUpdated());
             try {
                 crossStorageApi.remove(defaultRepo, volume.getUuid(), volume.getCetCode());
             } catch (Exception e) {
