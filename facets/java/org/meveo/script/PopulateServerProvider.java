@@ -41,8 +41,15 @@ public class PopulateServerProvider extends Script {
             	String url = "flavors/detail";
         		Credential credential = CredentialHelperService.getCredential(serverProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
             	List<JsonObject> flavors = openstackAPI.computeAPI(url, credential, null, "get", "flavor");
+                HashMap<String, String> serverTypes = new HashMap<String, String>();
             	for (JsonObject flavor : flavors) {
-                  	HashMap<String, String> serverTypes = new HashMap<String, String>();
+                  	serverTypes.put(flavor.get("id").getAsString(), flavor.toString());
+                }
+            	serverProvider.setServerType(serverTypes);
+            	try {
+                  	crossStorageApi.createOrUpdate(defaultRepo, serverProvider);
+                } catch (Exception ex) {
+                  	log.error("error updating server {} :{}", serverProvider.getUuid(), ex.getMessage());
                 }
             default:
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "WArning : ", "No populate found for " + serverProvider.getApiBaseUrl()));
