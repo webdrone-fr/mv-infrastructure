@@ -61,6 +61,7 @@ public class ListServerNetworks extends Script {
                     List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
                     for (JsonObject networkObj : networks) {
                         ServerNetwork network = new ServerNetwork();
+                      	network.setUuid(networkObj.get("id").getAsString());
                       	network.setName(networkObj.get("name").getAsString());
                       	ArrayList<String> subnets = new ArrayList<>();
                       	JsonArray jsonArray = (JsonArray)networkObj.get("subnets");
