@@ -65,8 +65,6 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
-    private String flavorRef;
-
     private ServerVolume rootVolume;
 
     private String location;
@@ -242,14 +240,6 @@ public class Server implements CustomEntity {
 
     public void setServerType(String serverType) {
         this.serverType = serverType;
-    }
-
-    public String getFlavorRef() {
-        return flavorRef;
-    }
-
-    public void setFlavorRef(String flavorRef) {
-        this.flavorRef = flavorRef;
     }
 
     public ServerVolume getRootVolume() {
