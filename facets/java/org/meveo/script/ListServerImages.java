@@ -1,7 +1,6 @@
 package org.meveo.script;
 
 import java.util.Map;
-
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 import org.slf4j.Logger;
@@ -33,61 +32,50 @@ public class ListServerImages extends Script {
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo = repositoryService.findDefaultRepository();
-  
-  	private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
+
+    private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
 
     private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
-  
+
     private CheckOVHToken checkOVHToken = new CheckOVHToken();
-  
-  	private OpenstackAPI openstackAPI = new OpenstackAPI();
-	
-	@Override
-	public void execute(Map<String, Object> parameters) throws BusinessException {
-		super.execute(parameters);
+
+    private OpenstackAPI openstackAPI = new OpenstackAPI();
+
+    @Override
+    public void execute(Map<String, Object> parameters) throws BusinessException {
+        super.execute(parameters);
         Client client = ClientBuilder.newClient();
-      	ServiceProvider sp = new ServiceProvider();
-      	String codeClass = sp.getClass().getSimpleName();
-		CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
-      	try {
-      		List<Map<String, Object>> providers =crossStorageService.find(defaultRepo, cet, null);
-          	for(Map<String, Object> provider : providers) {
-          		log.info(provider.toString());
-              	String baseURL = provider.get("apiBaseUrl").toString();
-              	ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
-              	Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
-              	checkOVHToken.checkOVHToken(credential, matchingProvider);
-              	List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
-              	log.info(images.toString());
-              	//https://image.compute.gra11.cloud.ovh.net/v2/images
-              	//WebTarget target = client.target("https://image.compute.gra11." + matchingProvider.getApiBaseUrl() + "/v2/images");
-              	//Response response = target.request().header("X-Auth-Token", credential.getToken()).get();
-				//String value = response.readEntity(String.class);
-              	//if (response.getStatus() < 300) {
-                //  	JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray("images");
-                     	for (JsonObject imageObj : images) {
-                            //JsonObject imageObj = element.getAsJsonObject();
-                            //Create a new image
-                            ServerImage image = new ServerImage();
-                            image.setUuid(imageObj.get("id").getAsString());
-                            image.setName(imageObj.get("name").getAsString());
-                            log.info(imageObj.get("visibility").getAsString());
-                            if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
-                                image.setIsPublic(false);
-                            else
-                                image.setIsPublic(true);
-                            try {
-                                crossStorageApi.createOrUpdate(defaultRepo, image);
-                            } catch (Exception ex) {
-                                log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
-                            }
-						}
-				//}
+        ServiceProvider sp = new ServiceProvider();
+        String codeClass = sp.getClass().getSimpleName();
+        CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
+        try {
+            List<Map<String, Object>> providers = crossStorageService.find(defaultRepo, cet, null);
+            for (Map<String, Object> provider : providers) {
+                log.info(provider.toString());
+                String baseURL = provider.get("apiBaseUrl").toString();
+                ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
+                Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
+                checkOVHToken.checkOVHToken(credential, matchingProvider);
+                List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
+                for (JsonObject imageObj : images) {
+                    ServerImage image = new ServerImage();
+                    image.setUuid(imageObj.get("id").getAsString());
+                    image.setName(imageObj.get("name").getAsString());
+                    log.info(imageObj.get("visibility").getAsString());
+                    if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
+                        image.setIsPublic(false);
+                    else
+                        image.setIsPublic(true);
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, image);
+                    } catch (Exception ex) {
+                        log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+                    }
+                }
             }
         } catch (EntityDoesNotExistsException ex) {
-          	log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
+            log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
         }
-      	client.close();
-	}
-	
+        client.close();
+    }
 }
