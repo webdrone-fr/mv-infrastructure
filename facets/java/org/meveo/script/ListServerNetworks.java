@@ -58,7 +58,7 @@ public class ListServerNetworks extends Script {
                 Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
               	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
                     checkOVHToken.checkOVHToken(credential, matchingProvider);
-                    List<JsonObject> networks = openstackAPI.imageAPI("images", credential, null, "get", "image");
+                    List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
                     for (JsonObject networkObj : networks) {
                         ServerNetwork network = new ServerNetwork();
                       	network.setName(networkObj.get("name").getAsString());
