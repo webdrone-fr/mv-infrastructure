@@ -63,7 +63,6 @@ public class ListServerNetworks extends Script {
                         ServerNetwork network = new ServerNetwork();
                       	network.setName(networkObj.get("name").getAsString());
                       	ArrayList<String> subnets = new ArrayList<>();
-                      	//subnets.add(networkObj.get("subnets").getAsString());
                       	JsonArray jsonArray = (JsonArray)networkObj.get("subnets");
                       	if (jsonArray != null) {
                             for (JsonElement o : jsonArray){ 
