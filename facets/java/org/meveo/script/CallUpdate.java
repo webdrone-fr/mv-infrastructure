@@ -11,7 +11,7 @@ import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.credentials.CredentialHelperService;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServerOVH;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import javax.faces.application.FacesMessage;
@@ -34,7 +34,7 @@ public class CallUpdate extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
         log.info("calling CallUpdate");
-        Server server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance) parameters.get(CONTEXT_ENTITY), Server.class);
+        ServerOVH server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance) parameters.get(CONTEXT_ENTITY), ServerOVH.class);
         ServiceProvider openstack = server.getProvider();
         Credential credential = CredentialHelperService.getCredential(openstack.getApiBaseUrl(), crossStorageApi, defaultRepo);
         if (credential == null) {
