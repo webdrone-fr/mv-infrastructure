@@ -20,6 +20,8 @@ import org.meveo.script.openstack.CheckOVHToken;
 import com.google.gson.*;
 import org.meveo.script.openstack.OpenstackAPI;
 import org.meveo.api.exception.EntityDoesNotExistsException;
+import org.meveo.model.customEntities.SecurityGroup;
+import java.time.OffsetDateTime;
 
 public class ListSecurityGroups extends Script {
 
@@ -55,12 +57,18 @@ public class ListSecurityGroups extends Script {
                     checkOVHToken.checkOVHToken(credential, matchingProvider);
                     List<JsonObject> securityGroups = openstackAPI.networkAPI("security-groups", credential, null, "get", "security-group");
                     for (JsonObject securityGroup : securityGroups) {
+                      	SecurityGroup secuGroup = new SecurityGroup();
+                      	secuGroup.setUuid(securityGroup.get("id").getAsString());
+                      	secuGroup.setName(securityGroup.get("Name").getAsString());
+                      	secuGroup.setProviderSideId(securityGroup.get("id").getAsString());
+                      	secuGroup.setCreationDate(OffsetDateTime.parse(securityGroup.get("created_at").getAsString()).toInstant());
+                      	secuGroup.setLastUpdated(OffsetDateTime.parse(securityGroup.get("updated_at").getAsString()).toInstant());
                     }
                 }
             }
         } catch (EntityDoesNotExistsException ex) {
             log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
-        }
+        }	
 	}
 	
 }
