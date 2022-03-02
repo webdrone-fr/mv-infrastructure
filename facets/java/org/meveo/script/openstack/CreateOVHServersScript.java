@@ -105,7 +105,6 @@ public class CreateOVHServersScript extends Script {
                     server.setDomainName(newServerObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
                     server.setInstanceName(newServerObj.get("name").getAsString());
                     server.setOrganization(newServerObj.get("tenant_id").getAsString());
-                  	server.setStatus(newServerObj.get("status").getAsString());
                 }
               	try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
