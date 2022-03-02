@@ -83,14 +83,18 @@ public class ListOVHServersScript extends Script {
                   	server.setServerType("38e49eca-b3cf-42ec-94c4-fd29a316477e");
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                 }
-              	JsonObject addresses = serverObj.get("addresses").getAsJsonObject();
-              	List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
-              	for (JsonObject network : networks) {
-                  	String networkName = network.get("name").getAsString();
-                  	if (addresses.get(networkName) != null) {
-                      	ServerNetwork networkObject = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
-                      	server.setNetwork(networkObject);
-                    }
+                if (serverObj.get("OS-EXT-STS:task_state").getAsString().equalsIgnoreCase("spawning")) {
+					server.setPublicIp("SPAWNING");
+                } else {
+                    JsonObject addresses = serverObj.get("addresses").getAsJsonObject();
+                    List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
+                    for (JsonObject network : networks) {
+                        String networkName = network.get("name").getAsString();
+                        if (addresses.get(networkName) != null) {
+                            ServerNetwork networkObject = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
+                            server.setNetwork(networkObject);
+                        }
+                }
                 }
               	//Security Group
               	//TODO
