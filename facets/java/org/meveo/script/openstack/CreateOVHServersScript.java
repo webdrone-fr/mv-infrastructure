@@ -47,19 +47,19 @@ public class CreateOVHServersScript extends Script {
     public void createServer(Credential credential, ServiceProvider openstack, ServerOVH server) throws BusinessException {
         log.info("calling CreateOVHServersScript");
         checkOVHToken.checkOVHToken(credential, openstack);
-        if (server.getName() == null) {
+        if (server.getInstanceName() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Instance name not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing instance name) for uuid : " + server.getUuid());
-        } else if (!server.getName().startsWith("dev-")) {
+        } else if (!server.getInstanceName().startsWith("dev-")) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Instance Name needs to start by <dev-> : " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing image id) for uuid : " + server.getUuid());
-        } else if (server.getImageRef() == null) {
+        } else if (server.getImage() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Image id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing image id) for uuid : " + server.getUuid());
-        } else if (server.getFlavorRef() == null) {
+        } else if (server.getServerType() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Flavor id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing flavor id) for uuid : " + server.getUuid());
-        } else if (server.getNetworks() == null) {
+        } else if (server.getNetwork() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Network id not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing network id) for uuid : " + server.getUuid());
         } else if (server.getKeyName() == null) {
@@ -75,6 +75,7 @@ public class CreateOVHServersScript extends Script {
             ArrayList<HashMap> networks = new ArrayList<HashMap>();
             HashMap<String, String> network = new HashMap<String, String>();
             List<String> networksList = new ArrayList<>();
+          	ServerNetwork servNetwork = server.getNetwork();
             networksList = server.getNetworks();
             networksList.forEach((net) -> network.put("uuid", net));
             networks.add(network);
