@@ -105,14 +105,7 @@ public class CreateOVHServersScript extends Script {
                     server.setDomainName(newServerObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
                     server.setInstanceName(newServerObj.get("name").getAsString());
                     server.setOrganization(newServerObj.get("tenant_id").getAsString());
-                    String idImage = newServerObj.get("image").getAsJsonObject().get("id").getAsString();
-                  	String urlImage = "images/" + idImage;
-                  	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "image");
-          			log.info(images.toString());
-                  	for (JsonObject imageObj : images) {
-                        if (imageObj != null) {
-                        }
-                    }
+                  	server.setStatus(newServerObj.get("status").getAsString());
                 }
               	try {
                     crossStorageApi.createOrUpdate(defaultRepo, server);
