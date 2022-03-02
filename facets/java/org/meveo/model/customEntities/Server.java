@@ -49,8 +49,6 @@ public class Server implements CustomEntity {
 
     private Instant creationDate;
 
-    private List<String> networks = new ArrayList<>();
-
     private String volumeSize;
 
     private ServiceProvider provider;
@@ -176,14 +174,6 @@ public class Server implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public List<String> getNetworks() {
-        return networks;
-    }
-
-    public void setNetworks(List<String> networks) {
-        this.networks = networks;
     }
 
     public String getVolumeSize() {
