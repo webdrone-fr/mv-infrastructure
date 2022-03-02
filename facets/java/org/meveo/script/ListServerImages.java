@@ -55,21 +55,23 @@ public class ListServerImages extends Script {
                 String baseURL = provider.get("apiBaseUrl").toString();
                 ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
                 Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
-                checkOVHToken.checkOVHToken(credential, matchingProvider);
-                List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
-                for (JsonObject imageObj : images) {
-                    ServerImage image = new ServerImage();
-                    image.setUuid(imageObj.get("id").getAsString());
-                    image.setName(imageObj.get("name").getAsString());
-                    log.info(imageObj.get("visibility").getAsString());
-                    if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
-                        image.setIsPublic(false);
-                    else
-                        image.setIsPublic(true);
-                    try {
-                        crossStorageApi.createOrUpdate(defaultRepo, image);
-                    } catch (Exception ex) {
-                        log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+              	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
+                    checkOVHToken.checkOVHToken(credential, matchingProvider);
+                    List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
+                    for (JsonObject imageObj : images) {
+                        ServerImage image = new ServerImage();
+                        image.setUuid(imageObj.get("id").getAsString());
+                        image.setName(imageObj.get("name").getAsString());
+                        log.info(imageObj.get("visibility").getAsString());
+                        if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
+                            image.setIsPublic(false);
+                        else
+                            image.setIsPublic(true);
+                        try {
+                            crossStorageApi.createOrUpdate(defaultRepo, image);
+                        } catch (Exception ex) {
+                            log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+                        }
                     }
                 }
             }
