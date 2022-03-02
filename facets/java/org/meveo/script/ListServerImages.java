@@ -17,8 +17,6 @@ import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.script.openstack.CheckOVHToken;
-import javax.ws.rs.client.*;
-import javax.ws.rs.core.*;
 import com.google.gson.*;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.script.openstack.OpenstackAPI;
