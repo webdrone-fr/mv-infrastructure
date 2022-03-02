@@ -53,7 +53,7 @@ public class ListSecurityGroups extends Script {
                 Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
               	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
                     checkOVHToken.checkOVHToken(credential, matchingProvider);
-                    List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
+                    List<JsonObject> images = openstackAPI.networkAPI("security-groups", credential, null, "get", "security-group");
                     for (JsonObject imageObj : images) {
                     }
                 }
