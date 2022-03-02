@@ -77,11 +77,9 @@ public class CreateOVHServersScript extends Script {
             List<String> networksList = new ArrayList<>();
           	ServerNetwork servNetwork = server.getNetwork();
           	ServerImage servImage = server.getImage();
-            networksList = server.getNetworks();
-            networksList.forEach((net) -> network.put("uuid", net));
-            networks.add(network);
+          	networksList.add(servNetwork.getUuid());
             newServer.put("key_name", server.getKeyName());
-            newServer.put("networks", servNetwork.getUuid());
+            newServer.put("networks", networksList);
             newServer.put("flavorRef", server.getServerType());
             newServer.put("imageRef", servImage.getUuid());
             newServer.put("name", server.getInstanceName());
