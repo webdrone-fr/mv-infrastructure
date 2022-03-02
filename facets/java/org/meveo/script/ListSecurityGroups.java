@@ -51,7 +51,6 @@ public class ListSecurityGroups extends Script {
         try {
             List<Map<String, Object>> providers = crossStorageService.find(defaultRepo, cet, null);
             for (Map<String, Object> provider : providers) {
-                log.info(provider.toString());
                 ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
                 Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
               	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
