@@ -74,6 +74,11 @@ public class ListSecurityGroups extends Script {
                           	JsonObject ruleObject = ruleElement.getAsJsonObject(); 
 							rules.put(ruleObject.get("security_group_id").getAsString(), ruleObject.get("direction").getAsString());
                         }
+                        try {
+                            crossStorageApi.createOrUpdate(defaultRepo, secuGroup);
+                        } catch (Exception ex) {
+                            log.error("error creating server {} :{}", secuGroup.getUuid(), ex.getMessage());
+                        }
                     }
                 }
             }
