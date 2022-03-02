@@ -12,6 +12,15 @@ import org.meveo.model.storage.Repository;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.persistence.CrossStorageService;
 import org.meveo.service.custom.CustomEntityTemplateService;
+import org.meveo.api.exception.EntityDoesNotExistsException;
+import org.meveo.model.customEntities.CustomEntityTemplate;
+import java.util.List;
+import com.google.gson.JsonObject;
+import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Credential;
+import org.meveo.script.openstack.CheckOVHToken;
+import org.meveo.script.openstack.OpenstackAPI;
+import org.meveo.model.customEntities.ServerNetwork;
 
 public class ListServerNetworks extends Script {
 
@@ -26,10 +35,46 @@ public class ListServerNetworks extends Script {
     private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
 
     private CustomEntityTemplateService customEntityTemplateService = getCDIBean(CustomEntityTemplateService.class);
+
+    private CheckOVHToken checkOVHToken = new CheckOVHToken();
+
+    private OpenstackAPI openstackAPI = new OpenstackAPI();
 	
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
+        /*ServiceProvider sp = new ServiceProvider();
+        String codeClass = sp.getClass().getSimpleName();
+        CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
+        try {
+            List<Map<String, Object>> providers = crossStorageService.find(defaultRepo, cet, null);
+            for (Map<String, Object> provider : providers) {
+                log.info(provider.toString());
+                ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
+                Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
+              	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
+                    checkOVHToken.checkOVHToken(credential, matchingProvider);
+                    List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
+                    for (JsonObject imageObj : images) {
+                        ServerNetwork image = new ServerNetwork();
+                        image.setUuid(imageObj.get("id").getAsString());
+                        image.setName(imageObj.get("name").getAsString());
+                        log.info(imageObj.get("visibility").getAsString());
+                        if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
+                            image.setIsPublic(false);
+                        else
+                            image.setIsPublic(true);
+                        try {
+                            crossStorageApi.createOrUpdate(defaultRepo, image);
+                        } catch (Exception ex) {
+                            log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+                        }
+                    }
+                }
+            }
+        } catch (EntityDoesNotExistsException ex) {
+            log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
+        }*/
 	}
 	
 }
