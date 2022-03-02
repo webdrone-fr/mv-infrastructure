@@ -22,6 +22,8 @@ import org.meveo.model.persistence.JacksonUtil;
 import com.google.gson.*;
 import java.time.OffsetDateTime;
 import org.meveo.script.openstack.OpenstackAPI;
+import org.meveo.model.customEntities.ServerImage;
+import org.meveo.model.customEntities.ServerNetwork;
 
 public class CreateOVHServersScript extends Script {
 
