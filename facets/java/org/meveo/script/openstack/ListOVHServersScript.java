@@ -12,6 +12,7 @@ import java.util.List;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.customEntities.ServerOVH;
 import org.meveo.model.customEntities.ServerImage;
+import org.meveo.model.customEntities.ServerNetwork;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
@@ -97,6 +98,14 @@ public class ListOVHServersScript extends Script {
                 for (JsonObject flavor : flavors) {
                     //server.setServerType(flavor.get("name").getAsString());
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
+                }
+              	JsonObject o = serverObj.get("addresses").getAsJsonObject();
+              	List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
+              	for (JsonObject network : networks) {
+                  	if (o.get(network.get("name").getAsString()) != null) {
+                      	ServerNetwork no = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
+                      	server.setNetwork(no);
+                    }
                 }
               	//Security Group
               	//TODO
