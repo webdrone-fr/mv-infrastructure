@@ -56,7 +56,7 @@ public class ListSecurityGroups extends Script {
                 Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
               	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
                     checkOVHToken.checkOVHToken(credential, matchingProvider);
-                    List<JsonObject> securityGroups = openstackAPI.networkAPI("security-groups", credential, null, "get", "security-group");
+                    List<JsonObject> securityGroups = openstackAPI.networkAPI("security-groups", credential, null, "get", "security_group");
                     for (JsonObject securityGroup : securityGroups) {
                       	SecurityGroup secuGroup = new SecurityGroup();
                       	secuGroup.setUuid(securityGroup.get("id").getAsString());
