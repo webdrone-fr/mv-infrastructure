@@ -76,14 +76,15 @@ public class CreateOVHServersScript extends Script {
             HashMap<String, String> network = new HashMap<String, String>();
             List<String> networksList = new ArrayList<>();
           	ServerNetwork servNetwork = server.getNetwork();
+          	ServerImage servImage = server.getImage();
             networksList = server.getNetworks();
             networksList.forEach((net) -> network.put("uuid", net));
             networks.add(network);
             newServer.put("key_name", server.getKeyName());
             newServer.put("networks", servNetwork.getUuid());
-            newServer.put("flavorRef", server.getFlavorRef());
-            newServer.put("imageRef", server.getImageRef());
-            newServer.put("name", server.getName());
+            newServer.put("flavorRef", server.getServerType());
+            newServer.put("imageRef", servImage.getUuid());
+            newServer.put("name", server.getInstanceName());
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
           	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential, resp, "post", "server");
