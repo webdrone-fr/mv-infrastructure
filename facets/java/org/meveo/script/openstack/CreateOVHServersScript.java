@@ -44,9 +44,7 @@ public class CreateOVHServersScript extends Script {
 
     public void createServer(Credential credential, ServiceProvider openstack, ServerOVH server) throws BusinessException {
         log.info("calling CreateOVHServersScript");
-        // Check Token
         checkOVHToken.checkOVHToken(credential, openstack);
-        // Check Input
         if (server.getName() == null) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning : ", "Instance name not found for server: " + server.getUuid()));
             throw new BusinessException("Cannot create new server (missing instance name) for uuid : " + server.getUuid());
