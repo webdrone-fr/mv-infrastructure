@@ -89,7 +89,7 @@ public class ListOVHServersScript extends Script {
               	for (JsonObject network : networks) {
                   	String networkName = network.get("name").getAsString();
                   	log.info(networkName);
-                  	log.info(addresses.get(networkName).toString());
+                  	log.info(addresses.get(networkName).getAsString());
                   	if (addresses.get(networkName) != null) {
                       	log.info("SET DU NETWORK");
                       	ServerNetwork networkObject = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
