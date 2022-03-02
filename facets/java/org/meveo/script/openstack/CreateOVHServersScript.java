@@ -76,11 +76,12 @@ public class CreateOVHServersScript extends Script {
             HashMap<String, String> network = new HashMap<String, String>();
             List<String> networksList = new ArrayList<>();
           	ServerNetwork servNetwork = server.getNetwork();
-          	ServerImage servImage = server.getImage();
-          	networksList.add(servNetwork.getUuid());
+          	network.put("uuid", servNetwork.getUuid());
+          	networks.add(network);
             newServer.put("key_name", server.getKeyName());
             newServer.put("networks", networksList);
             newServer.put("flavorRef", server.getServerType());
+          	ServerImage servImage = server.getImage();
             newServer.put("imageRef", servImage.getUuid());
             newServer.put("name", server.getInstanceName());
             master.put("server", newServer);
