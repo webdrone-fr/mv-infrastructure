@@ -84,6 +84,7 @@ public class ListOVHServersScript extends Script {
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                 }
                 if (serverObj.get("OS-EXT-STS:task_state") != null) {
+                  	log.info("TU PASSE LA ? " + serverObj.get("OS-EXT-STS:task_state").toString());
 					server.setPublicIp(serverObj.get("OS-EXT-STS:task_state").getAsString());
                 } else {
                     JsonObject addresses = serverObj.get("addresses").getAsJsonObject();
