@@ -44,27 +44,18 @@ public class ListOVHServersScript extends Script {
 
     public void callOVH(Credential credential, ServiceProvider openstack) throws BusinessException {
         log.info("calling ListOVHServersScript");
-        // Check the token
         checkOVHToken.checkOVHToken(credential, openstack);
-        // Call every region to list server
         Map<String, String> zones = new HashMap<String, String>();
         zones = openstack.getZone();
         for (String zone : zones.keySet()) {
             List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential, null, "get", "server");
             for (JsonObject serverObj : servers) {
-                //JsonObject serverObj = element.getAsJsonObject();
-                // Create new servers
                 ServerOVH server = new ServerOVH();
-                // UUID
                 server.setUuid(serverObj.get("id").getAsString());
               	server.setProviderSideId(serverObj.get("id").getAsString());
-                // server name
                 server.setInstanceName(serverObj.get("name").getAsString());
-                // domain name
                 server.setDomainName(serverObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
-                // tenant
                 server.setOrganization(serverObj.get("tenant_id").getAsString());
-                // image
                 String idImage = serverObj.get("image").getAsJsonObject().get("id").getAsString();
                 String urlImage = "images/" + idImage;
                 List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "image");
@@ -73,13 +64,10 @@ public class ListOVHServersScript extends Script {
                   	ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("uuid", imageElement.get("id").getAsString()).getResult();
                   	server.setImage(image);
                 }
-                // Set the creation & updated date
                 server.setCreationDate(OffsetDateTime.parse(serverObj.get("created").getAsString()).toInstant());
                 server.setLastUpdate(OffsetDateTime.parse(serverObj.get("updated").getAsString()).toInstant());
-                // zone
                 server.setZone(zone);
               	server.setLocation(zone);
-                // public IP
                 JsonArray publicIpArray = serverObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
                 for (JsonElement ip : publicIpArray) {
                     JsonObject ipElement = ip.getAsJsonObject();
@@ -87,11 +75,8 @@ public class ListOVHServersScript extends Script {
                         server.setPublicIp(ipElement.get("addr").getAsString());
                     }
                 }
-                // status
                 server.setStatus(serverObj.get("status").getAsString());
-                // provider
                 server.setProvider(openstack);
-                // volume & flavor
                 String idFlavor = serverObj.get("flavor").getAsJsonObject().get("id").getAsString();
                 String urlFlavor = "flavors/" + idFlavor;
                 List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavor");
