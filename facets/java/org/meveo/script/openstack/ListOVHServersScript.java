@@ -93,6 +93,7 @@ public class ListOVHServersScript extends Script {
                       	server.setNetwork(networkObject);
                     }
                 }
+              	server.setKeyName(serverObj.get("key_name").getAsString());
               	//Security Group
               	//TODO
               	//Root volume
