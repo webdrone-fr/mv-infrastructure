@@ -63,6 +63,7 @@ public class ListSecurityGroups extends Script {
                       	secuGroup.setProviderSideId(securityGroup.get("id").getAsString());
                       	secuGroup.setCreationDate(OffsetDateTime.parse(securityGroup.get("created_at").getAsString()).toInstant());
                       	secuGroup.setLastUpdated(OffsetDateTime.parse(securityGroup.get("updated_at").getAsString()).toInstant());
+                      	secuGroup.setDescription(securityGroup.get("description").getAsString());
                     }
                 }
             }
