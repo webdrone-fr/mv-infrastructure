@@ -92,6 +92,7 @@ public class CreateOVHServersScript extends Script {
               	String urlServer = "servers/" + server.getUuid();
                 List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential, null, "get", "server");
               	for (JsonObject newServerObj : newServers) {
+                  	log.info(newServerObj.toString());
                     server.setStatus(newServerObj.get("status").getAsString());
                     String idFlavor = newServerObj.get("flavor").getAsJsonObject().get("id").getAsString();
                   	String urlFlavor = "flavors/" + idFlavor;
