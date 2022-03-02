@@ -135,23 +135,6 @@
             "title": "Server.creationDate",
             "type": "string"
         },
-        "networks": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "Networks",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_networks",
-            "title": "Server.networks",
-            "type": "array",
-            "items": {
-                "id": "CE_Server_networks_item",
-                "title": "Server.networks item",
-                "type": "string",
-                "maxLength": 255
-            }
-        },
         "volumeSize": {
             "storages": ["SQL"],
             "nullable": true,
