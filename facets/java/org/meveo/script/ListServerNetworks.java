@@ -15,12 +15,14 @@ import org.meveo.service.custom.CustomEntityTemplateService;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.model.customEntities.CustomEntityTemplate;
 import java.util.List;
+import java.util.ArrayList;
 import com.google.gson.JsonObject;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.script.openstack.CheckOVHToken;
 import org.meveo.script.openstack.OpenstackAPI;
 import org.meveo.model.customEntities.ServerNetwork;
+import java.time.OffsetDateTime;
 
 public class ListServerNetworks extends Script {
 
@@ -43,7 +45,7 @@ public class ListServerNetworks extends Script {
 	@Override
 	public void execute(Map<String, Object> parameters) throws BusinessException {
 		super.execute(parameters);
-        /*ServiceProvider sp = new ServiceProvider();
+        ServiceProvider sp = new ServiceProvider();
         String codeClass = sp.getClass().getSimpleName();
         CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
         try {
@@ -54,27 +56,26 @@ public class ListServerNetworks extends Script {
                 Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
               	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
                     checkOVHToken.checkOVHToken(credential, matchingProvider);
-                    List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
-                    for (JsonObject imageObj : images) {
-                        ServerNetwork image = new ServerNetwork();
-                        image.setUuid(imageObj.get("id").getAsString());
-                        image.setName(imageObj.get("name").getAsString());
-                        log.info(imageObj.get("visibility").getAsString());
-                        if (imageObj.get("visibility").getAsString().equalsIgnoreCase("private"))
-                            image.setIsPublic(false);
-                        else
-                            image.setIsPublic(true);
+                    List<JsonObject> networks = openstackAPI.imageAPI("images", credential, null, "get", "image");
+                    for (JsonObject networkObj : networks) {
+                        ServerNetwork network = new ServerNetwork();
+                      	network.setName(networkObj.get("name").getAsString());
+                      	ArrayList<String> subnets = new ArrayList<>();
+                      	subnets.add(networkObj.get("subnets").getAsString());
+                      	network.setSubnet(subnets);
+                      	network.setCreationDate(OffsetDateTime.parse(networkObj.get("created_at").getAsString()).toInstant());
+                      	network.setLastUpdated(OffsetDateTime.parse(networkObj.get("updated_at").getAsString()).toInstant());
                         try {
-                            crossStorageApi.createOrUpdate(defaultRepo, image);
+                            crossStorageApi.createOrUpdate(defaultRepo, network);
                         } catch (Exception ex) {
-                            log.error("error creating server {} :{}", image.getUuid(), ex.getMessage());
+                            log.error("error creating network {} :{}", network.getUuid(), ex.getMessage());
                         }
                     }
                 }
             }
         } catch (EntityDoesNotExistsException ex) {
             log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
-        }*/
+        }
 	}
 	
 }
