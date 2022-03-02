@@ -38,7 +38,7 @@ public class ListSecurityGroups extends Script {
 
     private CrossStorageService crossStorageService = getCDIBean(CrossStorageService.class);
   
-  	private CheckOVHToken checkOVHToken = getCDIBean(CheckOVHToken.class);
+  	private CheckOVHToken checkOVHToken = new CheckOVHToken();
   
   	private OpenstackAPI openstackAPI = new OpenstackAPI();
 	
