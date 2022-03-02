@@ -173,7 +173,7 @@ public class CreateScalewayServer extends Script {
 
         if (response.getStatus()<300) {
             JsonObject serverObj = new JsonParser().parse(value).getAsJsonObject().get("server").getAsJsonObject();
-            server = ScalewaySetters.setScalewayServer(serverObj, server, action, provider, crossStorageApi, defaultRepo);
+            server = ScalewaySetters.setScalewayServer(serverObj, server, provider, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, server);
             } catch (Exception e) {

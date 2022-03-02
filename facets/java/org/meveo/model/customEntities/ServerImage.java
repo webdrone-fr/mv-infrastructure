@@ -3,7 +3,6 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.model.customEntities.Server;
 import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class ServerImage implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Server fromServer;
+    private String fromServer;
 
     private String providerSideId;
 
@@ -73,11 +72,11 @@ public class ServerImage implements CustomEntity {
         this.storages = storages;
     }
 
-    public Server getFromServer() {
+    public String getFromServer() {
         return fromServer;
     }
 
-    public void setFromServer(Server fromServer) {
+    public void setFromServer(String fromServer) {
         this.fromServer = fromServer;
     }
 

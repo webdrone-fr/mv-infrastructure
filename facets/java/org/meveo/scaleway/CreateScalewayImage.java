@@ -126,7 +126,7 @@ public class CreateScalewayImage extends Script {
         
         if (response.getStatus() < 300) {
             JsonObject imageObj = new JsonParser().parse(value).getAsJsonObject().get("image").getAsJsonObject();
-            serverImage = ScalewaySetters.setServerImage(imageObj, action, crossStorageApi, defaultRepo);
+            serverImage = ScalewaySetters.setServerImage(imageObj, serverImage, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, serverImage);
                 logger.info("Server Image : {} successfully created", serverImage.getName());

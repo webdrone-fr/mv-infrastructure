@@ -39,8 +39,6 @@ public class DeleteScalewayImage extends Script {
             throw new BusinessException("Invalid Image Zone");
         } else if (image.getProviderSideId() == null) {
             throw new BusinessException("Invalid Image Provider-side ID");
-        } else if (image.getFromServer() != null) {
-            throw new BusinessException("Unable to Delete, Image is still attached to a Server");
         } else if (image.getIsPublic()==true) {
             throw new BusinessException("Unable to Delete, Image is public");
         }

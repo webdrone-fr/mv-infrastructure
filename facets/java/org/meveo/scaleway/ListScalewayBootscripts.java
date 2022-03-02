@@ -63,8 +63,10 @@ public class ListScalewayBootscripts extends Script {
                         if(crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
                             bootscript = crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult();
                         } else {
-                            bootscript = ScalewaySetters.setBootScript(bootscriptObj, action, crossStorageApi, defaultRepo);
+                            bootscript = new Bootscript();
+                            bootscript.setUuid(bootscriptId);
                         }
+                        bootscript = ScalewaySetters.setBootScript(bootscriptObj, bootscript, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, bootscript);
                     } catch (Exception e) {
                         logger.error("Error creating Bootscript {} : {}", bootscript.getTitle(), e.getMessage());

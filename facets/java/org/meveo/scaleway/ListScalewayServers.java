@@ -13,6 +13,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
+import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -62,11 +63,13 @@ public class ListScalewayServers extends Script {
                     String serverId = serverObj.get("id").getAsString();
                     if (name.startsWith("dev-")) {
                         try {
-                            if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult() != null) {
+                            if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
                                 server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
                             } else {
-                                server = ScalewaySetters.setScalewayServer(serverObj, server, action, provider, crossStorageApi, defaultRepo);
+                                server = new ScalewayServer();
+                                server.setUuid(serverId);
                             }
+                            server = ScalewaySetters.setScalewayServer(serverObj, server, provider, crossStorageApi, defaultRepo);
                             crossStorageApi.createOrUpdate(defaultRepo, server);
                         } catch (Exception e) {
                             logger.error("Error retrieving server : {}", serverId, e);

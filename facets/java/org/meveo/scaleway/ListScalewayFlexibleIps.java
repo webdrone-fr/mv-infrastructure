@@ -69,9 +69,12 @@ public class ListScalewayFlexibleIps extends Script{
                         if(crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult() != null) {
                             publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
                         } else {
-                            publicIp = ScalewaySetters.setPublicIp(publicIpObj, publicIp, action, provider, crossStorageApi, defaultRepo);
+                            publicIp = new PublicIp();
+                            publicIp.setUuid(publicIpId);
                         }
+                        publicIp = ScalewaySetters.setPublicIp(publicIpObj, publicIp, provider, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, publicIp);
+                        
                         Map<String, String> publicIpRecord = new HashMap<String, String>();
                         String address = publicIpObj.get("address").getAsString();
                         String serverName = null;

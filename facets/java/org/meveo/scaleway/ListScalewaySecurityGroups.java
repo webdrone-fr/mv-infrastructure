@@ -64,8 +64,10 @@ public class ListScalewaySecurityGroups extends Script {
                         if(crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult()!= null){
                             securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
                         } else {
-                            securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, securityGroup, action, crossStorageApi, defaultRepo);
+                            securityGroup = new SecurityGroup();
+                            securityGroup.setUuid(securityGroupId);
                         }
+                        securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, securityGroup, action, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
                     } catch(Exception e){
                         logger.error("Error retrieving security group : ", securityGroupId, e.getMessage());

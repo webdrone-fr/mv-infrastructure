@@ -67,11 +67,13 @@ public class ListScalewayVolumes extends Script{
                         if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult() != null) {
                             volume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", volumeId).getResult();
                         } else {
-                            volume = ScalewaySetters.setServerVolume(volumeObj, volume, action, crossStorageApi, defaultRepo);
+                            volume = new ServerVolume();
+                            volume.setUuid(volumeId);
                         }
+                        volume = ScalewaySetters.setServerVolume(volumeObj, volume, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, volume);
                     } catch (Exception e) {
-                        logger.error("Error retrieving Volume {}", volumeId, e.getMessage());
+                        logger.error("Error retrieving Volume : {}", volumeId, e.getMessage());
                     }
                 }
             }

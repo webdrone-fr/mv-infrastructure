@@ -62,8 +62,10 @@ public class ListScalewayImages extends Script{
                         if(crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult() != null) {
                             image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
                         } else {
-                            image = ScalewaySetters.setServerImage(imageObj, action, crossStorageApi, defaultRepo);
+                            image = new ServerImage();
+                            image.setUuid(imageId);
                         }
+                        image = ScalewaySetters.setServerImage(imageObj, image, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, image);
                     } catch (Exception e) {
                         logger.error("Error retrieving Image : {}", imageId, e.getMessage());

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.ws.rs.client.*;
 
@@ -72,6 +73,8 @@ public class PopulateProviderFields extends Script {
                 Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
                 serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
             }
+            // Sort entries TODO
+            Map<String, String> treeMap = new TreeMap<String, String>(serverTypes);
             
             // Images
             JsonArray imagesArr = ScalewayHelperService.getProviderImages(zone, provider, credential);
@@ -83,12 +86,13 @@ public class PopulateProviderFields extends Script {
                     if(crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult()!=null)  {
                         image = crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult();
                     } else {
-                        String action = "listProviderImages";
-                        image = ScalewaySetters.setServerImage(imageObj, action, crossStorageApi, defaultRepo);
+                        image = new ServerImage();
+                        image.setUuid(imageId);
                     }
+                    image = ScalewaySetters.setServerImage(imageObj, image, crossStorageApi, defaultRepo);
                     crossStorageApi.createOrUpdate(defaultRepo, image);
                 } catch (Exception e) {
-                    logger.error("Error creating image : ", imageId);
+                    logger.error("Error creating image : {}", imageId);
                 }
                 String imageName = imageObj.get("name").getAsString();
                 images.put(imageId, imageName+" : "+zone);
@@ -104,9 +108,10 @@ public class PopulateProviderFields extends Script {
                     if (crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult()!=null) {
                         publicIp = crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult();
                     } else {
-                        String action = "listProviderPublicIps";
-                        publicIp = ScalewaySetters.setPublicIp(publicIpObj, publicIp, action, provider, crossStorageApi, defaultRepo);
+                        publicIp = new PublicIp();
+                        publicIp.setUuid(publicIpId);
                     }
+                    publicIp = ScalewaySetters.setPublicIp(publicIpObj, publicIp, provider, crossStorageApi, defaultRepo);
                     crossStorageApi.createOrUpdate(defaultRepo, publicIp);
 
                     Map<String, String> publicIpRecord = new HashMap<String, String>();

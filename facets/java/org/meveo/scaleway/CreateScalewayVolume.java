@@ -109,7 +109,7 @@ public class CreateScalewayVolume extends Script{
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response: "+value);
         if (response.getStatus()<300) {
             JsonObject volumeObj = new JsonParser().parse(value).getAsJsonObject().get("volume").getAsJsonObject();
-            volume = ScalewaySetters.setServerVolume(volumeObj, volume, action, crossStorageApi, defaultRepo);
+            volume = ScalewaySetters.setServerVolume(volumeObj, volume, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, volume);
             } catch (Exception e) {
