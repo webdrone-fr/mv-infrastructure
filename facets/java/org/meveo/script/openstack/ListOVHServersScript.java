@@ -83,7 +83,7 @@ public class ListOVHServersScript extends Script {
                   	server.setServerType("38e49eca-b3cf-42ec-94c4-fd29a316477e");
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                 }
-                if (serverObj.get("OS-EXT-STS:task_state").getAsString().equalsIgnoreCase("spawning")) {
+                if (serverObj.get("OS-EXT-STS:task_state") == null) {
 					server.setPublicIp("SPAWNING");
                 } else {
                     JsonObject addresses = serverObj.get("addresses").getAsJsonObject();
