@@ -87,10 +87,7 @@ public class ListOVHServersScript extends Script {
               	List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
               	for (JsonObject network : networks) {
                   	String networkName = network.get("name").getAsString();
-                  	log.info(networkName);
-                  	log.info(addresses.get(networkName).toString());
                   	if (addresses.get(networkName) != null) {
-                      	log.info("SET DU NETWORK");
                       	ServerNetwork networkObject = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
                       	server.setNetwork(networkObject);
                     }
