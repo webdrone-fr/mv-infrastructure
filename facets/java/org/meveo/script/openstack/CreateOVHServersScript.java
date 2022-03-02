@@ -6,7 +6,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.meveo.model.customEntities.ServiceProvider;
-import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServerOVH;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.service.storage.RepositoryService;
 import org.meveo.model.storage.Repository;
@@ -42,7 +42,7 @@ public class CreateOVHServersScript extends Script {
         super.execute(parameters);
     }
 
-    public void createServer(Credential credential, ServiceProvider openstack, Server server) throws BusinessException {
+    public void createServer(Credential credential, ServiceProvider openstack, ServerOVH server) throws BusinessException {
         log.info("calling CreateOVHServersScript");
         // Check Token
         checkOVHToken.checkOVHToken(credential, openstack);
@@ -85,55 +85,33 @@ public class CreateOVHServersScript extends Script {
             newServer.put("name", server.getName());
             master.put("server", newServer);
             String resp = JacksonUtil.toStringPrettyPrinted(master);
-            // Request
           	List<JsonObject> servers = openstackAPI.computeAPI("servers", credential, resp, "post", "server");
           	String oldUuid = server.getUuid();
           	for (JsonObject serverObj : servers) {
-                // UUID
                 server.setUuid(serverObj.get("id").getAsString());
               	String urlServer = "servers/" + server.getUuid();
                 List<JsonObject> newServers = openstackAPI.computeAPI(urlServer, credential, null, "get", "server");
           		log.info(newServers.toString());
               	for (JsonObject newServerObj : newServers) {
-                    // Status
                     server.setStatus(newServerObj.get("status").getAsString());
-                    // volume & flavor
                     String idFlavor = newServerObj.get("flavor").getAsJsonObject().get("id").getAsString();
                   	String urlFlavor = "flavors/" + idFlavor;
                   	List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavor");
           			log.info(flavors.toString());
                   	for (JsonObject flavorObj : flavors) {
-                        // flavor
-                        //server.setServerType(flavorObj.get("name").getAsString());
-                        // volume
                         server.setVolumeSize(flavorObj.get("disk").getAsString() + " GiB");
                     }
-                    // public IP
-                  	/*
-                    JsonArray publicIpArray = newServerObj.get("addresses").getAsJsonObject().get("Ext-Net").getAsJsonArray();
-                    for (JsonElement ip : publicIpArray) {
-                        JsonObject ipElement = ip.getAsJsonObject();
-                        if (ipElement.get("version").getAsInt() == 4) {
-                            server.setPublicIp(ipElement.get("addr").getAsString());
-                        }
-                    }*/
-                    // Set the creation & updated date
                     server.setCreationDate(OffsetDateTime.parse(newServerObj.get("created").getAsString()).toInstant());
                     server.setLastUpdate(OffsetDateTime.parse(newServerObj.get("updated").getAsString()).toInstant());
-                    // domain name
                     server.setDomainName(newServerObj.get("name").getAsString().toLowerCase() + ".webdrone.fr");
-                    // server name
                     server.setInstanceName(newServerObj.get("name").getAsString());
-                    // tenant
                     server.setOrganization(newServerObj.get("tenant_id").getAsString());
-                    // Image
                     String idImage = newServerObj.get("image").getAsJsonObject().get("id").getAsString();
                   	String urlImage = "images/" + idImage;
                   	List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "image");
           			log.info(images.toString());
                   	for (JsonObject imageObj : images) {
                         if (imageObj != null) {
-                            //server.setImage(imageObj.get("name").getAsString());
                         }
                     }
                 }
