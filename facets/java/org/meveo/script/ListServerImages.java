@@ -51,7 +51,7 @@ public class ListServerImages extends Script {
                 log.info(provider.toString());
                 String baseURL = provider.get("apiBaseUrl").toString();
                 ServiceProvider matchingProvider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("uuid", provider.get("uuid").toString()).getResult();
-                Credential credential = CredentialHelperService.getCredential(baseURL, crossStorageApi, defaultRepo);
+                Credential credential = CredentialHelperService.getCredential(matchingProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
               	if (credential.getDomainName().equalsIgnoreCase("cloud.ovh.net")) {
                     checkOVHToken.checkOVHToken(credential, matchingProvider);
                     List<JsonObject> images = openstackAPI.imageAPI("images", credential, null, "get", "image");
