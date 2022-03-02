@@ -60,7 +60,6 @@ public class ListOVHServersScript extends Script {
                 String urlImage = "images/" + idImage;
                 List<JsonObject> images = openstackAPI.computeAPI(urlImage, credential, null, "get", "image");
                 for (JsonObject imageElement : images) {
-                    //server.setImage(imageElement.get("name").getAsString());
                   	ServerImage image = crossStorageApi.find(defaultRepo, ServerImage.class).by("uuid", imageElement.get("id").getAsString()).getResult();
                   	server.setImage(image);
                 }
@@ -89,7 +88,7 @@ public class ListOVHServersScript extends Script {
               	for (JsonObject network : networks) {
                   	String networkName = network.get("name").getAsString();
                   	log.info(networkName);
-                  	log.info(addresses.get(networkName).getAsString());
+                  	log.info(addresses.get(networkName).toString());
                   	if (addresses.get(networkName) != null) {
                       	log.info("SET DU NETWORK");
                       	ServerNetwork networkObject = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
