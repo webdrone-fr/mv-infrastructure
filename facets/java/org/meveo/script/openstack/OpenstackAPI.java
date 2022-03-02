@@ -108,9 +108,9 @@ public class OpenstackAPI extends Script {
             WebTarget target = client.target(this.networkBaseAPI + url);
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
-          	log.info(value);
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
+              	log.info(isList);
                 if (value.contains(isList)) {
                   	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
