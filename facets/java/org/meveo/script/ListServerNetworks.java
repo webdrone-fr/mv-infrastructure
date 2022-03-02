@@ -17,6 +17,8 @@ import org.meveo.model.customEntities.CustomEntityTemplate;
 import java.util.List;
 import java.util.ArrayList;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.script.openstack.CheckOVHToken;
@@ -61,7 +63,13 @@ public class ListServerNetworks extends Script {
                         ServerNetwork network = new ServerNetwork();
                       	network.setName(networkObj.get("name").getAsString());
                       	ArrayList<String> subnets = new ArrayList<>();
-                      	subnets.add(networkObj.get("subnets").getAsString());
+                      	//subnets.add(networkObj.get("subnets").getAsString());
+                      	JsonArray jsonArray = (JsonArray)networkObj.get("subnets");
+                      	if (jsonArray != null) {
+                            for (JsonElement o : jsonArray){ 
+                            	subnets.add(o.getAsString());
+                            }
+                        }
                       	network.setSubnet(subnets);
                       	network.setCreationDate(OffsetDateTime.parse(networkObj.get("created_at").getAsString()).toInstant());
                       	network.setLastUpdated(OffsetDateTime.parse(networkObj.get("updated_at").getAsString()).toInstant());
