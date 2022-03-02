@@ -44,7 +44,6 @@ public class ListServerImages extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
-        Client client = ClientBuilder.newClient();
         ServiceProvider sp = new ServiceProvider();
         String codeClass = sp.getClass().getSimpleName();
         CustomEntityTemplate cet = customEntityTemplateService.findByCode(codeClass);
@@ -78,6 +77,5 @@ public class ListServerImages extends Script {
         } catch (EntityDoesNotExistsException ex) {
             log.error("Entity does not exist : {} : {}", codeClass, ex.getMessage());
         }
-        client.close();
     }
 }
