@@ -13,6 +13,7 @@ import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.customEntities.CustomEntityTemplate;
 import org.meveo.service.custom.CustomEntityTemplateService;
 import java.util.List;
+import java.util.HashMap;
 import org.meveo.persistence.CrossStorageService;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
@@ -66,6 +67,13 @@ public class ListSecurityGroups extends Script {
                       	secuGroup.setDescription(securityGroup.get("description").getAsString());
                       	secuGroup.setOrganization(securityGroup.get("tenant_id").getAsString());
                       	secuGroup.setProject(securityGroup.get("project_id").getAsString());
+                      	secuGroup.setZone("GRA11");
+                      	HashMap<String, String> rules = new HashMap<String, String>();
+                      	JsonArray rulesArray = (JsonArray)securityGroup.get("security_group_rules");
+                      	for (JsonElement ruleElement : rulesArray) {
+                          	JsonObject ruleObject = ruleElement.getAsJsonObject(); 
+							rules.put(ruleObject.get("security_group_id").getAsString(), ruleObject.get("direction").getAsString());
+                        }
                     }
                 }
             }
