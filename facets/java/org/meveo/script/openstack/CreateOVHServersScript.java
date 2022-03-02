@@ -80,7 +80,7 @@ public class CreateOVHServersScript extends Script {
             networksList.forEach((net) -> network.put("uuid", net));
             networks.add(network);
             newServer.put("key_name", server.getKeyName());
-            newServer.put("networks", networks);
+            newServer.put("networks", servNetwork.getUuid());
             newServer.put("flavorRef", server.getFlavorRef());
             newServer.put("imageRef", server.getImageRef());
             newServer.put("name", server.getName());
