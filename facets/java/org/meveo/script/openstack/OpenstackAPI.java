@@ -110,7 +110,6 @@ public class OpenstackAPI extends Script {
             String value = response.readEntity(String.class);
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
-              	log.info(isList);
                 if (value.contains(isList)) {
                   	objReturn += "s";
                     JsonArray rootArray = new JsonParser().parse(value).getAsJsonObject().getAsJsonArray(objReturn);
