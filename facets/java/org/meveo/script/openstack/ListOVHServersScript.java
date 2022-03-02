@@ -80,10 +80,9 @@ public class ListOVHServersScript extends Script {
                 String urlFlavor = "flavors/" + idFlavor;
                 List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavor");
                 for (JsonObject flavor : flavors) {
-                    //server.setServerType(flavor.get("name").getAsString());
+                  	server.setServerType("38e49eca-b3cf-42ec-94c4-fd29a316477e");
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                 }
-              	server.setServerType(serverObj.get("flavor").getAsJsonObject().get("id").getAsString());
               	JsonObject addresses = serverObj.get("addresses").getAsJsonObject();
               	List<JsonObject> networks = openstackAPI.networkAPI("networks", credential, null, "get", "network");
               	for (JsonObject network : networks) {
@@ -93,7 +92,6 @@ public class ListOVHServersScript extends Script {
                       	server.setNetwork(networkObject);
                     }
                 }
-              	server.setKeyName(serverObj.get("key_name").getAsString());
               	//Security Group
               	//TODO
               	//Root volume
