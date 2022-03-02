@@ -81,7 +81,7 @@ public class ListOVHServersScript extends Script {
                 List<JsonObject> flavors = openstackAPI.computeAPI(urlFlavor, credential, null, "get", "flavor");
                 for (JsonObject flavor : flavors) {
                     //server.setServerType(flavor.get("name").getAsString());
-                  	server.setServerType("cc");
+                  	server.setServerType("38e49eca-b3cf-42ec-94c4-fd29a316477e");
                     server.setVolumeSize(flavor.get("disk").getAsString() + " GiB");
                 }
               	JsonObject addresses = serverObj.get("addresses").getAsJsonObject();
