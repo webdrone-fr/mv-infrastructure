@@ -252,4 +252,22 @@ public class ScalewayHelperService extends Script{
             }
         }
     }
+
+    // public static JsonObject getSecurityGroupDetails(String zone, String securityGroupId, Credential credential) throws BusinessException {
+    //     JsonObject securityGroupObj = new JsonObject();
+
+    //     Client client = ClientBuilder.newClient();
+    //     client.register(new CredentialHelperService.LoggingFilter());
+    //     WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups/"+securityGroupId);
+    //     Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+    //     String value = response.readEntity(String.class);
+    //     if(response.getStatus()<300) {
+    //         securityGroupObj = new JsonParser().parse(value).getAsJsonObject()
+    //         .get("security_group").getAsJsonObject();
+    //     } else {
+    //         throw new BusinessException("Error retrieving Details for Security Group : "+securityGroupId);
+    //     }
+    //     response.close();
+    //     return securityGroupObj;
+    // }
 }

@@ -40,9 +40,9 @@ public class UpdateScalewaySecurityGroup extends Script{
         String action = parameters.get(CONTEXT_ACTION).toString();
         SecurityGroup securityGroup = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), SecurityGroup.class);
 
-        if(securityGroup.getProviderSideId()==null) {
+        if(securityGroup.getProviderSideId()==null) { // required
             throw new BusinessException("Invalid Security Group Provider-side ID");
-        } else if(securityGroup.getZone()==null) {
+        } else if(securityGroup.getZone()==null) { // required
             throw new BusinessException("Invalid Security Group Zone");
         }
 
@@ -106,43 +106,13 @@ public class UpdateScalewaySecurityGroup extends Script{
         logger.info("response : " + value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
-
         if(response.getStatus()<300){
             JsonObject securityGroupObj = new JsonParser().parse(value).getAsJsonObject().get("security_group").getAsJsonObject();
-
-            securityGroup.setLastUpdated(OffsetDateTime.parse(securityGroupObj.get("modification_date").getAsString()).toInstant());
-            securityGroup.setName(securityGroupObj.get("name").getAsString());
-            securityGroup.setEnableDefaultSecurity(securityGroupObj.get("enable_default_security").getAsBoolean());
-            securityGroup.setInboundDefaultPolicy(securityGroupObj.get("inbound_default_policy").getAsString());
-            securityGroup.setOutboundDefaultPolicy(securityGroupObj.get("outbound_default_policy").getAsString());
-            securityGroup.setOrganization(securityGroupObj.get("organization").getAsString());
-            securityGroup.setProject(securityGroupObj.get("project").getAsString());
-            securityGroup.setProjectDefault(securityGroupObj.get("project_default").getAsBoolean());
-
-            // Description
-            if(!securityGroupObj.get("description").isJsonNull()) {
-                securityGroup.setDescription(securityGroupObj.get("description").getAsString());
-            }
-
-            // Servers
-            if(!securityGroupObj.get("servers").isJsonNull()) {
-                JsonArray serversArr = securityGroupObj.get("servers").getAsJsonArray();
-                ArrayList<String> servers = new ArrayList<String>();
-                for (JsonElement serverEl : serversArr) {
-                    JsonObject serverObj = serverEl.getAsJsonObject();
-                    String serverId = serverObj.get("id").getAsString();
-                    String serverInstanceName = serverObj.get("name").getAsString();
-                    if(serverInstanceName.startsWith("dev-") && crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
-                        servers.add(serverId);
-                    }
-                }
-                securityGroup.setServers(servers);
-            }
-
+            securityGroup = ScalewaySetters.setSecurityGroup(securityGroupObj, securityGroup, crossStorageApi, defaultRepo);
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
             } catch (Exception e) {
-                logger.error("Error updating Security Group {} : {}", securityGroup.getName(), e.getMessage());
+                logger.error("Error updating Security Group : {}", securityGroup.getName(), e.getMessage());
             }
         }
         response.close();
