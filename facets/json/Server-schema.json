@@ -17,17 +17,6 @@
             "type": "string",
             "maxLength": 255
         },
-        "volumeCreationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Volume Creation Date",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_volumeCreationDate",
-            "title": "Server.volumeCreationDate",
-            "type": "string"
-        },
         "instanceName": {
             "storages": ["SQL"],
             "nullable": true,
