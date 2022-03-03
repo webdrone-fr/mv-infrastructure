@@ -1,1 +1,0 @@
-{"code":"listNetworks","description":"List server networks","appliesTo":"CE_ServerNetwork","label":"List Networks","script":"org.meveo.script.ListServerNetworks","guiPosition":"tab:Server Network:0;action:4","applicableToEntityList":true,"applicableToEntityInstance":false}

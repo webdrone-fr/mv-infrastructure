@@ -1,1 +1,0 @@
-{"code":"listServers","description":"List servers","appliesTo":"CE_ServiceProvider","label":"List Servers","script":"org.meveo.script.CallListing","applicableToEntityList":false,"applicableToEntityInstance":true}
