@@ -3,7 +3,6 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import java.time.Instant;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.customEntities.ServerImage;
@@ -11,6 +10,7 @@ import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -28,8 +28,6 @@ public class Server implements CustomEntity {
     private DBStorageType storages;
 
     private String providerSideId;
-
-    private Instant volumeCreationDate;
 
     private String instanceName;
 
@@ -102,14 +100,6 @@ public class Server implements CustomEntity {
 
     public void setProviderSideId(String providerSideId) {
         this.providerSideId = providerSideId;
-    }
-
-    public Instant getVolumeCreationDate() {
-        return volumeCreationDate;
-    }
-
-    public void setVolumeCreationDate(Instant volumeCreationDate) {
-        this.volumeCreationDate = volumeCreationDate;
     }
 
     public String getInstanceName() {
