@@ -3,14 +3,14 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.model.customEntities.ServerImage;
+import java.time.Instant;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.ServiceProvider;
+import org.meveo.model.customEntities.ServerImage;
 import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
-import java.time.Instant;
-import org.meveo.model.customEntities.ServiceProvider;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -27,13 +27,9 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private ServerImage image;
-
     private String providerSideId;
 
-    private List<String> serverAction = new ArrayList<>();
-
-    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
+    private Instant volumeCreationDate;
 
     private String instanceName;
 
@@ -41,17 +37,31 @@ public class Server implements CustomEntity {
 
     private String locationDefinition;
 
-    private String publicIp;
-
-    private SecurityGroup securityGroup;
-
-    private Instant creationDate;
+    private List<String> networks = new ArrayList<>();
 
     private String volumeSize;
 
     private ServiceProvider provider;
 
     private String zone;
+
+    private String volumeId;
+
+    private String volumeZone;
+
+    private ServerImage image;
+
+    private List<String> serverAction = new ArrayList<>();
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
+
+    private String volumeState;
+
+    private String publicIp;
+
+    private SecurityGroup securityGroup;
+
+    private Instant creationDate;
 
     private String domainName;
 
@@ -61,9 +71,17 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
+    private String volumeName;
+
+    private String name;
+
+    private String flavorRef;
+
     private ServerVolume rootVolume;
 
     private String location;
+
+    private String imageRef;
 
     private String backupName;
 
@@ -86,14 +104,6 @@ public class Server implements CustomEntity {
         this.storages = storages;
     }
 
-    public ServerImage getImage() {
-        return image;
-    }
-
-    public void setImage(ServerImage image) {
-        this.image = image;
-    }
-
     public String getProviderSideId() {
         return providerSideId;
     }
@@ -102,20 +112,12 @@ public class Server implements CustomEntity {
         this.providerSideId = providerSideId;
     }
 
-    public List<String> getServerAction() {
-        return serverAction;
+    public Instant getVolumeCreationDate() {
+        return volumeCreationDate;
     }
 
-    public void setServerAction(List<String> serverAction) {
-        this.serverAction = serverAction;
-    }
-
-    public Map<String, ServerVolume> getAdditionalVolumes() {
-        return additionalVolumes;
-    }
-
-    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
-        this.additionalVolumes = additionalVolumes;
+    public void setVolumeCreationDate(Instant volumeCreationDate) {
+        this.volumeCreationDate = volumeCreationDate;
     }
 
     public String getInstanceName() {
@@ -142,28 +144,12 @@ public class Server implements CustomEntity {
         this.locationDefinition = locationDefinition;
     }
 
-    public String getPublicIp() {
-        return publicIp;
+    public List<String> getNetworks() {
+        return networks;
     }
 
-    public void setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-    }
-
-    public SecurityGroup getSecurityGroup() {
-        return securityGroup;
-    }
-
-    public void setSecurityGroup(SecurityGroup securityGroup) {
-        this.securityGroup = securityGroup;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setNetworks(List<String> networks) {
+        this.networks = networks;
     }
 
     public String getVolumeSize() {
@@ -188,6 +174,78 @@ public class Server implements CustomEntity {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public String getVolumeId() {
+        return volumeId;
+    }
+
+    public void setVolumeId(String volumeId) {
+        this.volumeId = volumeId;
+    }
+
+    public String getVolumeZone() {
+        return volumeZone;
+    }
+
+    public void setVolumeZone(String volumeZone) {
+        this.volumeZone = volumeZone;
+    }
+
+    public ServerImage getImage() {
+        return image;
+    }
+
+    public void setImage(ServerImage image) {
+        this.image = image;
+    }
+
+    public List<String> getServerAction() {
+        return serverAction;
+    }
+
+    public void setServerAction(List<String> serverAction) {
+        this.serverAction = serverAction;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
+    }
+
+    public String getVolumeState() {
+        return volumeState;
+    }
+
+    public void setVolumeState(String volumeState) {
+        this.volumeState = volumeState;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getDomainName() {
@@ -222,6 +280,30 @@ public class Server implements CustomEntity {
         this.serverType = serverType;
     }
 
+    public String getVolumeName() {
+        return volumeName;
+    }
+
+    public void setVolumeName(String volumeName) {
+        this.volumeName = volumeName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFlavorRef() {
+        return flavorRef;
+    }
+
+    public void setFlavorRef(String flavorRef) {
+        this.flavorRef = flavorRef;
+    }
+
     public ServerVolume getRootVolume() {
         return rootVolume;
     }
@@ -236,6 +318,14 @@ public class Server implements CustomEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImageRef() {
+        return imageRef;
+    }
+
+    public void setImageRef(String imageRef) {
+        this.imageRef = imageRef;
     }
 
     public String getBackupName() {
