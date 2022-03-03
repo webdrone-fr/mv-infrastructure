@@ -110,17 +110,6 @@
             "type": "string",
             "maxLength": 50
         },
-        "volumeId": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume Id",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_volumeId",
-            "title": "Server.volumeId",
-            "type": "string",
-            "maxLength": 255
-        },
         "volumeZone": {
             "storages": ["SQL"],
             "nullable": true,
