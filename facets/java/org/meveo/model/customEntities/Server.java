@@ -53,8 +53,6 @@ public class Server implements CustomEntity {
 
     private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
-    private String volumeState;
-
     private String publicIp;
 
     private SecurityGroup securityGroup;
@@ -202,14 +200,6 @@ public class Server implements CustomEntity {
 
     public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
         this.additionalVolumes = additionalVolumes;
-    }
-
-    public String getVolumeState() {
-        return volumeState;
-    }
-
-    public void setVolumeState(String volumeState) {
-        this.volumeState = volumeState;
     }
 
     public String getPublicIp() {
