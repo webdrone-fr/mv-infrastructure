@@ -45,8 +45,6 @@ public class Server implements CustomEntity {
 
     private String zone;
 
-    private String volumeId;
-
     private String volumeZone;
 
     private ServerImage image;
@@ -174,14 +172,6 @@ public class Server implements CustomEntity {
 
     public void setZone(String zone) {
         this.zone = zone;
-    }
-
-    public String getVolumeId() {
-        return volumeId;
-    }
-
-    public void setVolumeId(String volumeId) {
-        this.volumeId = volumeId;
     }
 
     public String getVolumeZone() {
