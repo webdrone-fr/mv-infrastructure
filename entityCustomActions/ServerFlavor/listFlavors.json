@@ -1,1 +1,0 @@
-{"code":"listFlavors","description":"Button to list flavors","appliesTo":"CE_ServerFlavor","label":"List Flavors","script":"org.meveo.script.ListServerFlavors","guiPosition":"tab:Server Flavor:0;action:5","applicableToEntityList":true,"applicableToEntityInstance":false}

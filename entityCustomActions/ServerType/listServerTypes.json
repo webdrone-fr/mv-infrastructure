@@ -1,1 +1,0 @@
-{"code":"listServerTypes","description":"List server types","appliesTo":"CE_ServerType","label":"List Server Types","script":"org.meveo.script.ListServerTypes","applicableToEntityList":true,"applicableToEntityInstance":false}
