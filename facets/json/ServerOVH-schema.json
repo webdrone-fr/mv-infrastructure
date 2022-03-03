@@ -7,77 +7,27 @@
     "title": "Server OVH",
     "type": "object",
     "properties": {
-        "providerSideId": {
+        "KeyName": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Id assigned by provider",
-            "readOnly": true,
+            "description": "Key Name",
+            "readOnly": false,
             "versionable": false,
-            "id": "CE_Server_providerSideId",
-            "title": "ServerOVH.providerSideId",
+            "id": "CE_ServerOVH_KeyName",
+            "title": "ServerOVH.KeyName",
             "type": "string",
             "maxLength": 255
         },
-        "instanceName": {
+        "keyName": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Instance name",
+            "description": "Ssh Key Name",
             "readOnly": false,
             "versionable": false,
-            "id": "CE_Server_instanceName",
-            "title": "ServerOVH.instanceName",
+            "id": "CE_ServerOVH_keyName",
+            "title": "ServerOVH.keyName",
             "type": "string",
             "maxLength": 255
-        },
-        "sergentUrl": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Sergent URL",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_sergentUrl",
-            "title": "ServerOVH.sergentUrl",
-            "type": "string",
-            "maxLength": 500
-        },
-        "locationDefinition": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Location Definition",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_locationDefinition",
-            "title": "ServerOVH.locationDefinition",
-            "type": "string",
-            "maxLength": 255
-        },
-        "networks": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "Networks",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_networks",
-            "title": "ServerOVH.networks",
-            "type": "array",
-            "items": {
-                "id": "CE_Server_networks_item",
-                "title": "ServerOVH.networks item",
-                "type": "string",
-                "maxLength": 255
-            }
-        },
-        "volumeSize": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume Size",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_volumeSize",
-            "title": "ServerOVH.volumeSize",
-            "type": "string",
-            "maxLength": 20
         },
         "network": {
             "storages": ["SQL"],
@@ -88,232 +38,6 @@
             "id": "CE_ServerOVH_network",
             "title": "ServerOVH.network",
             "$ref": "#/definitions/ServerNetwork"
-        },
-        "provider": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Server provider",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_provider",
-            "title": "ServerOVH.provider",
-            "$ref": "#/definitions/ServiceProvider"
-        },
-        "zone": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Zone",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_zone",
-            "title": "ServerOVH.zone",
-            "type": "string",
-            "maxLength": 50
-        },
-        "image": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Image",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_image",
-            "title": "ServerOVH.image",
-            "$ref": "#/definitions/ServerImage"
-        },
-        "serverAction": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "Allowed Action on Server",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_serverAction",
-            "title": "ServerOVH.serverAction",
-            "type": "array",
-            "items": {
-                "id": "CE_Server_serverAction_item",
-                "title": "ServerOVH.serverAction item",
-                "type": "string",
-                "maxLength": 255
-            }
-        },
-        "additionalVolumes": {
-            "storages": ["SQL"],
-            "patternProperties": {"^.*$": {
-                "id": "CE_Server_additionalVolumes_item",
-                "title": "ServerOVH.additionalVolumes item",
-                "$ref": "#/definitions/ServerVolume"
-            }},
-            "nullable": true,
-            "description": "Additional Volumes",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_additionalVolumes",
-            "title": "ServerOVH.additionalVolumes",
-            "type": "object"
-        },
-        "keyName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Key Name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_keyName",
-            "title": "ServerOVH.keyName",
-            "type": "string",
-            "maxLength": 255
-        },
-        "publicIp": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Public IP",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_publicIp",
-            "title": "ServerOVH.publicIp",
-            "type": "string",
-            "maxLength": 100
-        },
-        "securityGroup": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Security Group",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_securityGroup",
-            "title": "ServerOVH.securityGroup",
-            "$ref": "#/definitions/SecurityGroup"
-        },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Creation date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_creationDate",
-            "title": "ServerOVH.creationDate",
-            "type": "string"
-        },
-        "domainName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Domain name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_domainName",
-            "title": "ServerOVH.domainName",
-            "type": "string",
-            "maxLength": 255
-        },
-        "lastUpdate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Last update",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_lastUpdate",
-            "title": "ServerOVH.lastUpdate",
-            "type": "string"
-        },
-        "organization": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Organization",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_organization",
-            "title": "ServerOVH.organization",
-            "type": "string",
-            "maxLength": 255
-        },
-        "serverType": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Server Type",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_serverType",
-            "title": "ServerOVH.serverType",
-            "enum": []
-        },
-        "name": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_name",
-            "title": "ServerOVH.name",
-            "type": "string",
-            "maxLength": 255
-        },
-        "flavorRef": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Flavor Ref",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_flavorRef",
-            "title": "ServerOVH.flavorRef",
-            "type": "string",
-            "maxLength": 255
-        },
-        "rootVolume": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Root Volume",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_rootVolume",
-            "title": "ServerOVH.rootVolume",
-            "$ref": "#/definitions/ServerVolume"
-        },
-        "location": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Location",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_location",
-            "title": "ServerOVH.location",
-            "type": "string",
-            "maxLength": 255
-        },
-        "imageRef": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Image Ref",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_imageRef",
-            "title": "ServerOVH.imageRef",
-            "type": "string",
-            "maxLength": 255
-        },
-        "backupName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Name of Backup",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_backupName",
-            "title": "ServerOVH.backupName",
-            "type": "string",
-            "maxLength": 255
-        },
-        "status": {
-            "storages": ["SQL"],
-            "default": "IN CREATION",
-            "nullable": true,
-            "description": "Status",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_status",
-            "title": "ServerOVH.status",
-            "type": "string",
-            "maxLength": 50
         }
     }
 }
