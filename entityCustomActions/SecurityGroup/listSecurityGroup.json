@@ -1,1 +1,0 @@
-{"code":"listSecurityGroup","description":"List severs's security group","appliesTo":"CE_SecurityGroup","label":"List Security Groups","script":"org.meveo.script.ListSecurityGroups","guiPosition":"tab:Security Group:0;action:9","applicableToEntityList":true,"applicableToEntityInstance":false}
