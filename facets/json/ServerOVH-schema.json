@@ -7,6 +7,17 @@
     "title": "Server OVH",
     "type": "object",
     "properties": {
+        "txt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Txt",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerOVH_txt",
+            "title": "ServerOVH.txt",
+            "type": "string",
+            "maxLength": 255
+        },
         "keyName": {
             "storages": ["SQL"],
             "nullable": true,
