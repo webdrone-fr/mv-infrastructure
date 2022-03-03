@@ -297,7 +297,6 @@ public class ScalewaySetters extends Script{
                     securityGroup.setUuid(securityGroupId);
                     securityGroup.setProviderSideId(securityGroupId);
                     securityGroup.setName(securityGroupObj.get("name").getAsString());
-                    securityGroup.setZone(securityGroupObj.get("zone").getAsString());
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
                     }catch (Exception e) {
@@ -419,7 +418,6 @@ public class ScalewaySetters extends Script{
         String securityGroupId = securityGroupObj.get("id").getAsString();
         securityGroup.setProviderSideId(securityGroupId);
         securityGroup.setName(securityGroupObj.get("name").getAsString());
-        securityGroup.setDescription(securityGroupObj.get("description").getAsString());
         securityGroup.setCreationDate(OffsetDateTime.parse(securityGroupObj.get("creation_date").getAsString()).toInstant());
         securityGroup.setLastUpdated(OffsetDateTime.parse(securityGroupObj.get("modification_date").getAsString()).toInstant());
         securityGroup.setOrganization(securityGroupObj.get("organization").getAsString());
@@ -431,7 +429,10 @@ public class ScalewaySetters extends Script{
         securityGroup.setProjectDefault(securityGroupObj.get("project_default").getAsBoolean());
         securityGroup.setEnableDefaultSecurity(securityGroupObj.get("enable_default_security").getAsBoolean());
         securityGroup.setZone(securityGroupObj.get("zone").getAsString());
-
+        // Description
+        if(!securityGroupObj.get("description").isJsonNull()) {
+            securityGroup.setDescription(securityGroupObj.get("description").getAsString());
+        }
         // Servers
         if(!securityGroupObj.get("servers").isJsonNull()) {
             JsonArray serversArr = securityGroupObj.get("servers").getAsJsonArray();
