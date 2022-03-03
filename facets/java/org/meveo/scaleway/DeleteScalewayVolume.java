@@ -31,7 +31,7 @@ public class DeleteScalewayVolume extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = (String)parameters.get(CONTEXT_ACTION);
+        String action = parameters.get(CONTEXT_ACTION).toString();
         ServerVolume volume = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServerVolume.class);
 
         if (volume.getZone() == null) {
@@ -39,12 +39,11 @@ public class DeleteScalewayVolume extends Script {
         } else if (volume.getProviderSideId() == null) {
             throw new BusinessException("Invalid Volume Provider-side ID");
         } else if (volume.getServer() != null) {
-            throw new BusinessException("Unable to Delete, Volume is still attached to a Server");
+            throw new BusinessException("Unable to Delete,\n Volume is still attached to a Server");
         }
 
         String zone = volume.getZone();
         String volumeId = volume.getProviderSideId();
-        logger.info("Action : {}, Volume Uuid : {}", action, volume.getUuid());
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -62,12 +61,11 @@ public class DeleteScalewayVolume extends Script {
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         if (response.getStatus()<300) {
-            volume.setLastUpdated(Instant.now());
-            logger.info("volume : {} deleted at: {}", volume.getUuid(), volume.getLastUpdated());
             try {
-                crossStorageApi.remove(defaultRepo, volume.getUuid(), volume.getCetCode());
+                crossStorageApi.remove(defaultRepo, volume.getUuid(), ServerVolume.class);
+                logger.info("volume : {} deleted at : {}", volumeId, Instant.now());
             } catch (Exception e) {
-                logger.error("error deleting volume {} :{}", volume.getUuid(), e.getMessage());
+                logger.error("error deleting volume : {}", volumeId, e.getMessage());
             }
         }
         response.close();

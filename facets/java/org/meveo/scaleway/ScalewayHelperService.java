@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
+import org.meveo.model.customEntities.SecurityGroup;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
@@ -102,25 +104,23 @@ public class ScalewayHelperService extends Script{
 
     public static JsonObject getServerTypeRequirements(ScalewayServer server, Credential credential) throws BusinessException {
         JsonObject serverConstraints = new JsonObject();
-        if (server != null) {
-            String zone = server.getZone();
-            String serverType = server.getServerType();
-            
-            Client client = ClientBuilder.newClient();
-            client.register(new CredentialHelperService.LoggingFilter());
-            WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/servers");
-            Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
-            String value = response.readEntity(String.class);
-            if (response.getStatus()<300) {
-                serverConstraints = 
-                    new JsonParser().parse(value).getAsJsonObject()
-                        .get("servers").getAsJsonObject()
-                        .get(serverType).getAsJsonObject();
-            } else {
-                throw new BusinessException("Error retrieving Server type constraints");
-            }
-            response.close();
+        String zone = server.getZone();
+        String serverType = server.getServerType();
+        
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/products/servers");
+        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+        String value = response.readEntity(String.class);
+        if (response.getStatus()<300) {
+            serverConstraints = 
+                new JsonParser().parse(value).getAsJsonObject()
+                    .get("servers").getAsJsonObject()
+                    .get(serverType).getAsJsonObject();
+        } else {
+            throw new BusinessException("Error retrieving Server type constraints");
         }
+        response.close();
         return serverConstraints;
     }
 
@@ -231,5 +231,46 @@ public class ScalewayHelperService extends Script{
         }
         response.close();
         return ipsArr;
+    }
+
+    public static void deleteVolume(ServerVolume volume, CrossStorageApi crossStorageApi, Repository defaultRepo, Credential credential) throws BusinessException {
+        String zone = volume.getZone();
+        String volumeId = volume.getProviderSideId();
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/volumes/"+volumeId);
+        Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
+        String value = response.readEntity(String.class);
+        logger.info("response : {}", value);
+        logger.debug("response status : {}", response.getStatus());
+        if(response.getStatus()<300) {
+            try {
+                crossStorageApi.remove(defaultRepo, volume.getUuid(), ServerVolume.class);
+                logger.info("volume : {} deleted at : {}", volumeId, Instant.now());
+            } catch (Exception e) {
+                logger.error("Error deleting volume : {}", volumeId, e.getMessage());
+            }
+        }
+    }
+
+    public static JsonArray getSecurityGroupRules(SecurityGroup securityGroup, Credential credential) throws BusinessException {
+        JsonArray rulesArr = new JsonArray();
+        String zone = securityGroup.getZone();
+        String securityGroupId = securityGroup.getProviderSideId();
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups/"+securityGroupId+"/rules");
+        Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
+        String value = response.readEntity(String.class);
+        if(response.getStatus()<300) {
+            rulesArr = new JsonParser().parse(value).getAsJsonObject()
+                .get("rules").getAsJsonArray();
+        } else {
+            throw new BusinessException("Error retrieving Security Group Rules constraints");
+        }
+        response.close();
+        return rulesArr;
     }
 }

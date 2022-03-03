@@ -13,6 +13,7 @@ import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerAction;
+import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -40,15 +41,13 @@ public class DeleteScalewayServer extends Script{
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
-        } else if (server.getRootVolume() != null || server.getAdditionalVolumes() != null) {
-            throw new BusinessException("Unable to delete Server \n Volumes are still attached");
         } else if (server.getStatus() != "stopped") {
             throw new BusinessException("Unable to delete Server \n Server is still running");
         }
 
         String zone = server.getZone();
         String serverId = server.getProviderSideId();
-        logger.info("action : {}, server uuid : {}", action, serverId);
+        logger.info("action : {}, server : {}", action, serverId);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential==null) {
@@ -56,10 +55,6 @@ public class DeleteScalewayServer extends Script{
         } else {
             logger.info("using credential {} with username {}",credential.getUuid(),credential.getUsername());
         }
-
-        Client client = ClientBuilder.newClient();
-        client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
 
         // Remove server actions related to server as linked in reference to CET Server
         if (crossStorageApi.find(defaultRepo, ServerAction.class).by("server", server).getResults() != null) {
@@ -73,18 +68,49 @@ public class DeleteScalewayServer extends Script{
             }
         }
 
+        // Option to delete associated volumes
+        if (server.getRootVolume() != null || server.getAdditionalVolumes() != null) {
+            if(action.equalsIgnoreCase("deleteScalewayServerWithVolumes")) {
+                // Root volume
+                String rootVolumeId = server.getRootVolume().getUuid();
+                try {
+                    ServerVolume rootVolume = crossStorageApi.find(defaultRepo, rootVolumeId, ServerVolume.class);
+                    ScalewayHelperService.deleteVolume(rootVolume, crossStorageApi, defaultRepo, credential);
+                } catch (Exception e) {
+                    logger.error("Error deleting root volume : {}", rootVolumeId, e.getMessage());
+                }
+                // Additional Volumes
+                if(server.getAdditionalVolumes()!= null) {
+                    for (Map.Entry<String, ServerVolume> additionalVolumeEnt : server.getAdditionalVolumes().entrySet()) {
+                        String additionalVolumeId = additionalVolumeEnt.getValue().getUuid();
+                        try {
+                            ServerVolume additionalVolume = crossStorageApi.find(defaultRepo, additionalVolumeId, ServerVolume.class);
+                            ScalewayHelperService.deleteVolume(additionalVolume, crossStorageApi, defaultRepo, credential);
+                        } catch(Exception e) {
+                            logger.error("Error deleting additional volume : {}", additionalVolumeId, e.getMessage());
+                        }
+                    }
+                }
+            } else {
+                throw new BusinessException("Unable to delete Server \n Volumes are still attached");
+            }
+        }
+
+        Client client = ClientBuilder.newClient();
+        client.register(new CredentialHelperService.LoggingFilter());
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId);
+
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         if (response.getStatus()<300) {
-            server.setLastUpdate(Instant.now());
-            logger.info("server {} deleted at: {}", server.getUuid(), server.getLastUpdate());
+            logger.info("server : {} deleted at : {}", serverId, Instant.now());
             try {
                 crossStorageApi.remove(defaultRepo, server.getUuid(), server.getCetCode());
             } catch (Exception e) {
-                logger.error("error deleting server {} :{}", server.getUuid(), e.getMessage());
+                logger.error("error deleting server : {}", serverId, e.getMessage());
             }
         }
         response.close();

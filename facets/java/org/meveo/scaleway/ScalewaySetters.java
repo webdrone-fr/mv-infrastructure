@@ -14,6 +14,7 @@ import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.SecurityGroup;
+import org.meveo.model.customEntities.SecurityRule;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -43,11 +44,6 @@ public class ScalewaySetters extends Script{
         volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
         volume.setZone(volumeObj.get("zone").getAsString());
         volume.setState(volumeObj.get("state").getAsString());
-        try {
-            crossStorageApi.createOrUpdate(defaultRepo, volume);
-        } catch (Exception e) {
-            logger.error("Error setting volume : {}", volumeId, e.getMessage());
-        }
         return volume;
     }
 
@@ -85,6 +81,7 @@ public class ScalewaySetters extends Script{
                         rootVolume.setUuid(rootVolumeId);
                     }
                     rootVolume = ScalewaySetters.setServerVolume(rootVolumeObj, rootVolume, crossStorageApi, defaultRepo);
+                    crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
                     image.setRootVolume(rootVolume);
                 } catch (Exception e) {
                     logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e.getMessage());
@@ -107,6 +104,7 @@ public class ScalewaySetters extends Script{
                             additionalVolume.setUuid(additionalVolumeId);
                         }
                         additionalVolume = ScalewaySetters.setServerVolume(additionalVolumeObj, additionalVolume, crossStorageApi, defaultRepo);
+                        crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
                         additionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
                     } catch (Exception e) {
                         logger.error("Error retrieving additional volume : {} for image : {}", additionalVolumeId, imageId, e.getMessage());
@@ -128,6 +126,7 @@ public class ScalewaySetters extends Script{
                     bootscript.setUuid(bootscriptId);
                 }
                 bootscript = ScalewaySetters.setBootScript(bootscriptObj, bootscript, crossStorageApi, defaultRepo);
+                crossStorageApi.createOrUpdate(defaultRepo, bootscript);
                 image.setDefaultBootscript(bootscript);
             } catch (Exception e) {
                 logger.error("Error retrieving bootscript : {} for image : {}", bootscriptId, imageId, e.getMessage());
@@ -164,11 +163,6 @@ public class ScalewaySetters extends Script{
         bootscript.setIsDefault(bootscriptObj.get("default").getAsBoolean());
         bootscript.setIsPublic(bootscriptObj.get("public").getAsBoolean());
         bootscript.setTitle(bootscriptObj.get("title").getAsString());
-        try {
-            crossStorageApi.createOrUpdate(defaultRepo, bootscript);
-        } catch (Exception e) {
-            logger.error("Error setting Bootscript {} : {}", bootscript.getTitle(), bootscriptId, e.getMessage());
-        }
         return bootscript;
     }
 
@@ -202,6 +196,7 @@ public class ScalewaySetters extends Script{
                     image.setUuid(imageId);
                 }
                 image = ScalewaySetters.setServerImage(imageObj, image, crossStorageApi, defaultRepo);
+                crossStorageApi.createOrUpdate(defaultRepo, image);
                 server.setImage(image);
             } catch (Exception e) {
                 logger.error("Error retrieving image : {} for server : {}", imageId, serverId, e.getMessage());
@@ -224,6 +219,7 @@ public class ScalewaySetters extends Script{
                     rootVolume.setUuid(rootVolumeId);
                 }
                 rootVolume = setServerVolume(rootVolumeObj, rootVolume, crossStorageApi, defaultRepo);
+                crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
                 server.setRootVolume(rootVolume);
                 serverTotalVolumesSize = Long.valueOf(rootVolume.getSize());
                 if(rootVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
@@ -249,6 +245,7 @@ public class ScalewaySetters extends Script{
                                 additionalVolume.setUuid(additionalVolumeId);
                             }
                             additionalVolume = setServerVolume(additionalVolumeObj, additionalVolume, crossStorageApi, defaultRepo);
+                            crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
                             serverAdditionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
                             serverTotalVolumesSize += Long.valueOf(additionalVolume.getSize());
                             if(additionalVolume.getVolumeType().equalsIgnoreCase("l_ssd")){
@@ -336,6 +333,7 @@ public class ScalewaySetters extends Script{
                     bootscript.setUuid(bootscriptId);
                 }
                 bootscript = setBootScript(bootscriptObj, bootscript, crossStorageApi, defaultRepo);
+                crossStorageApi.createOrUpdate(defaultRepo, bootscript);
                 server.setBootscript(bootscript);
             } catch (Exception e) {
                 logger.error("Error retrieving bootscript : {}", bootscriptId, e.getMessage());
@@ -417,7 +415,7 @@ public class ScalewaySetters extends Script{
         return publicIp;
     }
 
-    public static SecurityGroup setSecurityGroup(JsonObject securityGroupObj, SecurityGroup securityGroup, String action, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+    public static SecurityGroup setSecurityGroup(JsonObject securityGroupObj, SecurityGroup securityGroup, CrossStorageApi crossStorageApi, Repository defaultRepo) {
         String securityGroupId = securityGroupObj.get("id").getAsString();
         securityGroup.setProviderSideId(securityGroupId);
         securityGroup.setName(securityGroupObj.get("name").getAsString());
@@ -434,8 +432,8 @@ public class ScalewaySetters extends Script{
         securityGroup.setEnableDefaultSecurity(securityGroupObj.get("enable_default_security").getAsBoolean());
         securityGroup.setZone(securityGroupObj.get("zone").getAsString());
 
-         // Servers
-         if(!securityGroupObj.get("servers").isJsonNull()) {
+        // Servers
+        if(!securityGroupObj.get("servers").isJsonNull()) {
             JsonArray serversArr = securityGroupObj.get("servers").getAsJsonArray();
             ArrayList<String> servers = new ArrayList<String>();
             for (JsonElement serverEl : serversArr) {
@@ -450,6 +448,27 @@ public class ScalewaySetters extends Script{
             securityGroup.setServers(servers);
         }
         return securityGroup;
+    }
+
+    public static SecurityRule setSecurityRule(JsonObject ruleObj, SecurityRule rule, CrossStorageApi crossStorageApi, Repository defaultRepo) {
+        String ruleId = ruleObj.get("id").getAsString();
+        rule.setProviderSideId(ruleId);
+        rule.setProtocol(ruleObj.get("protocol").getAsString());
+        rule.setDirection(ruleObj.get("direction").getAsString());
+        rule.setAction(ruleObj.get("action").getAsString());
+        rule.setIpRange(ruleObj.get("ip_range").getAsString());
+        if(!ruleObj.get("dest_port_from").isJsonNull()) {
+            rule.setDestPortFrom(ruleObj.get("dest_port_from").getAsLong());
+        }
+        if(!ruleObj.get("dest_port_to").isJsonNull()) {
+            rule.setDestPortTo(ruleObj.get("dest_port_to").getAsLong());
+        }
+        rule.setPosition(ruleObj.get("position").getAsLong());
+        if(!ruleObj.get("editable").isJsonNull()) {
+            rule.setEditable(ruleObj.get("editable").getAsBoolean());
+        }
+        rule.setZone(ruleObj.get("zone").getAsString());
+        return rule;
     }
 
     public static Map<String, Object> setServerType(JsonObject serverTypeObj) {

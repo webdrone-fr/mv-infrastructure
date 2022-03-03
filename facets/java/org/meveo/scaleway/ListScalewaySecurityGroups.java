@@ -67,7 +67,7 @@ public class ListScalewaySecurityGroups extends Script {
                             securityGroup = new SecurityGroup();
                             securityGroup.setUuid(securityGroupId);
                         }
-                        securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, securityGroup, action, crossStorageApi, defaultRepo);
+                        securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, securityGroup, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
                     } catch(Exception e){
                         logger.error("Error retrieving security group : ", securityGroupId, e.getMessage());
