@@ -21,6 +21,8 @@ public class ServerOVH extends Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String txt;
+
     private String keyName;
 
     private ServerNetwork network;
@@ -40,6 +42,14 @@ public class ServerOVH extends Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getTxt() {
+        return txt;
+    }
+
+    public void setTxt(String txt) {
+        this.txt = txt;
     }
 
     public String getKeyName() {
