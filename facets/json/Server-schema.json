@@ -256,17 +256,6 @@
                 "e7b58d55-d69b-4f96-9f53-41b304874556"
             ]
         },
-        "volumeName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Volume Name",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_Server_volumeName",
-            "title": "Server.volumeName",
-            "type": "string",
-            "maxLength": 255
-        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
