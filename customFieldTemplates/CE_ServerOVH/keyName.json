@@ -1,6 +1,6 @@
 {
-  "code" : "KeyName",
-  "description" : "Key Name",
+  "code" : "keyName",
+  "description" : "Ssh Key Name",
   "fieldType" : "STRING",
   "accountLevel" : "CE_ServerOVH",
   "appliesTo" : "CE_ServerOVH",
@@ -22,6 +22,6 @@
   "summary" : true,
   "audited" : false,
   "persisted" : true,
-  "unique" : false,
-  "filter" : true
+  "filter" : false,
+  "unique" : false
 }
