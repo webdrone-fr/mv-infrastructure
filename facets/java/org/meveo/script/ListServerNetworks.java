@@ -28,7 +28,7 @@ import java.time.OffsetDateTime;
 
 public class ListServerNetworks extends Script {
 
-    private static final Logger log = LoggerFactory.getLogger(ListServerImages.class);
+    private static final Logger log = LoggerFactory.getLogger(ListServerNetworks.class);
 
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
 
