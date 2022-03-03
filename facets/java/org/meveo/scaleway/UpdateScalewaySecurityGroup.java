@@ -14,6 +14,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.SecurityGroup;
 import org.meveo.model.customEntities.Server;
 import org.meveo.model.persistence.CEIUtils;
@@ -48,7 +49,6 @@ public class UpdateScalewaySecurityGroup extends Script{
 
         String zone = securityGroup.getZone();
         String securityGroupId = securityGroup.getProviderSideId();
-        logger.info("action : {}, security group ID : {}", action, securityGroupId);
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -62,14 +62,11 @@ public class UpdateScalewaySecurityGroup extends Script{
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups/"+securityGroupId);
 
         Map<String, Object> body = new HashMap<String, Object>();
-        body.put("creation_date", securityGroup.getCreationDate());
-        body.put("modification_date", securityGroup.getLastUpdated());
-        body.put("enable_default_security", securityGroup.getEnableDefaultSecurity());
+        body.put("enable_default_security", securityGroup.getEnableDefaultSecurity()); // nullable; read only
         body.put("inbound_default_policy", securityGroup.getInboundDefaultPolicy()); // default is accept
         body.put("outbound_default_policy", securityGroup.getOutboundDefaultPolicy()); // default is accept
-        body.put("organization", securityGroup.getOrganization());
         body.put("project", securityGroup.getProject());
-        body.put("project_default", securityGroup.getProjectDefault());
+        body.put("project_default", securityGroup.getProjectDefault()); // default false
         body.put("stateful", securityGroup.getStateful());
         
         // Name
@@ -86,15 +83,15 @@ public class UpdateScalewaySecurityGroup extends Script{
         if (securityGroup.getServers() != null) {
             ArrayList<Object> serversArr = new ArrayList<Object>();
             for (String serverId : (securityGroup.getServers())){
-                Map<String, Object> serverObj = new HashMap<String, Object>();
+                Map<String, Object> serverMap = new HashMap<String, Object>();
                 try {
-                    Server server = crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", securityGroupId).getResult();
-                    serverObj.put("id", serverId);
-                    serverObj.put("name", server.getInstanceName());
+                    ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
+                    serverMap.put("id", serverId);
+                    serverMap.put("name", server.getInstanceName());
                 } catch (Exception e) {
-                    logger.error("Error retrieving Security Group {} : {}", securityGroup.getName(), e.getMessage());
+                    logger.error("Error retrieving server : {} for Security Group {}", serverId, securityGroup.getName(), e.getMessage());
                 }
-                serversArr.add(serverObj);
+                serversArr.add(serverMap);
             }
             body.put("servers", serversArr);
         }
