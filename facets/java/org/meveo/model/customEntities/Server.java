@@ -45,8 +45,6 @@ public class Server implements CustomEntity {
 
     private String zone;
 
-    private String volumeZone;
-
     private ServerImage image;
 
     private List<String> serverAction = new ArrayList<>();
@@ -168,14 +166,6 @@ public class Server implements CustomEntity {
 
     public void setZone(String zone) {
         this.zone = zone;
-    }
-
-    public String getVolumeZone() {
-        return volumeZone;
-    }
-
-    public void setVolumeZone(String volumeZone) {
-        this.volumeZone = volumeZone;
     }
 
     public ServerImage getImage() {
