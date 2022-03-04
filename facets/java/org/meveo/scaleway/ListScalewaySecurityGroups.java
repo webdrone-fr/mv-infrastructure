@@ -33,7 +33,10 @@ public class ListScalewaySecurityGroups extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = parameters.get(CONTEXT_ACTION).toString();
+        String action = null;
+        if(parameters.get(CONTEXT_ACTION)!=null){
+            action = parameters.get(CONTEXT_ACTION).toString();
+        }
         ServiceProvider provider = crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", "SCALEWAY").getResult();
         
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
@@ -70,7 +73,7 @@ public class ListScalewaySecurityGroups extends Script {
                         securityGroup = ScalewaySetters.setSecurityGroup(secGroupObj, securityGroup, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, securityGroup);
                     } catch(Exception e){
-                        logger.error("Error retrieving security group : ", securityGroupId, e.getMessage());
+                        logger.error("Error retrieving security group : {}", securityGroupId, e.getMessage());
                     }
                 }
             }

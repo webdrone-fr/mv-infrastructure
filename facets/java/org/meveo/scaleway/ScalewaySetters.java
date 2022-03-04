@@ -32,18 +32,29 @@ public class ScalewaySetters extends Script{
         String volumeId = volumeObj.get("id").getAsString();
         volume.setProviderSideId(volumeId);
         volume.setName(volumeObj.get("name").getAsString());
+        volume.setVolumeType(volumeObj.get("volume_type").getAsString());
+        volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
         // Server
         String serverId = null;
         if (!volumeObj.get("server").isJsonNull()) {
             serverId = volumeObj.get("server").getAsJsonObject().get("id").getAsString();
         }
         volume.setServer(serverId);
-        volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
-        volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
-        volume.setVolumeType(volumeObj.get("volume_type").getAsString());
-        volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
-        volume.setZone(volumeObj.get("zone").getAsString());
-        volume.setState(volumeObj.get("state").getAsString());
+        if(!volumeObj.get("creation_date").isJsonNull()) {
+            volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
+        }
+        if(!volumeObj.get("modification_date").isJsonNull()) {
+            volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
+
+        }
+        if(!volumeObj.get("zone").isJsonNull()) {
+            volume.setZone(volumeObj.get("zone").getAsString());
+
+        }
+        if(!volumeObj.get("state").isJsonNull()) {
+            volume.setZone(volumeObj.get("state").getAsString());
+
+        }
         return volume;
     }
 
@@ -60,57 +71,61 @@ public class ScalewaySetters extends Script{
         // Server
         if (!imageObj.get("from_server").isJsonNull()) {
             String serverId = imageObj.get("from_server").getAsString();
+            ScalewayServer server = null;
             try {
                 if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
+                    server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
                     image.setFromServer(serverId);
                 }                
             } catch (Exception e) {
-                logger.error("Error retrieving server attached to image : {}", imageId, e.getMessage());
+                logger.error("Error retrieving server : {} attached to image : {}", serverId, imageId, e.getMessage());
             }
-            // Volumes
-            // Root Volume
-            if (!imageObj.get("root_volume").isJsonNull()) {
-                JsonObject rootVolumeObj = imageObj.get("root_volume").getAsJsonObject();
-                String rootVolumeId = rootVolumeObj.get("id").getAsString();
-                ServerVolume rootVolume = null;
-                try {
-                    if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult() != null) {
-                        rootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult();
-                    } else {
-                        rootVolume = new ServerVolume();
-                        rootVolume.setUuid(rootVolumeId);
-                    }
-                    rootVolume = ScalewaySetters.setServerVolume(rootVolumeObj, rootVolume, crossStorageApi, defaultRepo);
-                    crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
-                    image.setRootVolume(rootVolume);
-                } catch (Exception e) {
-                    logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e.getMessage());
-                }
-            }
-            // Additional Volumes
-            if (!imageObj.get("extra_volumes").isJsonNull()) {
-                Map<String, ServerVolume> additionalVolumes = new HashMap<String, ServerVolume>();
-                JsonObject additionalVolumesObj = imageObj.get("extra_volumes").getAsJsonObject();
-                Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = additionalVolumesObj.entrySet();
-                for(Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
-                    JsonObject additionalVolumeObj = additionalVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject();
-                    String additionalVolumeId = additionalVolumeObj.get("id").getAsString();
-                    ServerVolume additionalVolume = null;
+            if(server!=null || imageObj.get("public").getAsBoolean()==false) {
+                // Volumes
+                // Root Volume
+                if (!imageObj.get("root_volume").isJsonNull()) {
+                    JsonObject rootVolumeObj = imageObj.get("root_volume").getAsJsonObject();
+                    String rootVolumeId = rootVolumeObj.get("id").getAsString();
+                    ServerVolume rootVolume = null;
                     try {
-                        if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
-                            additionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+                        if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult() != null) {
+                            rootVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", rootVolumeId).getResult();
                         } else {
-                            additionalVolume = new ServerVolume();
-                            additionalVolume.setUuid(additionalVolumeId);
+                            rootVolume = new ServerVolume();
+                            rootVolume.setUuid(rootVolumeId);
                         }
-                        additionalVolume = ScalewaySetters.setServerVolume(additionalVolumeObj, additionalVolume, crossStorageApi, defaultRepo);
-                        crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
-                        additionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
+                        rootVolume = ScalewaySetters.setServerVolume(rootVolumeObj, rootVolume, crossStorageApi, defaultRepo);
+                        crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
+                        image.setRootVolume(rootVolume);
                     } catch (Exception e) {
-                        logger.error("Error retrieving additional volume : {} for image : {}", additionalVolumeId, imageId, e.getMessage());
+                        logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e.getMessage());
                     }
                 }
-                image.setAdditionalVolumes(additionalVolumes);
+                // Additional Volumes
+                if (!imageObj.get("extra_volumes").isJsonNull()) {
+                    Map<String, ServerVolume> additionalVolumes = new HashMap<String, ServerVolume>();
+                    JsonObject additionalVolumesObj = imageObj.get("extra_volumes").getAsJsonObject();
+                    Set<Map.Entry<String, JsonElement>> additionalVolumeEntries = additionalVolumesObj.entrySet();
+                    for(Map.Entry<String, JsonElement> additionalVolumeEntry : additionalVolumeEntries) {
+                        JsonObject additionalVolumeObj = additionalVolumesObj.get(additionalVolumeEntry.getKey()).getAsJsonObject();
+                        String additionalVolumeId = additionalVolumeObj.get("id").getAsString();
+                        ServerVolume additionalVolume = null;
+                        try {
+                            if(crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult() != null) {
+                                additionalVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", additionalVolumeId).getResult();
+                            } else {
+                                additionalVolume = new ServerVolume();
+                                additionalVolume.setUuid(additionalVolumeId);
+                            }
+                            additionalVolume = ScalewaySetters.setServerVolume(additionalVolumeObj, additionalVolume, crossStorageApi, defaultRepo);
+                            crossStorageApi.createOrUpdate(defaultRepo, additionalVolume);
+                            additionalVolumes.put(additionalVolumeEntry.getKey(), additionalVolume);
+                        } catch (Exception e) {
+                            logger.error("Error retrieving additional volume : {} for image : {}", additionalVolumeId, imageId, e.getMessage());
+                        }
+                    }
+                    image.setAdditionalVolumes(additionalVolumes);
+                }
             }
         }
         // Bootscript
@@ -391,8 +406,12 @@ public class ScalewaySetters extends Script{
         if (!publicIpObj.get("server").isJsonNull()) {
             String serverId = publicIpObj.get("server").getAsJsonObject().get("id").getAsString();
             try {
-                ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
-                publicIp.setServer(server);
+                if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
+                    ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
+                    if(server.getInstanceName().startsWith("dev-")) {
+                        publicIp.setServer(server);
+                    }
+                }
             } catch (Exception e) {
                 logger.error("Error retrieving server : {} for Public Ip : {}", serverId, publicIpId, e.getMessage());
             }
@@ -420,7 +439,6 @@ public class ScalewaySetters extends Script{
         securityGroup.setName(securityGroupObj.get("name").getAsString());
         securityGroup.setCreationDate(OffsetDateTime.parse(securityGroupObj.get("creation_date").getAsString()).toInstant());
         securityGroup.setLastUpdated(OffsetDateTime.parse(securityGroupObj.get("modification_date").getAsString()).toInstant());
-        securityGroup.setOrganization(securityGroupObj.get("organization").getAsString());
         securityGroup.setProject(securityGroupObj.get("project").getAsString());
         securityGroup.setStateful(securityGroupObj.get("stateful").getAsBoolean());
         securityGroup.setState(securityGroupObj.get("state").getAsString());

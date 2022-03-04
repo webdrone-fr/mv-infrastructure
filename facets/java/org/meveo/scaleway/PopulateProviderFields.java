@@ -92,11 +92,13 @@ public class PopulateProviderFields extends Script {
                     image = ScalewaySetters.setServerImage(imageObj, image, crossStorageApi, defaultRepo);
                     crossStorageApi.createOrUpdate(defaultRepo, image);
                 } catch (Exception e) {
-                    logger.error("Error creating image : {}", imageId);
+                    logger.error("ERROR WITH IMAGE CREATION", e);
+                    logger.error("Error creating image : {}", imageId, e.getMessage());
                 }
                 String imageName = imageObj.get("name").getAsString();
                 images.put(imageId, imageName+" : "+zone);
             }
+            logger.info("IMAGES IN LIST COUNT: {}", images.size());
             
             // Public Ips
             JsonArray ipsArr = ScalewayHelperService.getProviderPublicIps(zone, provider, credential);
@@ -135,7 +137,7 @@ public class PopulateProviderFields extends Script {
         try {
             crossStorageApi.createOrUpdate(defaultRepo, provider);
         } catch (Exception e) {
-            logger.error("Error retriving provider details", e.getMessage());
+            logger.error("Error retrieving provider details", e.getMessage());
         }
     }
 }
