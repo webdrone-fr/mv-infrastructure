@@ -1,4 +1,4 @@
-package org.meveo.script.openstack;
+package org.meveo.openstack;
 
 import java.util.Map;
 import org.meveo.service.script.Script;
@@ -30,7 +30,7 @@ import org.apache.commons.lang3.SerializationUtils;
 
 public class CheckOVHToken extends Script {
 
-    private static final Logger log = LoggerFactory.getLogger(ListOVHServersScript.class);
+    private static final Logger log = LoggerFactory.getLogger(CheckOVHToken.class);
 
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
 

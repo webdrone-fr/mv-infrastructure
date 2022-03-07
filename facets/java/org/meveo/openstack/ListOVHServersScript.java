@@ -1,4 +1,4 @@
-package org.meveo.script.openstack;
+package org.meveo.openstack;
 
 import java.util.Map;
 import org.meveo.service.script.Script;
@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import org.meveo.model.customEntities.ServiceProvider;
-import org.meveo.model.customEntities.ServerOVH;
+import org.meveo.model.customEntities.OVHServer;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerNetwork;
 import org.meveo.model.customEntities.Credential;
@@ -20,8 +20,8 @@ import org.meveo.api.persistence.CrossStorageApi;
 import java.util.ArrayList;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.security.PasswordUtils;
-import org.meveo.script.openstack.CheckOVHToken;
-import org.meveo.script.openstack.OpenstackAPI;
+import org.meveo.openstack.CheckOVHToken;
+import org.meveo.openstack.OpenstackAPI;
 
 public class ListOVHServersScript extends Script {
 
@@ -45,12 +45,11 @@ public class ListOVHServersScript extends Script {
     public void callOVH(Credential credential, ServiceProvider openstack) throws BusinessException {
         log.info("calling ListOVHServersScript");
         checkOVHToken.checkOVHToken(credential, openstack);
-        Map<String, String> zones = new HashMap<String, String>();
-        zones = openstack.getZones();
-        for (String zone : zones.keySet()) {
+        List<String> zones = openstack.getZones();
+        for (String zone : zones) {
             List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential, null, "get", "server");
             for (JsonObject serverObj : servers) {
-                ServerOVH server = new ServerOVH();
+                OVHServer server = new OVHServer();
                 server.setUuid(serverObj.get("id").getAsString());
               	server.setProviderSideId(serverObj.get("id").getAsString());
                 server.setInstanceName(serverObj.get("name").getAsString());
@@ -93,7 +92,9 @@ public class ListOVHServersScript extends Script {
                         String networkName = network.get("name").getAsString();
                         if (addresses.get(networkName) != null) {
                             ServerNetwork networkObject = crossStorageApi.find(defaultRepo, ServerNetwork.class).by("uuid", network.get("id").getAsString()).getResult();
-                            server.setNetwork(networkObject);
+                          	ArrayList<ServerNetwork> networkList = new ArrayList<>();
+                          	networkList.add(networkObject);
+                            server.setNetwork(networkList);
                         }
                 }
                 }

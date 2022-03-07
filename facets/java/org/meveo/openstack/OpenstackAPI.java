@@ -1,4 +1,4 @@
-package org.meveo.script.openstack;
+package org.meveo.openstack;
 
 import java.util.Map;
 import org.meveo.service.script.Script;
@@ -14,7 +14,7 @@ import org.meveo.model.customEntities.Credential;
 
 public class OpenstackAPI extends Script {
 
-    private static final Logger log = LoggerFactory.getLogger(ListOVHServersScript.class);
+    private static final Logger log = LoggerFactory.getLogger(OpenstackAPI.class);
 
     private String computeBaseAPI = "https://compute.gra11.cloud.ovh.net/v2.1/";
 
