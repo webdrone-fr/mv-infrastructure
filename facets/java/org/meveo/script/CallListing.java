@@ -53,7 +53,7 @@ public class CallListing extends Script {
             listOVHServerScript.callOVH(credential, serviceProvider);
             break;
           case "api.scaleway.com":
-            listScalewayServersScript.listScaleway(credential, serviceProvider);
+            // listScalewayServersScript.listScaleway(credential, serviceProvider);
             break;
           case "api.gandi.net/v5/":
             //listGandiServer
