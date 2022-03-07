@@ -1,0 +1,1 @@
+{"code":"listScalewayServerVolumes","description":"List Scaleway Server Volumes","appliesTo":"CE_ServerVolume","label":"List Scaleway Server Volumes","script":"org.meveo.scaleway.ListScalewayVolumes","applicableToEntityList":true,"applicableToEntityInstance":false}

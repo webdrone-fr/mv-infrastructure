@@ -1,0 +1,1 @@
+{"code":"listScalewayServerBootscripts","description":"List Scaleway Server Bootscripts","appliesTo":"CE_Bootscript","label":"List Scaleway Server Bootscripts","script":"org.meveo.scaleway.ListScalewayBootscripts","applicableToEntityList":true,"applicableToEntityInstance":false}

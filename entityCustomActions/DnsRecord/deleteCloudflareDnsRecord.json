@@ -1,0 +1,1 @@
+{"code":"deleteCloudflareDnsRecord","description":"Delete Cloudflare DNS Record","appliesTo":"CE_DnsRecord","applicableOnEl":"${entity.getCfValuesAsValues().get(\"providerSideId\") ne null}","label":"Delete Cloudflare DNS Record","script":"org.meveo.cloudflare.DeleteCloudflareDnsRecord","guiPosition":"action:3","applicableToEntityList":false,"applicableToEntityInstance":true}

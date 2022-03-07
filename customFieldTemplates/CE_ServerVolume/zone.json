@@ -1,0 +1,33 @@
+{
+  "code" : "zone",
+  "description" : "Zone",
+  "fieldType" : "LIST",
+  "accountLevel" : "CE_ServerVolume",
+  "appliesTo" : "CE_ServerVolume",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "SINGLE",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "fr-par-1" : "fr-par-1",
+    "fr-par-2" : "fr-par-2",
+    "fr-par-3" : "fr-par-3",
+    "nl-ams-1" : "nl-ams-1",
+    "pl-waw-1" : "pl-waw-1"
+  },
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Server Volume:0;field:10",
+  "identifier" : false,
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : true,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false
+}

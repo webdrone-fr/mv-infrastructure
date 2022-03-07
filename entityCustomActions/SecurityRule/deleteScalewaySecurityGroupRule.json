@@ -1,0 +1,1 @@
+{"code":"deleteScalewaySecurityGroupRule","description":"Delete Scaleway Security Group Rule","appliesTo":"CE_SecurityRule","applicableOnEl":"${entity.getCfValuesAsValues().get(\"providerSideId\") ne null}","label":"Delete Scaleway Security Group Rule","script":"org.meveo.scaleway.DeleteScalewaySecurityGroupRule","applicableToEntityList":false,"applicableToEntityInstance":true}

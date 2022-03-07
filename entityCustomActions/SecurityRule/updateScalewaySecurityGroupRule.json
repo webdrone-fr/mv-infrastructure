@@ -1,0 +1,1 @@
+{"code":"updateScalewaySecurityGroupRule","description":"Update Scaleway Security Group Rule","appliesTo":"CE_SecurityRule","applicableOnEl":"${entity.getCfValuesAsValues().get(\"providerSideId\") ne null}","label":"Update Scaleway Security Group Rule","script":"org.meveo.scaleway.UpdateScalewaySecurityGroupRule","applicableToEntityList":false,"applicableToEntityInstance":true}

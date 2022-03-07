@@ -1,7 +1,7 @@
 {
   "code" : "responseStatus",
   "description" : "Response status",
-  "fieldType" : "LIST",
+  "fieldType" : "STRING",
   "accountLevel" : "CE_ServerAction",
   "appliesTo" : "CE_ServerAction",
   "useInheritedAsDefaultValue" : false,
@@ -9,17 +9,13 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
-  "listValues" : {
-    "ERROR" : "Error",
-    "OK" : "Ok",
-    "TIMEOUT" : "Timeout"
-  },
   "allowEdit" : true,
   "hideOnNew" : false,
+  "maxValue" : 255,
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Action on server:0;field:3",
+  "guiPosition" : "tab:Action on server:0;field:6",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],

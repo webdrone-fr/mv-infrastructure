@@ -1,0 +1,12 @@
+{
+  "code" : "ServerNetwork",
+  "name" : "Server Network",
+  "description" : "Server Network",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

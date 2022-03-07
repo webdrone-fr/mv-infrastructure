@@ -1,0 +1,12 @@
+{
+  "code" : "PublicIp",
+  "name" : "Public Ip",
+  "description" : "Public IP",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

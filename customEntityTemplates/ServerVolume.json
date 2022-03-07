@@ -1,0 +1,12 @@
+{
+  "code" : "ServerVolume",
+  "name" : "Server Volume",
+  "description" : "Location for storing data in Instance",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

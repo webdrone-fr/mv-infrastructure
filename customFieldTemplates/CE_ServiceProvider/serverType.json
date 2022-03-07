@@ -1,7 +1,7 @@
 {
   "code" : "serverType",
-  "description" : "Type",
-  "fieldType" : "STRING",
+  "description" : "Server Type",
+  "fieldType" : "LONG_TEXT",
   "accountLevel" : "CE_ServiceProvider",
   "appliesTo" : "CE_ServiceProvider",
   "useInheritedAsDefaultValue" : false,
@@ -11,11 +11,10 @@
   "triggerEndPeriodEvent" : false,
   "allowEdit" : true,
   "hideOnNew" : false,
-  "maxValue" : 255,
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Server Types:2;field:0",
+  "guiPosition" : "tab:Server Types:1;field:0",
   "identifier" : false,
   "mapKeyType" : "STRING",
   "storages" : [ "SQL" ],
@@ -23,6 +22,6 @@
   "summary" : false,
   "audited" : false,
   "persisted" : true,
-  "filter" : false,
+  "filter" : true,
   "unique" : false
 }

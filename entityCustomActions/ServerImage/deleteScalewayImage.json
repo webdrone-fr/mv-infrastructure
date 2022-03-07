@@ -1,0 +1,1 @@
+{"code":"deleteScalewayImage","description":"Delete Scaleway Image","appliesTo":"CE_ServerImage","applicableOnEl":"${entity.getCfValuesAsValues().get(\"isPublic\") eq false}","label":"Delete Scaleway Image","script":"org.meveo.scaleway.DeleteScalewayImage","applicableToEntityList":false,"applicableToEntityInstance":true}

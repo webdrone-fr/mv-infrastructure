@@ -1,0 +1,1 @@
+{"code":"createCloudflareLockdownRule","description":"Create Cloudflare Lockdown Rule","appliesTo":"CE_LockdownRule","applicableOnEl":"${entity.getCfValuesAsValues().get(\"providerSideId\") eq null}","label":"Create Cloudflare Lockdown Rule","script":"org.meveo.cloudflare.CreateCloudflareLockdownRule","applicableToEntityList":false,"applicableToEntityInstance":true}

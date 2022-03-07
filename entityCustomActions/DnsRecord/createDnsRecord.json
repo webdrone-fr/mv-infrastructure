@@ -1,1 +1,0 @@
-{"code":"createDnsRecord","description":"Create DNS record in Gandi","appliesTo":"CE_DnsRecord","label":"Create in Gandi","script":"org.meveo.gandi.CreateDnsRecord","applicableToEntityList":false,"applicableToEntityInstance":true}

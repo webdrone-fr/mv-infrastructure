@@ -1,0 +1,31 @@
+{
+  "code" : "direction",
+  "description" : "Direction",
+  "fieldType" : "LIST",
+  "accountLevel" : "CE_SecurityRule",
+  "appliesTo" : "CE_SecurityRule",
+  "defaultValue" : "inbound",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "SINGLE",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "inbound" : "inbound",
+    "outbound" : "outbound"
+  },
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Security Rule:0;field:2",
+  "identifier" : false,
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : true,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false
+}
