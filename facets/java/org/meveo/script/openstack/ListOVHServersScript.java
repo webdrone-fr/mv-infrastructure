@@ -46,7 +46,7 @@ public class ListOVHServersScript extends Script {
         log.info("calling ListOVHServersScript");
         checkOVHToken.checkOVHToken(credential, openstack);
         Map<String, String> zones = new HashMap<String, String>();
-        zones = openstack.getZone();
+        zones = openstack.getZones();
         for (String zone : zones.keySet()) {
             List<JsonObject> servers = openstackAPI.computeAPI("servers/detail", credential, null, "get", "server");
             for (JsonObject serverObj : servers) {
