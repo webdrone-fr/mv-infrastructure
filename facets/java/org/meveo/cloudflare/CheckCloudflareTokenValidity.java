@@ -10,6 +10,8 @@ import com.google.gson.*;
 
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
+import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
