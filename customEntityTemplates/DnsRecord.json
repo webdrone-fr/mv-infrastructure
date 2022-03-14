@@ -8,7 +8,5 @@
     "storeAsTable" : true
   },
   "samples" : [ ],
-  "audited" : false,
-  "fields" : [ ],
-  "actions" : [ ]
+  "audited" : false
 }
