@@ -1,0 +1,1 @@
+{"code":"deleteServer","description":"Button to delete ovh server","appliesTo":"CE_OVHServer","label":"Delete Server","script":"org.meveo.openstack.DeleteOVHServerScript","guiPosition":"tab:OVH Server:0;action:3","applicableToEntityList":false,"applicableToEntityInstance":true}
