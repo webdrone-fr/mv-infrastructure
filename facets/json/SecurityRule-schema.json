@@ -1,0 +1,8 @@
+{
+    "storages": ["SQL"],
+    "default": "Security Group rule",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "SecurityRule",
+    "title": "Security Rule",
+    "type": "object"
+}
