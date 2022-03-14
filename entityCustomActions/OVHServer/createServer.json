@@ -1,0 +1,1 @@
+{"code":"createServer","description":"Button to create ovh server","appliesTo":"CE_OVHServer","label":"Create Server","script":"org.meveo.openstack.CreateOVHServersScript","guiPosition":"tab:OVH Server:0;action:2","applicableToEntityList":false,"applicableToEntityInstance":true}
