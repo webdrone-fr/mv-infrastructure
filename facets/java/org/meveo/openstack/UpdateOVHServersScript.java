@@ -26,7 +26,7 @@ import org.meveo.model.customEntities.CustomEntityInstance;
 
 public class UpdateOVHServersScript extends Script {
 
-    private static final Logger log = LoggerFactory.getLogger(ListOVHServersScript.class);
+    private static final Logger log = LoggerFactory.getLogger(UpdateOVHServersScript.class);
 
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
 
