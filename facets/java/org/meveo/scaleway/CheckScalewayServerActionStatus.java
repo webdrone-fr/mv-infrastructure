@@ -92,7 +92,7 @@ public class CheckScalewayServerActionStatus extends Script{
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, action);
                 } catch (Exception e) {
-                    logger.error("Error with Action Status : {}", e.getMessage());
+                    logger.error("Error with Action Status : {}", action.getResponse(), e.getMessage());
                 }
             }
             response.close();
