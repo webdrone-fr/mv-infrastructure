@@ -1,0 +1,8 @@
+{
+    "storages": ["SQL"],
+    "default": "Bootscripts are a combination of a Kernel and of an initrd. They tell to the instance how to start and configure its starting process and settings",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "Bootscript",
+    "title": "Bootscript",
+    "type": "object"
+}
