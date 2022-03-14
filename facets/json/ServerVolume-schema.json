@@ -1,0 +1,8 @@
+{
+    "storages": ["SQL"],
+    "default": "Location for storing data in Instance",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "ServerVolume",
+    "title": "Server Volume",
+    "type": "object"
+}
