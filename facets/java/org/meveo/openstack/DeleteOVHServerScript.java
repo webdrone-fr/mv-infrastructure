@@ -21,7 +21,7 @@ import org.meveo.openstack.OpenstackAPI;
 
 public class DeleteOVHServerScript extends Script {
 
-    private static final Logger log = LoggerFactory.getLogger(ListOVHServersScript.class);
+    private static final Logger log = LoggerFactory.getLogger(DeleteOVHServerScript.class);
 
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
 
