@@ -82,7 +82,7 @@ public class CheckScalewayServerActionStatus extends Script{
                     action.setElapsedTimeMs(timeElapsed.toMillis());
                     action.setProgress(taskObj.get("progress").getAsLong());
                     actionComplete = true;
-                    parameters.put(RESULT_GUI_MESSAGE, "Action : "+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
+                    parameters.put(RESULT_GUI_MESSAGE, "Action :"+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
                 } else if (action.getResponse().equalsIgnoreCase("failure")) {
                     throw new BusinessException("Task failed");
                 } else {
