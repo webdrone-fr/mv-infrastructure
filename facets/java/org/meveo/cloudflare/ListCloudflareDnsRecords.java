@@ -78,9 +78,9 @@ public class ListCloudflareDnsRecords extends Script {
 
                     try {
                         crossStorageApi.createOrUpdate(defaultRepo, record);
-                        logger.info("record : {} with address {} successfully retrieved", record.getRecordType(), record.getValue());
+                        logger.info("record : {} with address : {} successfully retrieved", record.getRecordType(), record.getValue());
                     } catch (Exception e) {
-                        logger.error("error retrieving record {} : {}", record.getProviderSideId(), e.getMessage());
+                        logger.error("error retrieving record : {}", record.getProviderSideId(), e.getMessage());
                     }
                 } else {
                     if (name.startsWith("dev-")) {
@@ -91,5 +91,6 @@ public class ListCloudflareDnsRecords extends Script {
             // parameters.put(RESULT_GUI_MESSAGE, "Total Non-imported Records: " + nonImportedRecords.size());
             parameters.put(RESULT_GUI_MESSAGE, "Non-imported Records: " + JacksonUtil.toStringPrettyPrinted(nonImportedRecords));
         }
+        response.close();
     }
 }
