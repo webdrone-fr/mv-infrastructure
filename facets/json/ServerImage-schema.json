@@ -1,0 +1,8 @@
+{
+    "storages": ["SQL"],
+    "default": "Image is a complete backup of server including all volumes",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "ServerImage",
+    "title": "Server Image",
+    "type": "object"
+}
