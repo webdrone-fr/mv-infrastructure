@@ -408,7 +408,7 @@ public class ScalewaySetters extends Script{
             try {
                 if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
                     ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
-                    if(server.getInstanceName().startsWith("dev-")) {
+                    if(server.getInstanceName().startsWith("dev-") || server.getInstanceName().startsWith("int")) {
                         publicIp.setServer(server);
                     }
                 }
