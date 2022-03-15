@@ -4,10 +4,12 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.ServerImage;
+import java.util.Map;
+import org.meveo.model.customEntities.ServerVolume;
+import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
 import java.util.ArrayList;
-import org.meveo.model.customEntities.ServerVolume;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -25,6 +27,8 @@ public class Server implements CustomEntity {
     private DBStorageType storages;
 
     private ServerImage image;
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
     private String sergentUrl;
 
@@ -75,6 +79,14 @@ public class Server implements CustomEntity {
 
     public void setImage(ServerImage image) {
         this.image = image;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
     }
 
     public String getSergentUrl() {
