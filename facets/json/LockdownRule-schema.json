@@ -23,6 +23,17 @@
                 "maxLength": 50
             }
         },
+        "lastUpdated": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last Updated",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_lastUpdated",
+            "title": "LockdownRule.lastUpdated",
+            "type": "string"
+        },
         "providerSideId": {
             "storages": ["SQL"],
             "nullable": true,
