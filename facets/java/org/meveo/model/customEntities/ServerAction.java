@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServiceProvider;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,11 +22,17 @@ public class ServerAction implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String providerSideId;
+
     private Server server;
+
+    private ServiceProvider provider;
 
     private String response;
 
     private String action;
+
+    private Long progress;
 
     private Instant creationDate;
 
@@ -50,12 +57,28 @@ public class ServerAction implements CustomEntity {
         this.storages = storages;
     }
 
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
+    }
+
     public Server getServer() {
         return server;
     }
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public ServiceProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(ServiceProvider provider) {
+        this.provider = provider;
     }
 
     public String getResponse() {
@@ -72,6 +95,14 @@ public class ServerAction implements CustomEntity {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Long getProgress() {
+        return progress;
+    }
+
+    public void setProgress(Long progress) {
+        this.progress = progress;
     }
 
     public Instant getCreationDate() {

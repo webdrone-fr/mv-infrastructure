@@ -3,9 +3,14 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.ServerImage;
+import java.util.Map;
+import org.meveo.model.customEntities.ServerVolume;
+import java.util.HashMap;
+import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
-import java.util.ArrayList;
 import org.meveo.model.customEntities.ServiceProvider;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -22,19 +27,23 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String image;
+    private ServerImage image;
+
+    private String providerSideId;
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
     private String instanceName;
 
-    private String keyName;
-
     private String sergentUrl;
+
+    private String locationDefinition;
 
     private String publicIp;
 
-    private Instant creationDate;
+    private SecurityGroup securityGroup;
 
-    private List<String> networks = new ArrayList<>();
+    private Instant creationDate;
 
     private String volumeSize;
 
@@ -50,11 +59,13 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
-    private String name;
+    private List<String> serverActions = new ArrayList<>();
 
-    private String flavorRef;
+    private ServerVolume rootVolume;
 
-    private String imageRef;
+    private String location;
+
+    private String backupName;
 
     private String status;
 
@@ -75,12 +86,28 @@ public class Server implements CustomEntity {
         this.storages = storages;
     }
 
-    public String getImage() {
+    public ServerImage getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(ServerImage image) {
         this.image = image;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
     }
 
     public String getInstanceName() {
@@ -91,20 +118,20 @@ public class Server implements CustomEntity {
         this.instanceName = instanceName;
     }
 
-    public String getKeyName() {
-        return keyName;
-    }
-
-    public void setKeyName(String keyName) {
-        this.keyName = keyName;
-    }
-
     public String getSergentUrl() {
         return sergentUrl;
     }
 
     public void setSergentUrl(String sergentUrl) {
         this.sergentUrl = sergentUrl;
+    }
+
+    public String getLocationDefinition() {
+        return locationDefinition;
+    }
+
+    public void setLocationDefinition(String locationDefinition) {
+        this.locationDefinition = locationDefinition;
     }
 
     public String getPublicIp() {
@@ -115,20 +142,20 @@ public class Server implements CustomEntity {
         this.publicIp = publicIp;
     }
 
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
+    }
+
     public Instant getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public List<String> getNetworks() {
-        return networks;
-    }
-
-    public void setNetworks(List<String> networks) {
-        this.networks = networks;
     }
 
     public String getVolumeSize() {
@@ -187,28 +214,36 @@ public class Server implements CustomEntity {
         this.serverType = serverType;
     }
 
-    public String getName() {
-        return name;
+    public List<String> getServerActions() {
+        return serverActions;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setServerActions(List<String> serverActions) {
+        this.serverActions = serverActions;
     }
 
-    public String getFlavorRef() {
-        return flavorRef;
+    public ServerVolume getRootVolume() {
+        return rootVolume;
     }
 
-    public void setFlavorRef(String flavorRef) {
-        this.flavorRef = flavorRef;
+    public void setRootVolume(ServerVolume rootVolume) {
+        this.rootVolume = rootVolume;
     }
 
-    public String getImageRef() {
-        return imageRef;
+    public String getLocation() {
+        return location;
     }
 
-    public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getBackupName() {
+        return backupName;
+    }
+
+    public void setBackupName(String backupName) {
+        this.backupName = backupName;
     }
 
     public String getStatus() {

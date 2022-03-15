@@ -1,0 +1,30 @@
+{
+  "code" : "volumeType",
+  "description" : "Volume Type",
+  "fieldType" : "LIST",
+  "accountLevel" : "CE_ServerVolume",
+  "appliesTo" : "CE_ServerVolume",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "SINGLE",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "b_ssd" : "block",
+    "l_ssd" : "local"
+  },
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Server Volume:0;field:10",
+  "identifier" : false,
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : false,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false
+}

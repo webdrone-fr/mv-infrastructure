@@ -1,7 +1,7 @@
 {
   "code" : "response",
   "description" : "Response",
-  "fieldType" : "LONG_TEXT",
+  "fieldType" : "LIST",
   "accountLevel" : "CE_ServerAction",
   "appliesTo" : "CE_ServerAction",
   "useInheritedAsDefaultValue" : false,
@@ -9,18 +9,25 @@
   "valueRequired" : false,
   "versionable" : false,
   "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "failure" : "failure",
+    "pending" : "pending",
+    "retry" : "retry",
+    "started" : "started",
+    "success" : "success"
+  },
   "allowEdit" : true,
   "hideOnNew" : false,
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:Action on server:0;field:4",
+  "guiPosition" : "tab:Action on server:0;field:8",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],
-  "summary" : false,
+  "summary" : true,
   "audited" : false,
   "persisted" : true,
-  "filter" : false,
+  "filter" : true,
   "unique" : false
 }

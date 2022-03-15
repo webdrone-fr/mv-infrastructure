@@ -1,0 +1,33 @@
+{
+  "code" : "protocol",
+  "description" : "Protocol",
+  "fieldType" : "LIST",
+  "accountLevel" : "CE_SecurityRule",
+  "appliesTo" : "CE_SecurityRule",
+  "defaultValue" : "TCP",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "SINGLE",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "ANY" : "ANY",
+    "ICMP" : "ICMP",
+    "TCP" : "TCP",
+    "UDP" : "UDP"
+  },
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Security Rule:0;field:1",
+  "identifier" : false,
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : true,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false
+}

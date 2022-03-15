@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.meveo</groupId>
-  <artifactId>Infrastructure</artifactId>
+  <artifactId>infrastructure</artifactId>
   <version>1.31</version>
   <properties>
     <maven.compiler.target>11</maven.compiler.target>
@@ -48,6 +48,12 @@
       <version>7.0.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.meveo</groupId>
+      <artifactId>mv-credentials</artifactId>
+      <version>1.2.5</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>
@@ -56,7 +62,7 @@
     </repository>
     <repository>
       <id>meveo-repo</id>
-      <url>http://localhost:8080/meveo/maven</url>
+      <url>https://dev-meveo.webdrone.fr/meveo/maven</url>
     </repository>
     <repository>
       <snapshots>

@@ -1,0 +1,1 @@
+{"code":"createScalewayVolume","description":"Create Scaleway Volume","appliesTo":"CE_ServerVolume","applicableOnEl":"${entity.getCfValuesAsValues().get(\"providerSideId\") eq null}","label":"Create Scaleway Volume","script":"org.meveo.scaleway.CreateScalewayVolume","applicableToEntityList":false,"applicableToEntityInstance":true,"scriptParameters":{}}

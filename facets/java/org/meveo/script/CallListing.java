@@ -13,8 +13,7 @@ import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ServiceProvider;
 import java.util.List;
 import org.meveo.model.persistence.CEIUtils;
-import org.meveo.script.openstack.ListOVHServersScript;
-import org.meveo.script.ListScalewayServersScript;
+import org.meveo.openstack.ListOVHServersScript;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import org.meveo.credentials.CredentialHelperService;
@@ -30,8 +29,6 @@ public class CallListing extends Script {
     private Repository defaultRepo = repositoryService.findDefaultRepository();
   
     private ListOVHServersScript listOVHServerScript = new ListOVHServersScript();
-  
-    private ListScalewayServersScript listScalewayServersScript = new ListScalewayServersScript();
       
     private ServiceProvider getProvider(String code) {
 		return crossStorageApi.find(defaultRepo, ServiceProvider.class).by("code", code).getResult();
@@ -53,7 +50,7 @@ public class CallListing extends Script {
             listOVHServerScript.callOVH(credential, serviceProvider);
             break;
           case "api.scaleway.com":
-            listScalewayServersScript.listScaleway(credential, serviceProvider);
+            //listScalewayServer
             break;
           case "api.gandi.net/v5/":
             //listGandiServer

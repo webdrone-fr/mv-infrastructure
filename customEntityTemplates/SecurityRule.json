@@ -1,0 +1,12 @@
+{
+  "code" : "SecurityRule",
+  "name" : "Security Rule",
+  "description" : "Security Group rule",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

@@ -1,0 +1,12 @@
+{
+  "code" : "LockdownRule",
+  "name" : "Lockdown Rule",
+  "description" : "Cloudflare Lockdown Rule",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

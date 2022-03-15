@@ -1,6 +1,6 @@
 {
   "code" : "name",
-  "description" : "name",
+  "description" : "Name",
   "fieldType" : "STRING",
   "accountLevel" : "CE_DnsRecord",
   "appliesTo" : "CE_DnsRecord",
@@ -15,7 +15,7 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:DNS record:0;field:3",
+  "guiPosition" : "tab:DNS record:0;field:4",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],

@@ -1,0 +1,12 @@
+{
+  "code" : "ServerUserData",
+  "name" : "Server User Data",
+  "description" : "Unauthenticated data store for server",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

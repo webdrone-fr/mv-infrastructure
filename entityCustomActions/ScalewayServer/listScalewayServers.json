@@ -1,0 +1,1 @@
+{"code":"listScalewayServers","description":"List Scaleway Servers","appliesTo":"CE_ScalewayServer","label":"List Scaleway Servers","script":"org.meveo.scaleway.ListScalewayServers","guiPosition":"action:3","applicableToEntityList":true,"applicableToEntityInstance":false,"scriptParameters":{}}

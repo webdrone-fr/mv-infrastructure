@@ -21,13 +21,25 @@ public class DnsRecord implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String providerSideId;
+
     private String recordType;
 
     private DomainName domainName;
 
+    private Boolean isLocked;
+
     private String name;
 
     private Instant lastSyncDate;
+
+    private Boolean proxied;
+
+    private Instant creationDate;
+
+    private Long priority;
+
+    private Boolean proxiable;
 
     private Long ttl;
 
@@ -50,6 +62,14 @@ public class DnsRecord implements CustomEntity {
         this.storages = storages;
     }
 
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
+    }
+
     public String getRecordType() {
         return recordType;
     }
@@ -66,6 +86,14 @@ public class DnsRecord implements CustomEntity {
         this.domainName = domainName;
     }
 
+    public Boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
+    }
+
     public String getName() {
         return name;
     }
@@ -80,6 +108,38 @@ public class DnsRecord implements CustomEntity {
 
     public void setLastSyncDate(Instant lastSyncDate) {
         this.lastSyncDate = lastSyncDate;
+    }
+
+    public Boolean getProxied() {
+        return proxied;
+    }
+
+    public void setProxied(Boolean proxied) {
+        this.proxied = proxied;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Long priority) {
+        this.priority = priority;
+    }
+
+    public Boolean getProxiable() {
+        return proxiable;
+    }
+
+    public void setProxiable(Boolean proxiable) {
+        this.proxiable = proxiable;
     }
 
     public Long getTtl() {

@@ -1,0 +1,1 @@
+{"code":"updateScalewayVolume","description":"Update Scaleway Volume","appliesTo":"CE_ServerVolume","applicableOnEl":"${entity.getCfValuesAsValues().get(\"providerSideId\") ne null}","label":"Update Scaleway Volume","script":"org.meveo.scaleway.UpdateScalewayVolume","applicableToEntityList":false,"applicableToEntityInstance":true,"scriptParameters":{}}

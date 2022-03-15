@@ -1,0 +1,1 @@
+{"code":"backupServer","description":"Send Backup Command to Server","appliesTo":"CE_ScalewayServer","applicableOnEl":"${entity.getCfValuesAsValues().get(\"serverActions\").contains(\"backup\")}","label":"Backup Server","script":"org.meveo.scaleway.PerformActionOnScalewayServer","applicableToEntityList":false,"applicableToEntityInstance":true,"scriptParameters":{}}

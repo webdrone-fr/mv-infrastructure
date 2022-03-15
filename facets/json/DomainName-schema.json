@@ -6,16 +6,15 @@
     "title": "Domain name",
     "type": "object",
     "properties": {
-        "normedName": {
+        "registrar": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Normalized name (ASCII)",
+            "description": "Registrar",
             "readOnly": false,
             "versionable": false,
-            "id": "CE_DomainName_normedName",
-            "title": "DomainName.normedName",
-            "type": "string",
-            "maxLength": 255
+            "id": "CE_DomainName_registrar",
+            "title": "DomainName.registrar",
+            "$ref": "#/definitions/ServiceProvider"
         },
         "registrationEndDate": {
             "storages": ["SQL"],
@@ -60,28 +59,6 @@
             "id": "CE_DomainName_registrationDate",
             "title": "DomainName.registrationDate",
             "type": "string"
-        },
-        "autoRenew": {
-            "storages": ["SQL"],
-            "default": "false",
-            "nullable": true,
-            "description": "Auto renew",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_DomainName_autoRenew",
-            "title": "DomainName.autoRenew",
-            "type": "string"
-        },
-        "registar": {
-            "storages": ["SQL"],
-            "default": "GANDI",
-            "nullable": true,
-            "description": "Registar",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_DomainName_registar",
-            "title": "DomainName.registar",
-            "enum": ["GANDI"]
         },
         "creationDate": {
             "storages": ["SQL"],

@@ -1,0 +1,12 @@
+{
+  "code" : "ServerImage",
+  "name" : "Server Image",
+  "description" : "Image is a complete backup of server including all volumes",
+  "customEntityCategoryCode" : "INFRA",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}

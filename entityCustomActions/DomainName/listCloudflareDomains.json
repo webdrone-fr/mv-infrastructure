@@ -1,0 +1,1 @@
+{"code":"listCloudflareDomains","description":"List Cloudflare Domains","appliesTo":"CE_DomainName","label":"List Cloudflare Domains","script":"org.meveo.cloudflare.ListCloudflareDomains","applicableToEntityList":true,"applicableToEntityInstance":false,"scriptParameters":{}}

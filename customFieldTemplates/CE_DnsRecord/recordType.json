@@ -19,7 +19,7 @@
   "contentTypes" : [ ],
   "fileExtensions" : [ ],
   "saveOnExplorer" : false,
-  "guiPosition" : "tab:DNS record:0;field:1",
+  "guiPosition" : "tab:DNS record:0;field:2",
   "identifier" : false,
   "storages" : [ "SQL" ],
   "samples" : [ ],

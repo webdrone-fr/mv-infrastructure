@@ -1,0 +1,1 @@
+{"code":"listScalewayServerImages","description":"List Scaleway Server Images","appliesTo":"CE_ServerImage","label":"List Scaleway Server Images","script":"org.meveo.scaleway.ListScalewayImages","applicableToEntityList":true,"applicableToEntityInstance":false,"scriptParameters":{}}

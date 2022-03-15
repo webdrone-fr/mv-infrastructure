@@ -6,6 +6,17 @@
     "title": "Action on server",
     "type": "object",
     "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_providerSideId",
+            "title": "ServerAction.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "server": {
             "storages": ["SQL"],
             "nullable": true,
@@ -16,6 +27,16 @@
             "title": "ServerAction.server",
             "$ref": "#/definitions/Server"
         },
+        "provider": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_provider",
+            "title": "ServerAction.provider",
+            "$ref": "#/definitions/ServiceProvider"
+        },
         "response": {
             "storages": ["SQL"],
             "nullable": true,
@@ -24,18 +45,41 @@
             "versionable": false,
             "id": "CE_ServerAction_response",
             "title": "ServerAction.response",
-            "type": "string"
+            "enum": [
+                "failure",
+                "success",
+                "pending",
+                "started",
+                "retry"
+            ]
         },
         "action": {
             "storages": ["SQL"],
+            "default": "poweron",
             "nullable": true,
-            "description": "Action",
+            "description": "Action on Server",
             "readOnly": false,
             "versionable": false,
             "id": "CE_ServerAction_action",
             "title": "ServerAction.action",
-            "type": "string",
-            "maxLength": 255
+            "enum": [
+                "reboot",
+                "backup",
+                "poweron",
+                "poweroff",
+                "stop_in_place",
+                "terminate"
+            ]
+        },
+        "progress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Progress",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_progress",
+            "title": "ServerAction.progress",
+            "type": "integer"
         },
         "creationDate": {
             "storages": ["SQL"],
@@ -56,11 +100,8 @@
             "versionable": false,
             "id": "CE_ServerAction_responseStatus",
             "title": "ServerAction.responseStatus",
-            "enum": [
-                "ERROR",
-                "TIMEOUT",
-                "OK"
-            ]
+            "type": "string",
+            "maxLength": 255
         },
         "elapsedTimeMs": {
             "storages": ["SQL"],
