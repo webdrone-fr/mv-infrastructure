@@ -65,6 +65,17 @@
             "title": "Server.securityGroup",
             "$ref": "#/definitions/SecurityGroup"
         },
+        "backupName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name of Backup",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_backupName",
+            "title": "Server.backupName",
+            "type": "string",
+            "maxLength": 255
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
