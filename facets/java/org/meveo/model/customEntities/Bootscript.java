@@ -25,6 +25,8 @@ public class Bootscript implements CustomEntity {
 
     private String bootcmdargs;
 
+    private String zone;
+
     private String kernel;
 
     private String organization;
@@ -74,6 +76,14 @@ public class Bootscript implements CustomEntity {
 
     public void setBootcmdargs(String bootcmdargs) {
         this.bootcmdargs = bootcmdargs;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public String getKernel() {
