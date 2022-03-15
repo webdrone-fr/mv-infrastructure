@@ -27,6 +27,8 @@ public class ServerImage implements CustomEntity {
 
     private String fromServer;
 
+    private String providerSideId;
+
     private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
     private String project;
@@ -74,6 +76,14 @@ public class ServerImage implements CustomEntity {
 
     public void setFromServer(String fromServer) {
         this.fromServer = fromServer;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
     }
 
     public Map<String, ServerVolume> getAdditionalVolumes() {
