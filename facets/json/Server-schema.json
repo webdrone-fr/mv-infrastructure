@@ -26,6 +26,23 @@
             "id": "CE_Server_rootVolume",
             "title": "Server.rootVolume",
             "$ref": "#/definitions/ServerVolume"
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_status",
+            "title": "Server.status",
+            "enum": [
+                "running",
+                "stopped",
+                "stopping",
+                "locked",
+                "starting",
+                "stopped in place"
+            ]
         }
     }
 }
