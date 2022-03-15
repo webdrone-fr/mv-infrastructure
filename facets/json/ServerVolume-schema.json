@@ -48,6 +48,17 @@
                 "fetching",
                 "error"
             ]
+        },
+        "isBoot": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Is used for server boot",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_isBoot",
+            "title": "ServerVolume.isBoot",
+            "type": "string"
         }
     }
 }
