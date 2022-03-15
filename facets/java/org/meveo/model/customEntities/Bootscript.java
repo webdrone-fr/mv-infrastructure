@@ -19,6 +19,8 @@ public class Bootscript implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean isDefault;
+
     private String dtb;
 
     private String bootcmdargs;
@@ -44,6 +46,14 @@ public class Bootscript implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
 
     public String getDtb() {
