@@ -23,6 +23,8 @@ public class ServerVolume implements CustomEntity {
 
     private String volumeType;
 
+    private String state;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -54,6 +56,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setVolumeType(String volumeType) {
         this.volumeType = volumeType;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override()
