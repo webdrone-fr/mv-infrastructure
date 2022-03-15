@@ -33,7 +33,6 @@ public class ListScalewayServerUserData extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        String action = parameters.get(CONTEXT_ACTION).toString();
         Server server = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), Server.class);
 
         String zone = server.getZone();
@@ -43,7 +42,7 @@ public class ListScalewayServerUserData extends Script {
         if (credential == null) {
             throw new BusinessException("No credential found for "+SCALEWAY_URL);
         } else {
-            logger.info("using credential {} with username {}", credential.getDomainName(), credential.getUsername());
+            logger.info("using credential {}({}) with username {}", credential.getDomainName(), credential.getUuid(), credential.getUsername());
         }
         
         Client client = ClientBuilder.newClient();
