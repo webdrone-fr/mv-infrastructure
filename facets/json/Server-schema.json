@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "Server",
     "title": "Server",
-    "type": "object"
+    "type": "object",
+    "properties": {"organization": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Organization",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_Server_organization",
+        "title": "Server.organization",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
