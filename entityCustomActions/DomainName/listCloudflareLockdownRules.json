@@ -1,1 +1,1 @@
-{"code":"listCloudflareLockdownRules","description":"List Cloudflare Lockdown Rules","appliesTo":"CE_DomainName","label":"List Cloudflare Lockdown Rules","script":"org.meveo.cloudflare.ListCloudflareLockdownRules","applicableToEntityList":false,"applicableToEntityInstance":true}
+{"code":"listCloudflareLockdownRules","description":"List Cloudflare Lockdown Rules","appliesTo":"CE_DomainName","label":"List Cloudflare Lockdown Rules","script":"org.meveo.cloudflare.ListCloudflareLockdownRules","applicableToEntityList":false,"applicableToEntityInstance":true,"scriptParameters":{}}
