@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.SecurityGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SecurityRule implements CustomEntity {
@@ -20,6 +21,8 @@ public class SecurityRule implements CustomEntity {
     private DBStorageType storages;
 
     private String ipRange;
+
+    private SecurityGroup securityGroup;
 
     @Override()
     public String getUuid() {
@@ -44,6 +47,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setIpRange(String ipRange) {
         this.ipRange = ipRange;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
     }
 
     @Override()
