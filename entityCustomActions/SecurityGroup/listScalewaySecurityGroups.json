@@ -1,1 +1,1 @@
-{"code":"listScalewaySecurityGroups","description":"List Scaleway Security Groups","appliesTo":"CE_SecurityGroup","label":"List Scaleway Security Groups","script":"org.meveo.scaleway.ListScalewaySecurityGroups","applicableToEntityList":true,"applicableToEntityInstance":false}
+{"code":"listScalewaySecurityGroups","description":"List Scaleway Security Groups","appliesTo":"CE_SecurityGroup","label":"List Scaleway Security Groups","script":"org.meveo.scaleway.ListScalewaySecurityGroups","applicableToEntityList":true,"applicableToEntityInstance":false,"scriptParameters":{}}
