@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.DomainName;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DnsRecord implements CustomEntity {
@@ -25,6 +26,8 @@ public class DnsRecord implements CustomEntity {
     private String name;
 
     private Boolean proxied;
+
+    private Instant creationDate;
 
     private String value;
 
@@ -67,6 +70,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setProxied(Boolean proxied) {
         this.proxied = proxied;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getValue() {
