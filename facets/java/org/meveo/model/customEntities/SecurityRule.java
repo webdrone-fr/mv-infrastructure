@@ -20,6 +20,8 @@ public class SecurityRule implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Long destPortFrom;
+
     private String zone;
 
     private Boolean editable;
@@ -45,6 +47,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Long getDestPortFrom() {
+        return destPortFrom;
+    }
+
+    public void setDestPortFrom(Long destPortFrom) {
+        this.destPortFrom = destPortFrom;
     }
 
     public String getZone() {
