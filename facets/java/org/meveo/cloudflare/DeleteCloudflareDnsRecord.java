@@ -33,6 +33,10 @@ public class DeleteCloudflareDnsRecord extends Script {
         String action = parameters.get(CONTEXT_ACTION).toString();
         DnsRecord record = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), DnsRecord.class);
 
+        if (record.getProviderSideId()==null) { // Required
+            throw new BusinessException("Invalid Record Provider-side ID");
+        }
+
         DomainName domainName = record.getDomainName();
         String domainNameId = domainName.getUuid();
         logger.info("action : {}, domain name uuid : {}", action, domainNameId);
@@ -53,12 +57,11 @@ public class DeleteCloudflareDnsRecord extends Script {
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         
         if (response.getStatus()<300) {
-            record.setLastSyncDate(Instant.now());
-            logger.info("record {} deleted at: {}", record.getUuid(), record.getLastSyncDate());
+            logger.info("record : {} deleted at: {}", record.getUuid(), Instant.now());
             try {
                 crossStorageApi.remove(defaultRepo, record.getUuid(), record.getCetCode());
             } catch (Exception e) {
-                logger.error("error deleting record {} :{}", record.getUuid(), e.getMessage());
+                logger.error("error deleting record : {}", record.getUuid(), e.getMessage());
             }
         }
     }
