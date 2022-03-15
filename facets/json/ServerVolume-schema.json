@@ -76,6 +76,17 @@
                 "error"
             ]
         },
+        "baseVolume": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Base Volume",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_baseVolume",
+            "title": "ServerVolume.baseVolume",
+            "type": "string",
+            "maxLength": 50
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
