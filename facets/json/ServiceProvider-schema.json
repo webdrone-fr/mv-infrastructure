@@ -60,6 +60,17 @@
             "title": "ServiceProvider.organization",
             "type": "object"
         },
+        "description": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Description",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_description",
+            "title": "ServiceProvider.description",
+            "type": "string",
+            "maxLength": 255
+        },
         "publicIp": {
             "storages": ["SQL"],
             "nullable": true,
