@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.ServerVolume;
+import java.time.Instant;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +40,8 @@ public class ServerImage implements CustomEntity {
     private ServerVolume rootVolume;
 
     private String state;
+
+    private Instant creationDate;
 
     private List<String> tags = new ArrayList<>();
 
@@ -129,6 +132,14 @@ public class ServerImage implements CustomEntity {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public List<String> getTags() {
