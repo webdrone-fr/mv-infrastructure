@@ -55,6 +55,16 @@
             "title": "Server.rootVolume",
             "$ref": "#/definitions/ServerVolume"
         },
+        "securityGroup": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Security Group",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_securityGroup",
+            "title": "Server.securityGroup",
+            "$ref": "#/definitions/SecurityGroup"
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
