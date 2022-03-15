@@ -3,8 +3,10 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.model.customEntities.Bootscript;
+import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
+import java.util.HashMap;
+import org.meveo.model.customEntities.Bootscript;
 import java.time.Instant;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,6 +26,8 @@ public class ServerImage implements CustomEntity {
     private DBStorageType storages;
 
     private String fromServer;
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
     private String zone;
 
@@ -68,6 +72,14 @@ public class ServerImage implements CustomEntity {
 
     public void setFromServer(String fromServer) {
         this.fromServer = fromServer;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
     }
 
     public String getZone() {
