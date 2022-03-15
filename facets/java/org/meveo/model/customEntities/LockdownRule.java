@@ -28,6 +28,8 @@ public class LockdownRule implements CustomEntity {
 
     private DomainName domainName;
 
+    private String description;
+
     private Instant creationDate;
 
     private List<String> ips = new ArrayList<>();
@@ -71,6 +73,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setDomainName(DomainName domainName) {
         this.domainName = domainName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Instant getCreationDate() {
