@@ -31,6 +31,17 @@
             "title": "Server.additionalVolumes",
             "type": "object"
         },
+        "instanceName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Instance name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_instanceName",
+            "title": "Server.instanceName",
+            "type": "string",
+            "maxLength": 255
+        },
         "sergentUrl": {
             "storages": ["SQL"],
             "nullable": true,
