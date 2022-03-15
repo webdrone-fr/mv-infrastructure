@@ -92,6 +92,17 @@
             "title": "Server.rootVolume",
             "$ref": "#/definitions/ServerVolume"
         },
+        "publicIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Public IP",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_publicIp",
+            "title": "Server.publicIp",
+            "type": "string",
+            "maxLength": 16
+        },
         "securityGroup": {
             "storages": ["SQL"],
             "nullable": true,
