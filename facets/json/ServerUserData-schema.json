@@ -38,6 +38,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "contentType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Content Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerUserData_contentType",
+            "title": "ServerUserData.contentType",
+            "type": "string",
+            "maxLength": 255
+        },
         "content": {
             "storages": ["SQL"],
             "nullable": true,
