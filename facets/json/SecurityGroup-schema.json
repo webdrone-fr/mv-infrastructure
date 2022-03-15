@@ -84,6 +84,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "description": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Description",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_description",
+            "title": "SecurityGroup.description",
+            "type": "string"
+        },
         "project": {
             "storages": ["SQL"],
             "nullable": true,
