@@ -23,6 +23,17 @@
                 "maxLength": 50
             }
         },
+        "paused": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Paused",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_paused",
+            "title": "LockdownRule.paused",
+            "type": "string"
+        },
         "urls": {
             "storages": ["SQL"],
             "nullable": true,
