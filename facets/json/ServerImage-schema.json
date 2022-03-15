@@ -32,6 +32,45 @@
             "title": "ServerImage.additionalVolumes",
             "type": "object"
         },
+        "project": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Project ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_project",
+            "title": "ServerImage.project",
+            "type": "string",
+            "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_creationDate",
+            "title": "ServerImage.creationDate",
+            "type": "string"
+        },
+        "tags": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Tags",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_tags",
+            "title": "ServerImage.tags",
+            "type": "array",
+            "items": {
+                "id": "CE_ServerImage_tags_item",
+                "title": "ServerImage.tags item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
@@ -86,17 +125,6 @@
             "title": "ServerImage.isPublic",
             "type": "string"
         },
-        "project": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Project ID",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_ServerImage_project",
-            "title": "ServerImage.project",
-            "type": "string",
-            "maxLength": 255
-        },
         "rootVolume": {
             "storages": ["SQL"],
             "nullable": true,
@@ -106,6 +134,19 @@
             "id": "CE_ServerImage_rootVolume",
             "title": "ServerImage.rootVolume",
             "$ref": "#/definitions/ServerVolume"
+        },
+        "arch": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Arch",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_arch",
+            "title": "ServerImage.arch",
+            "enum": [
+                "x86_64",
+                "arm"
+            ]
         },
         "state": {
             "storages": ["SQL"],
@@ -121,34 +162,6 @@
                 "creating",
                 "error"
             ]
-        },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Creation Date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_ServerImage_creationDate",
-            "title": "ServerImage.creationDate",
-            "type": "string"
-        },
-        "tags": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "Tags",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_ServerImage_tags",
-            "title": "ServerImage.tags",
-            "type": "array",
-            "items": {
-                "id": "CE_ServerImage_tags_item",
-                "title": "ServerImage.tags item",
-                "type": "string",
-                "maxLength": 255
-            }
         }
     }
 }
