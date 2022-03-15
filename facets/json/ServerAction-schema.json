@@ -60,6 +60,16 @@
                 "terminate"
             ]
         },
+        "progress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Progress",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_progress",
+            "title": "ServerAction.progress",
+            "type": "integer"
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
