@@ -31,6 +31,16 @@
             "title": "ApplicationInstance.isStartServiceSource",
             "type": "string"
         },
+        "port": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "port",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_port",
+            "title": "ApplicationInstance.port",
+            "type": "integer"
+        },
         "repoName": {
             "storages": ["SQL"],
             "nullable": true,
