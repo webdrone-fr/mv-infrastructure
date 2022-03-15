@@ -32,6 +32,8 @@ public class PublicIp implements CustomEntity {
 
     private String project;
 
+    private String location;
+
     private String reverse;
 
     private List<String> tags = new ArrayList<>();
@@ -91,6 +93,14 @@ public class PublicIp implements CustomEntity {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getReverse() {
