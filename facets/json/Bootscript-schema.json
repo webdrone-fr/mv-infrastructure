@@ -5,15 +5,28 @@
     "id": "Bootscript",
     "title": "Bootscript",
     "type": "object",
-    "properties": {"dtb": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Device Binary Tree (C1 Servers)",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_Bootscript_dtb",
-        "title": "Bootscript.dtb",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "dtb": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Device Binary Tree (C1 Servers)",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_dtb",
+            "title": "Bootscript.dtb",
+            "type": "string",
+            "maxLength": 255
+        },
+        "organization": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Organization ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_organization",
+            "title": "Bootscript.organization",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
