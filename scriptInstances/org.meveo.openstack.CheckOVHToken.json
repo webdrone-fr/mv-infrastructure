@@ -1,6 +1,6 @@
 {
   "code" : "org.meveo.openstack.CheckOVHToken",
-  "description" : "Check OVH provider token",
+  "description" : "Check OVH provider token to make call to openstack api",
   "inputs" : [ ],
   "outputs" : [ ],
   "generateOutputs" : false,
