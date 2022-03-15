@@ -61,7 +61,7 @@ public class ListScalewayServers extends Script {
                     ScalewayServer server = null;
                     String name = serverObj.get("name").getAsString(); // used for check
                     String serverId = serverObj.get("id").getAsString();
-                    if (name.startsWith("dev-") || name.startsWith("int")) { // check for case for intégration servers
+                    if (name.startsWith("dev-")) {
                         try {
                             if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
                                 server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
