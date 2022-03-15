@@ -6,6 +6,17 @@
     "title": "Security Group",
     "type": "object",
     "properties": {
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_zone",
+            "title": "SecurityGroup.zone",
+            "type": "string",
+            "maxLength": 255
+        },
         "projectDefault": {
             "storages": ["SQL"],
             "default": "false",
