@@ -29,6 +29,8 @@ public class ServerImage implements CustomEntity {
 
     private ServerVolume rootVolume;
 
+    private String state;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -76,6 +78,14 @@ public class ServerImage implements CustomEntity {
 
     public void setRootVolume(ServerVolume rootVolume) {
         this.rootVolume = rootVolume;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     @Override()
