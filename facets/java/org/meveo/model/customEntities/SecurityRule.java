@@ -24,6 +24,8 @@ public class SecurityRule implements CustomEntity {
 
     private Long destPortTo;
 
+    private String protocol;
+
     private String zone;
 
     private Boolean editable;
@@ -69,6 +71,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setDestPortTo(Long destPortTo) {
         this.destPortTo = destPortTo;
+    }
+
+    public String getProtocol() {
+        return protocol;
+    }
+
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
     public String getZone() {
