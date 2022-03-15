@@ -4,9 +4,10 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.ServerImage;
+import org.meveo.model.customEntities.SecurityGroup;
+import java.time.Instant;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServerVolume;
-import org.meveo.model.customEntities.SecurityGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -25,25 +26,27 @@ public class Server implements CustomEntity {
 
     private ServerImage image;
 
-    private String zone;
-
-    private String domainName;
-
-    private String organization;
-
     private String sergentUrl;
-
-    private List<String> serverActions = new ArrayList<>();
-
-    private ServerVolume rootVolume;
 
     private String publicIp;
 
     private SecurityGroup securityGroup;
 
-    private String backupName;
-
     private String volumeSize;
+
+    private String zone;
+
+    private String domainName;
+
+    private Instant lastUpdate;
+
+    private String organization;
+
+    private List<String> serverActions = new ArrayList<>();
+
+    private ServerVolume rootVolume;
+
+    private String backupName;
 
     private String status;
 
@@ -72,52 +75,12 @@ public class Server implements CustomEntity {
         this.image = image;
     }
 
-    public String getZone() {
-        return zone;
-    }
-
-    public void setZone(String zone) {
-        this.zone = zone;
-    }
-
-    public String getDomainName() {
-        return domainName;
-    }
-
-    public void setDomainName(String domainName) {
-        this.domainName = domainName;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
     public String getSergentUrl() {
         return sergentUrl;
     }
 
     public void setSergentUrl(String sergentUrl) {
         this.sergentUrl = sergentUrl;
-    }
-
-    public List<String> getServerActions() {
-        return serverActions;
-    }
-
-    public void setServerActions(List<String> serverActions) {
-        this.serverActions = serverActions;
-    }
-
-    public ServerVolume getRootVolume() {
-        return rootVolume;
-    }
-
-    public void setRootVolume(ServerVolume rootVolume) {
-        this.rootVolume = rootVolume;
     }
 
     public String getPublicIp() {
@@ -136,20 +99,68 @@ public class Server implements CustomEntity {
         this.securityGroup = securityGroup;
     }
 
-    public String getBackupName() {
-        return backupName;
-    }
-
-    public void setBackupName(String backupName) {
-        this.backupName = backupName;
-    }
-
     public String getVolumeSize() {
         return volumeSize;
     }
 
     public void setVolumeSize(String volumeSize) {
         this.volumeSize = volumeSize;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
+
+    public List<String> getServerActions() {
+        return serverActions;
+    }
+
+    public void setServerActions(List<String> serverActions) {
+        this.serverActions = serverActions;
+    }
+
+    public ServerVolume getRootVolume() {
+        return rootVolume;
+    }
+
+    public void setRootVolume(ServerVolume rootVolume) {
+        this.rootVolume = rootVolume;
+    }
+
+    public String getBackupName() {
+        return backupName;
+    }
+
+    public void setBackupName(String backupName) {
+        this.backupName = backupName;
     }
 
     public String getStatus() {
