@@ -82,7 +82,7 @@ public class CheckScalewayServerActionStatus extends Script{
                     action.setElapsedTimeMs(timeElapsed.toMillis());
                     action.setProgress(taskObj.get("progress").getAsLong());
                     actionComplete = true;
-                    parameters.put(RESULT_GUI_MESSAGE, "Action : "+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
+                    parameters.put(RESULT_GUI_MESSAGE, "Action :"+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
                 } else if (action.getResponse().equalsIgnoreCase("failure")) {
                     throw new BusinessException("Task failed");
                 } else {
@@ -92,7 +92,7 @@ public class CheckScalewayServerActionStatus extends Script{
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, action);
                 } catch (Exception e) {
-                    logger.error("Error with Action Status : {}", action.getResponse(), e.getMessage());
+                    logger.error("Error with Action Status : {}", e.getMessage());
                 }
             }
             response.close();
