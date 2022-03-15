@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class ListScalewaySecurityGroupRules extends Script{
 
 
-    private static final Logger logger = LoggerFactory.getLogger(ListScalewaySecurityGroupRules.class);
+        private static final Logger logger = LoggerFactory.getLogger(ListScalewaySecurityGroupRules.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
