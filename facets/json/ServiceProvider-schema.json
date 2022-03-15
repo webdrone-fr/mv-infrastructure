@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 1000
         },
+        "code": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Code",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_code",
+            "title": "ServiceProvider.code",
+            "type": "string",
+            "maxLength": 50
+        },
         "organization": {
             "storages": ["SQL"],
             "patternProperties": {"^.*$": {
