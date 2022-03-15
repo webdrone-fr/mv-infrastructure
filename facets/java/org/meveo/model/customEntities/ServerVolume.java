@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerVolume implements CustomEntity {
@@ -28,6 +29,8 @@ public class ServerVolume implements CustomEntity {
     private String name;
 
     private String state;
+
+    private Instant creationDate;
 
     private Boolean isBoot;
 
@@ -86,6 +89,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Boolean getIsBoot() {
