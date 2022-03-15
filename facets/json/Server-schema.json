@@ -113,6 +113,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "volumeSize": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total volume size",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_volumeSize",
+            "title": "Server.volumeSize",
+            "type": "string",
+            "maxLength": 20
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
