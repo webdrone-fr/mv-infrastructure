@@ -19,6 +19,8 @@ public class DomainName implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String name;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class DomainName implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override()
