@@ -19,6 +19,8 @@ public class ApplicationInstance implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String repoName;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getRepoName() {
+        return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 
     @Override()
