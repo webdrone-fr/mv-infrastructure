@@ -1,0 +1,8 @@
+{
+    "storages": ["SQL"],
+    "default": "Public IP",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "PublicIp",
+    "title": "Public Ip",
+    "type": "object"
+}
