@@ -61,6 +61,8 @@ public class Server implements CustomEntity {
 
     private ServerVolume rootVolume;
 
+    private String location;
+
     private String backupName;
 
     private String status;
@@ -216,6 +218,14 @@ public class Server implements CustomEntity {
 
     public void setRootVolume(ServerVolume rootVolume) {
         this.rootVolume = rootVolume;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getBackupName() {
