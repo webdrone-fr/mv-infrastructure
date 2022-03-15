@@ -5,14 +5,34 @@
     "id": "ServerAction",
     "title": "Action on server",
     "type": "object",
-    "properties": {"server": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Server",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServerAction_server",
-        "title": "ServerAction.server",
-        "$ref": "#/definitions/Server"
-    }}
+    "properties": {
+        "server": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_server",
+            "title": "ServerAction.server",
+            "$ref": "#/definitions/Server"
+        },
+        "action": {
+            "storages": ["SQL"],
+            "default": "poweron",
+            "nullable": true,
+            "description": "Action on Server",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_action",
+            "title": "ServerAction.action",
+            "enum": [
+                "reboot",
+                "backup",
+                "poweron",
+                "poweroff",
+                "stop_in_place",
+                "terminate"
+            ]
+        }
+    }
 }
