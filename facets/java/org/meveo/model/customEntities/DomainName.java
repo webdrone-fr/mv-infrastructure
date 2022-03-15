@@ -24,6 +24,8 @@ public class DomainName implements CustomEntity {
 
     private String name;
 
+    private Instant registrationDate;
+
     private Instant creationDate;
 
     @Override()
@@ -57,6 +59,14 @@ public class DomainName implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Instant registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public Instant getCreationDate() {
