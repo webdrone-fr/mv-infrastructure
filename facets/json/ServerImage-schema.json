@@ -107,6 +107,17 @@
                 "error"
             ]
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_creationDate",
+            "title": "ServerImage.creationDate",
+            "type": "string"
+        },
         "tags": {
             "storages": ["SQL"],
             "nullable": true,
