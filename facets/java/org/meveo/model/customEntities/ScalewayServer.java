@@ -3,8 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import org.meveo.model.customEntities.Bootscript;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Server;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,21 +22,11 @@ public class ScalewayServer extends Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Boolean enableIPvSix;
-
-    private String bootType;
-
     private Boolean dynamicIpRequired;
 
     private String privateIp;
 
-    private Bootscript bootscript;
-
     private String project;
-
-    private String placementGroup;
-
-    private String arch;
 
     private String ipVSix;
 
@@ -45,6 +35,18 @@ public class ScalewayServer extends Server implements CustomEntity {
     private List<String> maintenances = new ArrayList<>();
 
     private List<String> privateNics = new ArrayList<>();
+
+    private Boolean enableIPvSix;
+
+    private Boolean isProtected;
+
+    private String bootType;
+
+    private Bootscript bootscript;
+
+    private String placementGroup;
+
+    private String arch;
 
     @Override()
     public String getUuid() {
@@ -63,22 +65,6 @@ public class ScalewayServer extends Server implements CustomEntity {
         this.storages = storages;
     }
 
-    public Boolean getEnableIPvSix() {
-        return enableIPvSix;
-    }
-
-    public void setEnableIPvSix(Boolean enableIPvSix) {
-        this.enableIPvSix = enableIPvSix;
-    }
-
-    public String getBootType() {
-        return bootType;
-    }
-
-    public void setBootType(String bootType) {
-        this.bootType = bootType;
-    }
-
     public Boolean getDynamicIpRequired() {
         return dynamicIpRequired;
     }
@@ -95,36 +81,12 @@ public class ScalewayServer extends Server implements CustomEntity {
         this.privateIp = privateIp;
     }
 
-    public Bootscript getBootscript() {
-        return bootscript;
-    }
-
-    public void setBootscript(Bootscript bootscript) {
-        this.bootscript = bootscript;
-    }
-
     public String getProject() {
         return project;
     }
 
     public void setProject(String project) {
         this.project = project;
-    }
-
-    public String getPlacementGroup() {
-        return placementGroup;
-    }
-
-    public void setPlacementGroup(String placementGroup) {
-        this.placementGroup = placementGroup;
-    }
-
-    public String getArch() {
-        return arch;
-    }
-
-    public void setArch(String arch) {
-        this.arch = arch;
     }
 
     public String getIpVSix() {
@@ -157,6 +119,54 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPrivateNics(List<String> privateNics) {
         this.privateNics = privateNics;
+    }
+
+    public Boolean getEnableIPvSix() {
+        return enableIPvSix;
+    }
+
+    public void setEnableIPvSix(Boolean enableIPvSix) {
+        this.enableIPvSix = enableIPvSix;
+    }
+
+    public Boolean getIsProtected() {
+        return isProtected;
+    }
+
+    public void setIsProtected(Boolean isProtected) {
+        this.isProtected = isProtected;
+    }
+
+    public String getBootType() {
+        return bootType;
+    }
+
+    public void setBootType(String bootType) {
+        this.bootType = bootType;
+    }
+
+    public Bootscript getBootscript() {
+        return bootscript;
+    }
+
+    public void setBootscript(Bootscript bootscript) {
+        this.bootscript = bootscript;
+    }
+
+    public String getPlacementGroup() {
+        return placementGroup;
+    }
+
+    public void setPlacementGroup(String placementGroup) {
+        this.placementGroup = placementGroup;
+    }
+
+    public String getArch() {
+        return arch;
+    }
+
+    public void setArch(String arch) {
+        this.arch = arch;
     }
 
     @Override()
