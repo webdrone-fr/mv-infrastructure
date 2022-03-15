@@ -85,6 +85,16 @@
             "type": "string",
             "maxLength": 20
         },
+        "provider": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_provider",
+            "title": "Server.provider",
+            "$ref": "#/definitions/ServiceProvider"
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
