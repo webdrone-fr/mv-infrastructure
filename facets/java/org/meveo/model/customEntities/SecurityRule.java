@@ -19,6 +19,8 @@ public class SecurityRule implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String ipRange;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getIpRange() {
+        return ipRange;
+    }
+
+    public void setIpRange(String ipRange) {
+        this.ipRange = ipRange;
     }
 
     @Override()
