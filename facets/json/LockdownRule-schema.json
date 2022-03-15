@@ -50,6 +50,16 @@
             "title": "LockdownRule.domainName",
             "$ref": "#/definitions/DomainName"
         },
+        "description": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Description",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_description",
+            "title": "LockdownRule.description",
+            "type": "string"
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
