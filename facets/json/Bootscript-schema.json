@@ -6,6 +6,17 @@
     "title": "Bootscript",
     "type": "object",
     "properties": {
+        "isDefault": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Is Default Bootscript",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_isDefault",
+            "title": "Bootscript.isDefault",
+            "type": "string"
+        },
         "dtb": {
             "storages": ["SQL"],
             "nullable": true,
