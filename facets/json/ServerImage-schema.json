@@ -17,6 +17,21 @@
             "type": "string",
             "maxLength": 255
         },
+        "additionalVolumes": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServerImage_additionalVolumes_item",
+                "title": "ServerImage.additionalVolumes item",
+                "$ref": "#/definitions/ServerVolume"
+            }},
+            "nullable": true,
+            "description": "Additional Volumes",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_additionalVolumes",
+            "title": "ServerImage.additionalVolumes",
+            "type": "object"
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
