@@ -24,6 +24,8 @@ public class ServerUserData implements CustomEntity {
 
     private String zone;
 
+    private String name;
+
     private String content;
 
     private String serverSideKey;
@@ -59,6 +61,14 @@ public class ServerUserData implements CustomEntity {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getContent() {
