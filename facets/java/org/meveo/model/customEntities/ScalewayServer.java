@@ -21,6 +21,8 @@ public class ScalewayServer extends Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean dynamicIpRequired;
+
     private String privateIp;
 
     private String project;
@@ -46,6 +48,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getDynamicIpRequired() {
+        return dynamicIpRequired;
+    }
+
+    public void setDynamicIpRequired(Boolean dynamicIpRequired) {
+        this.dynamicIpRequired = dynamicIpRequired;
     }
 
     public String getPrivateIp() {
