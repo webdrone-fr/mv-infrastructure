@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "DomainName",
     "title": "Domain name",
-    "type": "object"
+    "type": "object",
+    "properties": {"name": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "domain name",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_DomainName_name",
+        "title": "DomainName.name",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
