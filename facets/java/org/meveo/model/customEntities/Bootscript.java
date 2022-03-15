@@ -23,6 +23,8 @@ public class Bootscript implements CustomEntity {
 
     private String organization;
 
+    private String initrd;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -54,6 +56,14 @@ public class Bootscript implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getInitrd() {
+        return initrd;
+    }
+
+    public void setInitrd(String initrd) {
+        this.initrd = initrd;
     }
 
     @Override()
