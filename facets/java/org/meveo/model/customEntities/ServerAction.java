@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.Server;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerAction implements CustomEntity {
@@ -23,6 +24,8 @@ public class ServerAction implements CustomEntity {
     private Server server;
 
     private String action;
+
+    private Instant creationDate;
 
     @Override()
     public String getUuid() {
@@ -55,6 +58,14 @@ public class ServerAction implements CustomEntity {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override()
