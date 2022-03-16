@@ -41,6 +41,8 @@ public class DeleteScalewaySecurityGroupRule extends Script{
             throw new BusinessException("Invalid Security Group for Security Rule"); // required
         } else if(rule.getIpRange()==null) {
             throw new BusinessException("Invalid Security Rule IP Range"); // required
+        } else if(rule.getProviderSideId()==null) {
+            throw new BusinessException("Invalid Security Rule Provider-side ID");
         }
 
         String zone = rule.getZone();
