@@ -49,6 +49,17 @@
             "id": "CE_LockdownRule_domainName",
             "title": "LockdownRule.domainName",
             "$ref": "#/definitions/DomainName"
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_creationDate",
+            "title": "LockdownRule.creationDate",
+            "type": "string"
         }
     }
 }
