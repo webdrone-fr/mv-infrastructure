@@ -1,0 +1,1 @@
+{"code":"deleteServer","description":"Button to delete ovh server","appliesTo":"CE_OVHServer","applicableOnEl":"#{!empty entity.getCfValuesAsValues().get(\"creationDate\")}","label":"Delete Server","script":"org.meveo.script.CallDelete","guiPosition":"tab:OVH Server:0;action:3","applicableToEntityList":false,"applicableToEntityInstance":true,"scriptParameters":{}}

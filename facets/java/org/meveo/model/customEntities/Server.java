@@ -3,14 +3,14 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.ArrayList;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.customEntities.ServerImage;
 import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
-import org.meveo.model.customEntities.ServiceProvider;
-import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -27,11 +27,7 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private ServerImage image;
-
     private String providerSideId;
-
-    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
     private String instanceName;
 
@@ -39,17 +35,27 @@ public class Server implements CustomEntity {
 
     private String locationDefinition;
 
-    private String publicIp;
-
-    private SecurityGroup securityGroup;
-
-    private Instant creationDate;
+    private List<String> networks = new ArrayList<>();
 
     private String volumeSize;
 
     private ServiceProvider provider;
 
     private String zone;
+
+    private List<String> serverActions = new ArrayList<>();
+
+    private ServerImage image;
+
+    private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
+
+    private String keyName;
+
+    private String publicIp;
+
+    private SecurityGroup securityGroup;
+
+    private Instant creationDate;
 
     private String domainName;
 
@@ -59,11 +65,15 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
-    private List<String> serverActions = new ArrayList<>();
+    private String name;
+
+    private String flavorRef;
 
     private ServerVolume rootVolume;
 
     private String location;
+
+    private String imageRef;
 
     private String backupName;
 
@@ -86,28 +96,12 @@ public class Server implements CustomEntity {
         this.storages = storages;
     }
 
-    public ServerImage getImage() {
-        return image;
-    }
-
-    public void setImage(ServerImage image) {
-        this.image = image;
-    }
-
     public String getProviderSideId() {
         return providerSideId;
     }
 
     public void setProviderSideId(String providerSideId) {
         this.providerSideId = providerSideId;
-    }
-
-    public Map<String, ServerVolume> getAdditionalVolumes() {
-        return additionalVolumes;
-    }
-
-    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
-        this.additionalVolumes = additionalVolumes;
     }
 
     public String getInstanceName() {
@@ -134,28 +128,12 @@ public class Server implements CustomEntity {
         this.locationDefinition = locationDefinition;
     }
 
-    public String getPublicIp() {
-        return publicIp;
+    public List<String> getNetworks() {
+        return networks;
     }
 
-    public void setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-    }
-
-    public SecurityGroup getSecurityGroup() {
-        return securityGroup;
-    }
-
-    public void setSecurityGroup(SecurityGroup securityGroup) {
-        this.securityGroup = securityGroup;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
+    public void setNetworks(List<String> networks) {
+        this.networks = networks;
     }
 
     public String getVolumeSize() {
@@ -180,6 +158,62 @@ public class Server implements CustomEntity {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public List<String> getServerActions() {
+        return serverActions;
+    }
+
+    public void setServerActions(List<String> serverActions) {
+        this.serverActions = serverActions;
+    }
+
+    public ServerImage getImage() {
+        return image;
+    }
+
+    public void setImage(ServerImage image) {
+        this.image = image;
+    }
+
+    public Map<String, ServerVolume> getAdditionalVolumes() {
+        return additionalVolumes;
+    }
+
+    public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
+        this.additionalVolumes = additionalVolumes;
+    }
+
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getDomainName() {
@@ -214,12 +248,20 @@ public class Server implements CustomEntity {
         this.serverType = serverType;
     }
 
-    public List<String> getServerActions() {
-        return serverActions;
+    public String getName() {
+        return name;
     }
 
-    public void setServerActions(List<String> serverActions) {
-        this.serverActions = serverActions;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFlavorRef() {
+        return flavorRef;
+    }
+
+    public void setFlavorRef(String flavorRef) {
+        this.flavorRef = flavorRef;
     }
 
     public ServerVolume getRootVolume() {
@@ -236,6 +278,14 @@ public class Server implements CustomEntity {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getImageRef() {
+        return imageRef;
+    }
+
+    public void setImageRef(String imageRef) {
+        this.imageRef = imageRef;
     }
 
     public String getBackupName() {
