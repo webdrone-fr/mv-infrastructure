@@ -60,6 +60,23 @@
             "id": "CE_LockdownRule_creationDate",
             "title": "LockdownRule.creationDate",
             "type": "string"
+        },
+        "ips": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "IPs",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_ips",
+            "title": "LockdownRule.ips",
+            "type": "array",
+            "items": {
+                "id": "CE_LockdownRule_ips_item",
+                "title": "LockdownRule.ips item",
+                "type": "string",
+                "maxLength": 50
+            }
         }
     }
 }
