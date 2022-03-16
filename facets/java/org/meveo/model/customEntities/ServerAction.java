@@ -22,6 +22,8 @@ public class ServerAction implements CustomEntity {
 
     private Server server;
 
+    private String action;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -45,6 +47,14 @@ public class ServerAction implements CustomEntity {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 
     @Override()
