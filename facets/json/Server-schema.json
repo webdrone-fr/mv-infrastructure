@@ -97,6 +97,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "lastUpdate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last update",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_lastUpdate",
+            "title": "Server.lastUpdate",
+            "type": "string"
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
