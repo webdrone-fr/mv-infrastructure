@@ -40,6 +40,23 @@
             "type": "string",
             "maxLength": 255
         },
+        "maintenances": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Server planned maintenances",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_maintenances",
+            "title": "ScalewayServer.maintenances",
+            "type": "array",
+            "items": {
+                "id": "CE_ScalewayServer_maintenances_item",
+                "title": "ScalewayServer.maintenances item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "privateNics": {
             "storages": ["SQL"],
             "nullable": true,
