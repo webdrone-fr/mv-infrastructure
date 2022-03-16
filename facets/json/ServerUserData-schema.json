@@ -5,14 +5,27 @@
     "id": "ServerUserData",
     "title": "Server User Data",
     "type": "object",
-    "properties": {"content": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Content",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServerUserData_content",
-        "title": "ServerUserData.content",
-        "type": "string"
-    }}
+    "properties": {
+        "content": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Content",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerUserData_content",
+            "title": "ServerUserData.content",
+            "type": "string"
+        },
+        "serverSideKey": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server Side Key",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerUserData_serverSideKey",
+            "title": "ServerUserData.serverSideKey",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
