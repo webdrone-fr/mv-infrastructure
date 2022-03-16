@@ -6,6 +6,17 @@
     "title": "Action on server",
     "type": "object",
     "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_providerSideId",
+            "title": "ServerAction.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "server": {
             "storages": ["SQL"],
             "nullable": true,
