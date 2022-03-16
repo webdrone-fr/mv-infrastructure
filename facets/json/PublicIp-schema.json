@@ -16,6 +16,16 @@
             "title": "PublicIp.server",
             "$ref": "#/definitions/Server"
         },
+        "provider": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_provider",
+            "title": "PublicIp.provider",
+            "$ref": "#/definitions/ServiceProvider"
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
