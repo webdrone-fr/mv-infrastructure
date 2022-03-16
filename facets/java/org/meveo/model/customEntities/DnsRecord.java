@@ -33,6 +33,8 @@ public class DnsRecord implements CustomEntity {
 
     private Instant creationDate;
 
+    private Boolean proxiable;
+
     private String value;
 
     @Override()
@@ -98,6 +100,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Boolean getProxiable() {
+        return proxiable;
+    }
+
+    public void setProxiable(Boolean proxiable) {
+        this.proxiable = proxiable;
     }
 
     public String getValue() {
