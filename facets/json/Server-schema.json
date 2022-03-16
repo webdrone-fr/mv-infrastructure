@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "sergentUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Sergent URL",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_sergentUrl",
+            "title": "Server.sergentUrl",
+            "type": "string",
+            "maxLength": 500
+        },
         "rootVolume": {
             "storages": ["SQL"],
             "nullable": true,
