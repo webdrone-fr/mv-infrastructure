@@ -24,6 +24,8 @@ public class PublicIp implements CustomEntity {
 
     private String organization;
 
+    private String project;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -55,6 +57,14 @@ public class PublicIp implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     @Override()
