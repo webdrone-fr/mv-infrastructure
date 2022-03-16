@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_zone",
+            "title": "ServerImage.zone",
+            "type": "string",
+            "maxLength": 255
+        },
         "defaultBootscript": {
             "storages": ["SQL"],
             "nullable": true,
