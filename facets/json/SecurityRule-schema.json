@@ -54,6 +54,20 @@
             "type": "string",
             "maxLength": 255
         },
+        "action": {
+            "storages": ["SQL"],
+            "default": "accept",
+            "nullable": true,
+            "description": "Action",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_action",
+            "title": "SecurityRule.action",
+            "enum": [
+                "drop",
+                "accept"
+            ]
+        },
         "position": {
             "storages": ["SQL"],
             "nullable": true,
