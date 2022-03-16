@@ -26,6 +26,8 @@ public class ServerUserData implements CustomEntity {
 
     private String name;
 
+    private String contentType;
+
     private String content;
 
     private String serverSideKey;
@@ -69,6 +71,14 @@ public class ServerUserData implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getContent() {
