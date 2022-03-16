@@ -23,6 +23,8 @@ public class ServerAction implements CustomEntity {
 
     private Server server;
 
+    private String response;
+
     private String action;
 
     private Instant creationDate;
@@ -50,6 +52,14 @@ public class ServerAction implements CustomEntity {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 
     public String getAction() {
