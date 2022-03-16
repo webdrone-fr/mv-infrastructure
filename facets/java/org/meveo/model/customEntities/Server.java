@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.ArrayList;
 import org.meveo.model.customEntities.ServerVolume;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,6 +26,8 @@ public class Server implements CustomEntity {
     private String keyName;
 
     private String sergentUrl;
+
+    private List<String> serverActions = new ArrayList<>();
 
     private ServerVolume rootVolume;
 
@@ -69,6 +72,14 @@ public class Server implements CustomEntity {
 
     public void setSergentUrl(String sergentUrl) {
         this.sergentUrl = sergentUrl;
+    }
+
+    public List<String> getServerActions() {
+        return serverActions;
+    }
+
+    public void setServerActions(List<String> serverActions) {
+        this.serverActions = serverActions;
     }
 
     public ServerVolume getRootVolume() {
