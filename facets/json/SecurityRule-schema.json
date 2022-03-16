@@ -26,6 +26,22 @@
             "title": "SecurityRule.destPortTo",
             "type": "integer"
         },
+        "protocol": {
+            "storages": ["SQL"],
+            "default": "TCP",
+            "nullable": true,
+            "description": "Protocol",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_protocol",
+            "title": "SecurityRule.protocol",
+            "enum": [
+                "TCP",
+                "UDP",
+                "ANY",
+                "ICMP"
+            ]
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
