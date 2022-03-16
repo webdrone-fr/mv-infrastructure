@@ -6,6 +6,17 @@
     "title": "Domain name",
     "type": "object",
     "properties": {
+        "registrationEndDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Registration end date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registrationEndDate",
+            "title": "DomainName.registrationEndDate",
+            "type": "string"
+        },
         "lastUpdate": {
             "storages": ["SQL"],
             "nullable": true,
