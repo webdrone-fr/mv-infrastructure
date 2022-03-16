@@ -49,6 +49,17 @@
             "type": "string",
             "maxLength": 50
         },
+        "reverse": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Ip Reverse",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_reverse",
+            "title": "PublicIp.reverse",
+            "type": "string",
+            "maxLength": 50
+        },
         "tags": {
             "storages": ["SQL"],
             "nullable": true,
