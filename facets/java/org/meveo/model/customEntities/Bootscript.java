@@ -21,6 +21,8 @@ public class Bootscript implements CustomEntity {
 
     private String dtb;
 
+    private String bootcmdargs;
+
     private String kernel;
 
     private String organization;
@@ -50,6 +52,14 @@ public class Bootscript implements CustomEntity {
 
     public void setDtb(String dtb) {
         this.dtb = dtb;
+    }
+
+    public String getBootcmdargs() {
+        return bootcmdargs;
+    }
+
+    public void setBootcmdargs(String bootcmdargs) {
+        this.bootcmdargs = bootcmdargs;
     }
 
     public String getKernel() {
