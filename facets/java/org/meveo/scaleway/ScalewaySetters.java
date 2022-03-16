@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 public class ScalewaySetters extends Script{
 
-    private static final Logger logger = LoggerFactory.getLogger(ScalewayHelperService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ScalewaySetters.class);
 
 
     public static ServerVolume setServerVolume(JsonObject volumeObj, ServerVolume volume, CrossStorageApi crossStorageApi, Repository defaultRepo) {
@@ -35,11 +35,12 @@ public class ScalewaySetters extends Script{
         volume.setVolumeType(volumeObj.get("volume_type").getAsString());
         volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
         // Server
-        String serverId = null;
         if (!volumeObj.get("server").isJsonNull()) {
-            serverId = volumeObj.get("server").getAsJsonObject().get("id").getAsString();
+            String serverId = volumeObj.get("server").getAsJsonObject().get("id").getAsString();
+            volume.setServer(serverId);
+        } else{
+            volume.setServer(null);
         }
-        volume.setServer(serverId);
         if(!volumeObj.get("creation_date").isJsonNull()) {
             volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
         }
@@ -53,7 +54,6 @@ public class ScalewaySetters extends Script{
         }
         if(!volumeObj.get("state").isJsonNull()) {
             volume.setZone(volumeObj.get("state").getAsString());
-
         }
         return volume;
     }
