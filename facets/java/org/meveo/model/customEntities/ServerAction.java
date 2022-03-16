@@ -32,6 +32,8 @@ public class ServerAction implements CustomEntity {
 
     private Instant creationDate;
 
+    private String responseStatus;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -87,6 +89,14 @@ public class ServerAction implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getResponseStatus() {
+        return responseStatus;
+    }
+
+    public void setResponseStatus(String responseStatus) {
+        this.responseStatus = responseStatus;
     }
 
     @Override()
