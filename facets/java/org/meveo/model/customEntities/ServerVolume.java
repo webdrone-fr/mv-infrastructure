@@ -25,6 +25,8 @@ public class ServerVolume implements CustomEntity {
 
     private String state;
 
+    private Boolean isBoot;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -64,6 +66,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Boolean getIsBoot() {
+        return isBoot;
+    }
+
+    public void setIsBoot(Boolean isBoot) {
+        this.isBoot = isBoot;
     }
 
     @Override()
