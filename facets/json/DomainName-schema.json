@@ -60,6 +60,17 @@
             "id": "CE_DomainName_creationDate",
             "title": "DomainName.creationDate",
             "type": "string"
+        },
+        "tld": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Tld",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_tld",
+            "title": "DomainName.tld",
+            "type": "string",
+            "maxLength": 20
         }
     }
 }
