@@ -29,6 +29,8 @@ public class Bootscript implements CustomEntity {
 
     private String organization;
 
+    private String project;
+
     private String initrd;
 
     @Override()
@@ -86,6 +88,14 @@ public class Bootscript implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getInitrd() {
