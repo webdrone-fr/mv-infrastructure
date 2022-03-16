@@ -65,8 +65,6 @@ public class Server implements CustomEntity {
 
     private List<String> serverActions = new ArrayList<>();
 
-    private String flavorRef;
-
     private ServerVolume rootVolume;
 
     private String location;
@@ -242,14 +240,6 @@ public class Server implements CustomEntity {
 
     public void setServerActions(List<String> serverActions) {
         this.serverActions = serverActions;
-    }
-
-    public String getFlavorRef() {
-        return flavorRef;
-    }
-
-    public void setFlavorRef(String flavorRef) {
-        this.flavorRef = flavorRef;
     }
 
     public ServerVolume getRootVolume() {
