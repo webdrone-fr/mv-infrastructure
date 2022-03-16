@@ -39,6 +39,8 @@ public class Bootscript implements CustomEntity {
 
     private String arch;
 
+    private String title;
+
     private String initrd;
 
     @Override()
@@ -136,6 +138,14 @@ public class Bootscript implements CustomEntity {
 
     public void setArch(String arch) {
         this.arch = arch;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getInitrd() {
