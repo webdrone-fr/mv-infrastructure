@@ -4,5 +4,22 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "LockdownRule",
     "title": "Lockdown Rule",
-    "type": "object"
+    "type": "object",
+    "properties": {"ipRanges": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "uniqueItems": true,
+        "description": "IP ranges",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_LockdownRule_ipRanges",
+        "title": "LockdownRule.ipRanges",
+        "type": "array",
+        "items": {
+            "id": "CE_LockdownRule_ipRanges_item",
+            "title": "LockdownRule.ipRanges item",
+            "type": "string",
+            "maxLength": 50
+        }
+    }}
 }
