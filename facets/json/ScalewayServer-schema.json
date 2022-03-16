@@ -7,6 +7,17 @@
     "title": "Scaleway Server",
     "type": "object",
     "properties": {
+        "enableIPvSix": {
+            "storages": ["SQL"],
+            "default": "true",
+            "nullable": true,
+            "description": "IPv6 Enabled",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_enableIPvSix",
+            "title": "ScalewayServer.enableIPvSix",
+            "type": "string"
+        },
         "bootType": {
             "storages": ["SQL"],
             "nullable": true,
