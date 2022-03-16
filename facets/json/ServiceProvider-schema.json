@@ -5,20 +5,39 @@
     "id": "ServiceProvider",
     "title": "Server provider",
     "type": "object",
-    "properties": {"organization": {
-        "storages": ["SQL"],
-        "patternProperties": {"^.*$": {
-            "id": "CE_ServiceProvider_organization_item",
-            "title": "ServiceProvider.organization item",
-            "type": "string",
-            "maxLength": 255
-        }},
-        "nullable": true,
-        "description": "Organization",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServiceProvider_organization",
-        "title": "ServiceProvider.organization",
-        "type": "object"
-    }}
+    "properties": {
+        "organization": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_organization_item",
+                "title": "ServiceProvider.organization item",
+                "type": "string",
+                "maxLength": 255
+            }},
+            "nullable": true,
+            "description": "Organization",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_organization",
+            "title": "ServiceProvider.organization",
+            "type": "object"
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_status",
+            "title": "ServiceProvider.status",
+            "type": "array",
+            "items": {
+                "id": "CE_ServiceProvider_status_item",
+                "title": "ServiceProvider.status item",
+                "type": "string",
+                "maxLength": 50
+            }
+        }
+    }
 }
