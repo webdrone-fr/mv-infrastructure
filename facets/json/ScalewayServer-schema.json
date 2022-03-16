@@ -7,6 +7,17 @@
     "title": "Scaleway Server",
     "type": "object",
     "properties": {
+        "dynamicIpRequired": {
+            "storages": ["SQL"],
+            "default": "true",
+            "nullable": true,
+            "description": "Dynamic Ip Required",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_dynamicIpRequired",
+            "title": "ScalewayServer.dynamicIpRequired",
+            "type": "string"
+        },
         "privateIp": {
             "storages": ["SQL"],
             "nullable": true,
