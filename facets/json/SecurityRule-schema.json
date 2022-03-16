@@ -16,6 +16,16 @@
             "title": "SecurityRule.destPortFrom",
             "type": "integer"
         },
+        "destPortTo": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Destination Port To",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_destPortTo",
+            "title": "SecurityRule.destPortTo",
+            "type": "integer"
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
