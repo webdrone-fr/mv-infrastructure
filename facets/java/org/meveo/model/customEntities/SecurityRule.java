@@ -20,6 +20,8 @@ public class SecurityRule implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean editable;
+
     private String ipRange;
 
     private SecurityGroup securityGroup;
@@ -39,6 +41,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getEditable() {
+        return editable;
+    }
+
+    public void setEditable(Boolean editable) {
+        this.editable = editable;
     }
 
     public String getIpRange() {
