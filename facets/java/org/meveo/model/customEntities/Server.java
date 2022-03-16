@@ -35,8 +35,6 @@ public class Server implements CustomEntity {
 
     private String instanceName;
 
-    private String keyName;
-
     private String sergentUrl;
 
     private String locationDefinition;
@@ -118,14 +116,6 @@ public class Server implements CustomEntity {
 
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
-    }
-
-    public String getKeyName() {
-        return keyName;
-    }
-
-    public void setKeyName(String keyName) {
-        this.keyName = keyName;
     }
 
     public String getSergentUrl() {
