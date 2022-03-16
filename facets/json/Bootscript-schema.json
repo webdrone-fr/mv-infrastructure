@@ -6,6 +6,17 @@
     "title": "Bootscript",
     "type": "object",
     "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_providerSideId",
+            "title": "Bootscript.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "isDefault": {
             "storages": ["SQL"],
             "default": "false",
