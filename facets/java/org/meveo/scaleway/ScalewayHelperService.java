@@ -39,7 +39,7 @@ public class ScalewayHelperService extends Script{
             Long rootVolumeSize = Long.valueOf(serverRootVolume.getSize());
             allVolumesSizes.add(rootVolumeSize);
         } catch (Exception e) {
-            logger.error("Error retrieving root volume, {}", e.getMessage());
+            logger.error("Error retrieving root volume", e.getMessage());
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
@@ -51,7 +51,7 @@ public class ScalewayHelperService extends Script{
                     Long serverAdditionalVolumeSize = Long.valueOf(serverAdditionalVolume.getSize());
                     allVolumesSizes.add(serverAdditionalVolumeSize);
                 } catch (Exception e) {
-                    logger.error("Error retrieving additional volumes {}", e.getMessage());
+                    logger.error("Error retrieving additional volumes", e.getMessage());
                 }
             }
         }
@@ -75,7 +75,7 @@ public class ScalewayHelperService extends Script{
                 allLocalVolumesSizes.add(rootVolumeSize);
             }
         } catch (Exception e) {
-            logger.error("Error retrieving root volume, {}", e.getMessage());
+            logger.error("Error retrieving local root volume", e.getMessage());
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
@@ -90,7 +90,7 @@ public class ScalewayHelperService extends Script{
                         allLocalVolumesSizes.add(serverAdditionalVolumeSize);
                     }
                 } catch (Exception e) {
-                    logger.error("Error retrieving additional volumes {}", e.getMessage());
+                    logger.error("Error retrieving local additional volumes {}", e.getMessage());
                 }
             }
         }
