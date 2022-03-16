@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ApplicationInstance",
     "title": "Apps",
-    "type": "object"
+    "type": "object",
+    "properties": {"repoName": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "name repository",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ApplicationInstance_repoName",
+        "title": "ApplicationInstance.repoName",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
