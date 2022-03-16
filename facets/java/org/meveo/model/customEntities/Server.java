@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.SecurityGroup;
+import java.time.Instant;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServerVolume;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,6 +39,8 @@ public class Server implements CustomEntity {
     private String zone;
 
     private String domainName;
+
+    private Instant lastUpdate;
 
     private String organization;
 
@@ -130,6 +133,14 @@ public class Server implements CustomEntity {
 
     public void setDomainName(String domainName) {
         this.domainName = domainName;
+    }
+
+    public Instant getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Instant lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     public String getOrganization() {
