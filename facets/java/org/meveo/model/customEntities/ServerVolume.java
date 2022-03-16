@@ -23,6 +23,8 @@ public class ServerVolume implements CustomEntity {
 
     private String volumeType;
 
+    private String zone;
+
     private String state;
 
     private Boolean isBoot;
@@ -58,6 +60,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setVolumeType(String volumeType) {
         this.volumeType = volumeType;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public String getState() {
