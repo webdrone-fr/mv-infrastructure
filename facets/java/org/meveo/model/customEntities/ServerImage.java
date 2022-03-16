@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.ServerVolume;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerImage implements CustomEntity {
@@ -20,6 +21,8 @@ public class ServerImage implements CustomEntity {
     private DBStorageType storages;
 
     private String organization;
+
+    private ServerVolume rootVolume;
 
     @Override()
     public String getUuid() {
@@ -44,6 +47,14 @@ public class ServerImage implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public ServerVolume getRootVolume() {
+        return rootVolume;
+    }
+
+    public void setRootVolume(ServerVolume rootVolume) {
+        this.rootVolume = rootVolume;
     }
 
     @Override()
