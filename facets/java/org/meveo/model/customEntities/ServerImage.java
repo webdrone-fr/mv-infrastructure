@@ -29,6 +29,8 @@ public class ServerImage implements CustomEntity {
 
     private String organization;
 
+    private String name;
+
     private Boolean isPublic;
 
     private String project;
@@ -84,6 +86,14 @@ public class ServerImage implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Boolean getIsPublic() {
