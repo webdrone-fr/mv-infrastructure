@@ -65,6 +65,17 @@
             "title": "ApplicationInstance.port",
             "type": "integer"
         },
+        "urlDomain": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "url domain",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_urlDomain",
+            "title": "ApplicationInstance.urlDomain",
+            "type": "string",
+            "maxLength": 255
+        },
         "repoName": {
             "storages": ["SQL"],
             "nullable": true,
