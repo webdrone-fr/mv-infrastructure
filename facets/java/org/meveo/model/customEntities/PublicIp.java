@@ -29,6 +29,8 @@ public class PublicIp implements CustomEntity {
 
     private String project;
 
+    private String reverse;
+
     private List<String> tags = new ArrayList<>();
 
     @Override()
@@ -78,6 +80,14 @@ public class PublicIp implements CustomEntity {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public String getReverse() {
+        return reverse;
+    }
+
+    public void setReverse(String reverse) {
+        this.reverse = reverse;
     }
 
     public List<String> getTags() {
