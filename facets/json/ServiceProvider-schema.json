@@ -33,6 +33,23 @@
             "title": "ServiceProvider.organization",
             "type": "object"
         },
+        "publicIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Public IP",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_publicIp",
+            "title": "ServiceProvider.publicIp",
+            "type": "array",
+            "items": {
+                "id": "CE_ServiceProvider_publicIp_item",
+                "title": "ServiceProvider.publicIp item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
