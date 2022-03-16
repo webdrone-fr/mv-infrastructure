@@ -21,6 +21,8 @@ public class DnsRecord implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String providerSideId;
+
     private String recordType;
 
     private DomainName domainName;
@@ -58,6 +60,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
     }
 
     public String getRecordType() {
