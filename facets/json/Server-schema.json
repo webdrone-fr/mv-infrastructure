@@ -16,6 +16,17 @@
             "title": "Server.image",
             "$ref": "#/definitions/ServerImage"
         },
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_providerSideId",
+            "title": "Server.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "additionalVolumes": {
             "storages": ["SQL"],
             "patternProperties": {"^.*$": {
