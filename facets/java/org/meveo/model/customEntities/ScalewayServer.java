@@ -20,6 +20,8 @@ public class ScalewayServer extends Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String privateIp;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -35,6 +37,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getPrivateIp() {
+        return privateIp;
+    }
+
+    public void setPrivateIp(String privateIp) {
+        this.privateIp = privateIp;
     }
 
     @Override()
