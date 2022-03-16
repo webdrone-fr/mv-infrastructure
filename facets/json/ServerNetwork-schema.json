@@ -4,5 +4,22 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerNetwork",
     "title": "Server Network",
-    "type": "object"
+    "type": "object",
+    "properties": {"subnet": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "uniqueItems": true,
+        "description": "Subnet",
+        "readOnly": true,
+        "versionable": false,
+        "id": "CE_ServerNetwork_subnet",
+        "title": "ServerNetwork.subnet",
+        "type": "array",
+        "items": {
+            "id": "CE_ServerNetwork_subnet_item",
+            "title": "ServerNetwork.subnet item",
+            "type": "string",
+            "maxLength": 255
+        }
+    }}
 }
