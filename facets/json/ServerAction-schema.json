@@ -81,6 +81,16 @@
             "title": "ServerAction.responseStatus",
             "type": "string",
             "maxLength": 255
+        },
+        "elapsedTimeMs": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Elapsed time ms",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_elapsedTimeMs",
+            "title": "ServerAction.elapsedTimeMs",
+            "type": "integer"
         }
     }
 }
