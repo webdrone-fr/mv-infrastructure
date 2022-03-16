@@ -35,6 +35,8 @@ public class Bootscript implements CustomEntity {
 
     private String project;
 
+    private String arch;
+
     private String initrd;
 
     @Override()
@@ -116,6 +118,14 @@ public class Bootscript implements CustomEntity {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public String getArch() {
+        return arch;
+    }
+
+    public void setArch(String arch) {
+        this.arch = arch;
     }
 
     public String getInitrd() {
