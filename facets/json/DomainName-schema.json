@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "registrationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Registration date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registrationDate",
+            "title": "DomainName.registrationDate",
+            "type": "string"
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
