@@ -32,6 +32,8 @@ public class PublicIp implements CustomEntity {
 
     private String project;
 
+    private String ipVFourAddress;
+
     private String location;
 
     private String reverse;
@@ -93,6 +95,14 @@ public class PublicIp implements CustomEntity {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public String getIpVFourAddress() {
+        return ipVFourAddress;
+    }
+
+    public void setIpVFourAddress(String ipVFourAddress) {
+        this.ipVFourAddress = ipVFourAddress;
     }
 
     public String getLocation() {
