@@ -6,6 +6,17 @@
     "title": "Public Ip",
     "type": "object",
     "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_providerSideId",
+            "title": "PublicIp.providerSideId",
+            "type": "string",
+            "maxLength": 50
+        },
         "server": {
             "storages": ["SQL"],
             "nullable": true,
