@@ -6,6 +6,17 @@
     "title": "Server Volume",
     "type": "object",
     "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_providerSideId",
+            "title": "ServerVolume.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "server": {
             "storages": ["SQL"],
             "nullable": true,
