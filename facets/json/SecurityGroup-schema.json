@@ -6,6 +6,66 @@
     "title": "Security Group",
     "type": "object",
     "properties": {
+        "enableDefaultSecurity": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Enable Default Security",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_enableDefaultSecurity",
+            "title": "SecurityGroup.enableDefaultSecurity",
+            "type": "string"
+        },
+        "description": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Description",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_description",
+            "title": "SecurityGroup.description",
+            "type": "string"
+        },
+        "project": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Project ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_project",
+            "title": "SecurityGroup.project",
+            "type": "string",
+            "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_creationDate",
+            "title": "SecurityGroup.creationDate",
+            "type": "string"
+        },
+        "tags": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "tags",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_tags",
+            "title": "SecurityGroup.tags",
+            "type": "array",
+            "items": {
+                "id": "CE_SecurityGroup_tags_item",
+                "title": "SecurityGroup.tags item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "servers": {
             "storages": ["SQL"],
             "nullable": true,
@@ -84,27 +144,6 @@
             "type": "string",
             "maxLength": 255
         },
-        "description": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Description",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_SecurityGroup_description",
-            "title": "SecurityGroup.description",
-            "type": "string"
-        },
-        "project": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Project ID",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_SecurityGroup_project",
-            "title": "SecurityGroup.project",
-            "type": "string",
-            "maxLength": 255
-        },
         "state": {
             "storages": ["SQL"],
             "default": "available",
@@ -120,17 +159,6 @@
                 "available"
             ]
         },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Creation Date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_SecurityGroup_creationDate",
-            "title": "SecurityGroup.creationDate",
-            "type": "string"
-        },
         "stateful": {
             "storages": ["SQL"],
             "default": "false",
@@ -141,23 +169,6 @@
             "id": "CE_SecurityGroup_stateful",
             "title": "SecurityGroup.stateful",
             "type": "string"
-        },
-        "tags": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "tags",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_SecurityGroup_tags",
-            "title": "SecurityGroup.tags",
-            "type": "array",
-            "items": {
-                "id": "CE_SecurityGroup_tags_item",
-                "title": "SecurityGroup.tags item",
-                "type": "string",
-                "maxLength": 255
-            }
         }
     }
 }
