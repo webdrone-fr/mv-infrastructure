@@ -760,4 +760,3 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 	+ Delete Scaleway Server Volume (Btn)
 - Restrictions/ Notes:
 	+ Check if Volume(s) is not attached to a Server and that Server is not running
-Test commit
