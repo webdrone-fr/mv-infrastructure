@@ -15,6 +15,7 @@ import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.SecurityGroup;
 import org.meveo.model.customEntities.SecurityRule;
+import org.meveo.model.customEntities.Server;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -35,25 +36,25 @@ public class ScalewaySetters extends Script{
         volume.setVolumeType(volumeObj.get("volume_type").getAsString());
         volume.setSize(String.valueOf(volumeObj.get("size").getAsLong()));
         // Server
-        if (!volumeObj.get("server").isJsonNull()) {
+        if (volumeObj.has("server") && !volumeObj.get("server").isJsonNull()) {
             String serverId = volumeObj.get("server").getAsJsonObject().get("id").getAsString();
             volume.setServer(serverId);
         } else{
             volume.setServer(null);
         }
-        if(!volumeObj.get("creation_date").isJsonNull()) {
+        if(volumeObj.has("creation_date") && !volumeObj.get("creation_date").isJsonNull()) {
             volume.setCreationDate(OffsetDateTime.parse(volumeObj.get("creation_date").getAsString()).toInstant());
         }
-        if(!volumeObj.get("modification_date").isJsonNull()) {
+        if(volumeObj.has("modification_date") && !volumeObj.get("modification_date").isJsonNull()) {
             volume.setLastUpdated(OffsetDateTime.parse(volumeObj.get("modification_date").getAsString()).toInstant());
 
         }
-        if(!volumeObj.get("zone").isJsonNull()) {
+        if(volumeObj.has("zone") && !volumeObj.get("zone").isJsonNull()) {
             volume.setZone(volumeObj.get("zone").getAsString());
 
         }
-        if(!volumeObj.get("state").isJsonNull()) {
-            volume.setZone(volumeObj.get("state").getAsString());
+        if(volumeObj.has("state") && !volumeObj.get("state").isJsonNull()) {
+            volume.setState(volumeObj.get("state").getAsString());
         }
         return volume;
     }
@@ -71,16 +72,15 @@ public class ScalewaySetters extends Script{
         // Server
         if (!imageObj.get("from_server").isJsonNull()) {
             String serverId = imageObj.get("from_server").getAsString();
-            ScalewayServer server = null;
             try {
-                if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
-                    server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
+                if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult()!=null) { // TODO
                     image.setFromServer(serverId);
                 }                
             } catch (Exception e) {
-                logger.error("Error retrieving server : {} attached to image : {}", serverId, imageId, e.getMessage());
+                // logger.error("Error retrieving server : {} attached to image : {}", serverId, imageId, e.getMessage());
+                logger.error("Error retrieving server : {} attached to image : {}", serverId, imageId, e);
             }
-            if(server!=null || imageObj.get("public").getAsBoolean()==false) {
+            if(imageObj.get("public").getAsBoolean()==false) {
                 // Volumes
                 // Root Volume
                 if (!imageObj.get("root_volume").isJsonNull()) {
@@ -98,7 +98,8 @@ public class ScalewaySetters extends Script{
                         crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
                         image.setRootVolume(rootVolume);
                     } catch (Exception e) {
-                        logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e.getMessage());
+                        // logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e.getMessage());
+                        logger.error("Error retrieving root volume : {} for image : {}", rootVolumeId, imageId, e);
                     }
                 }
                 // Additional Volumes
@@ -405,15 +406,16 @@ public class ScalewaySetters extends Script{
         // Server
         if (!publicIpObj.get("server").isJsonNull()) {
             String serverId = publicIpObj.get("server").getAsJsonObject().get("id").getAsString();
-            try {
-                if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
-                    ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
-                    if(server.getInstanceName().startsWith("dev-") || server.getInstanceName().startsWith("int")) {
+            String serverName = publicIpObj.get("server").getAsJsonObject().get("name").getAsString();
+            if (serverName.toLowerCase().startsWith("dev-")|| serverName.toLowerCase().startsWith("int")){
+                try {
+                    if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult()!=null) { // TODO
+                        ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
                         publicIp.setServer(server);
                     }
+                } catch (Exception e) {
+                    logger.error("Error retrieving Server : {} for Public Ip : {}", serverId, publicIpId, e.getMessage());
                 }
-            } catch (Exception e) {
-                logger.error("Error retrieving server : {} for Public Ip : {}", serverId, publicIpId, e.getMessage());
             }
         }
         // Tags

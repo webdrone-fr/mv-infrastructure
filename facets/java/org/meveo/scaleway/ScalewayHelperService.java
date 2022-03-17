@@ -2,6 +2,7 @@ package org.meveo.scaleway;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -12,8 +13,14 @@ import com.google.gson.*;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.CustomEntityInstance;
+import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ScalewayServer;
+import org.meveo.model.customEntities.SecurityGroup;
+import org.meveo.model.customEntities.SecurityRule;
+import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.storage.Repository;
@@ -158,7 +165,7 @@ public class ScalewayHelperService extends Script{
         return serverUserDataObj;
     }
 
-    public static JsonObject getServerDetailsAfterSuccessfulAction(String zone, String serverId, Credential credential) throws BusinessException {
+    public static JsonObject getServerDetails(String zone, String serverId, Credential credential) throws BusinessException {
         JsonObject serverDetailsObj = new JsonObject();
 
         Client client = ClientBuilder.newClient();
@@ -270,4 +277,30 @@ public class ScalewayHelperService extends Script{
     //     response.close();
     //     return securityGroupObj;
     // }
+
+    public static void filterToLatestValues(String cetCode, List<String> providerUuids, CrossStorageApi crossStorageApi, Repository defaultRepo) throws BusinessException {
+        List<String> entitiesToRemove = new ArrayList<String>();
+        List<String> clientSideIds = new ArrayList<String>();
+
+        // get client side ids for cet
+        List<CustomEntityInstance> cetInstances = crossStorageApi.find(defaultRepo, cetCode).getResults();
+        for (CustomEntityInstance cetInstance : cetInstances) {
+            clientSideIds.add(cetInstance.getUuid());
+        }
+
+        // check if matching latest
+        for (String clientUuid : clientSideIds) {
+            if (!providerUuids.contains(clientUuid)) {
+                entitiesToRemove.add(clientUuid);
+            }
+        }
+
+        for (String entityId : entitiesToRemove) {
+            try {
+                crossStorageApi.remove(defaultRepo, entityId, cetCode);
+            } catch (Exception e) {
+                logger.error("Error clearing {} : {}",cetCode, entityId, e.getMessage());
+            }
+        }
+    }
 }
