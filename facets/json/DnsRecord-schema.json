@@ -85,6 +85,17 @@
             "title": "DnsRecord.creationDate",
             "type": "string"
         },
+        "priority": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Priority",
+            "maximum": 65535,
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_priority",
+            "title": "DnsRecord.priority",
+            "type": "integer"
+        },
         "proxiable": {
             "storages": ["SQL"],
             "default": "false",
