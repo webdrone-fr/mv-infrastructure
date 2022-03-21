@@ -6,6 +6,16 @@
     "title": "Server",
     "type": "object",
     "properties": {
+        "image": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Image",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_image",
+            "title": "Server.image",
+            "$ref": "#/definitions/ServerImage"
+        },
         "providerSideId": {
             "storages": ["SQL"],
             "nullable": true,
@@ -16,6 +26,21 @@
             "title": "Server.providerSideId",
             "type": "string",
             "maxLength": 255
+        },
+        "additionalVolumes": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_Server_additionalVolumes_item",
+                "title": "Server.additionalVolumes item",
+                "$ref": "#/definitions/ServerVolume"
+            }},
+            "nullable": true,
+            "description": "Additional Volumes",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_additionalVolumes",
+            "title": "Server.additionalVolumes",
+            "type": "object"
         },
         "instanceName": {
             "storages": ["SQL"],
@@ -50,22 +75,37 @@
             "type": "string",
             "maxLength": 255
         },
-        "networks": {
+        "publicIp": {
             "storages": ["SQL"],
             "nullable": true,
-            "uniqueItems": true,
-            "description": "Networks",
+            "description": "Public IP",
             "readOnly": false,
             "versionable": false,
-            "id": "CE_Server_networks",
-            "title": "Server.networks",
-            "type": "array",
-            "items": {
-                "id": "CE_Server_networks_item",
-                "title": "Server.networks item",
-                "type": "string",
-                "maxLength": 255
-            }
+            "id": "CE_Server_publicIp",
+            "title": "Server.publicIp",
+            "type": "string",
+            "maxLength": 16
+        },
+        "securityGroup": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Security Group",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_securityGroup",
+            "title": "Server.securityGroup",
+            "$ref": "#/definitions/SecurityGroup"
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_creationDate",
+            "title": "Server.creationDate",
+            "type": "string"
         },
         "volumeSize": {
             "storages": ["SQL"],
@@ -103,91 +143,6 @@
                 "pl-waw-1",
                 "nl-ams-1"
             ]
-        },
-        "serverActions": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "Allowed Actions on Server",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_serverActions",
-            "title": "Server.serverActions",
-            "type": "array",
-            "items": {
-                "id": "CE_Server_serverActions_item",
-                "title": "Server.serverActions item",
-                "type": "string",
-                "maxLength": 255
-            }
-        },
-        "image": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Image",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_image",
-            "title": "Server.image",
-            "$ref": "#/definitions/ServerImage"
-        },
-        "additionalVolumes": {
-            "storages": ["SQL"],
-            "patternProperties": {"^.*$": {
-                "id": "CE_Server_additionalVolumes_item",
-                "title": "Server.additionalVolumes item",
-                "$ref": "#/definitions/ServerVolume"
-            }},
-            "nullable": true,
-            "description": "Additional Volumes",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_additionalVolumes",
-            "title": "Server.additionalVolumes",
-            "type": "object"
-        },
-        "keyName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Key Name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_keyName",
-            "title": "Server.keyName",
-            "type": "string",
-            "maxLength": 255
-        },
-        "publicIp": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Public IP",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_publicIp",
-            "title": "Server.publicIp",
-            "type": "string",
-            "maxLength": 16
-        },
-        "securityGroup": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Security Group",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_securityGroup",
-            "title": "Server.securityGroup",
-            "$ref": "#/definitions/SecurityGroup"
-        },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Creation date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_creationDate",
-            "title": "Server.creationDate",
-            "type": "string"
         },
         "domainName": {
             "storages": ["SQL"],
@@ -249,27 +204,22 @@
                 "GP1-XL"
             ]
         },
-        "name": {
+        "serverActions": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Name",
+            "uniqueItems": true,
+            "description": "Allowed Actions on Server",
             "readOnly": false,
             "versionable": false,
-            "id": "CE_Server_name",
-            "title": "Server.name",
-            "type": "string",
-            "maxLength": 255
-        },
-        "flavorRef": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Flavor Ref",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_flavorRef",
-            "title": "Server.flavorRef",
-            "type": "string",
-            "maxLength": 255
+            "id": "CE_Server_serverActions",
+            "title": "Server.serverActions",
+            "type": "array",
+            "items": {
+                "id": "CE_Server_serverActions_item",
+                "title": "Server.serverActions item",
+                "type": "string",
+                "maxLength": 255
+            }
         },
         "rootVolume": {
             "storages": ["SQL"],
@@ -289,17 +239,6 @@
             "versionable": false,
             "id": "CE_Server_location",
             "title": "Server.location",
-            "type": "string",
-            "maxLength": 255
-        },
-        "imageRef": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Image Ref",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_imageRef",
-            "title": "Server.imageRef",
             "type": "string",
             "maxLength": 255
         },
