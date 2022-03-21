@@ -253,17 +253,6 @@
             "type": "string",
             "maxLength": 255
         },
-        "imageRef": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Image Ref",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_imageRef",
-            "title": "Server.imageRef",
-            "type": "string",
-            "maxLength": 255
-        },
         "backupName": {
             "storages": ["SQL"],
             "nullable": true,
