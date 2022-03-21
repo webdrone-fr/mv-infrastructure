@@ -6,6 +6,16 @@
     "title": "Domain name",
     "type": "object",
     "properties": {
+        "registrar": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Registrar",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_registrar",
+            "title": "DomainName.registrar",
+            "$ref": "#/definitions/ServiceProvider"
+        },
         "registrationEndDate": {
             "storages": ["SQL"],
             "nullable": true,
