@@ -48,6 +48,23 @@
             "title": "PublicIp.project",
             "type": "string",
             "maxLength": 50
+        },
+        "tags": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Tags",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_tags",
+            "title": "PublicIp.tags",
+            "type": "array",
+            "items": {
+                "id": "CE_PublicIp_tags_item",
+                "title": "PublicIp.tags item",
+                "type": "string",
+                "maxLength": 255
+            }
         }
     }
 }
