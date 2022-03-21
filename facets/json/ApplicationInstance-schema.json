@@ -6,6 +6,20 @@
     "title": "Apps",
     "type": "object",
     "properties": {
+        "application": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "name of the application deployed",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_application",
+            "title": "ApplicationInstance.application",
+            "enum": [
+                "API_V1",
+                "KC",
+                "IC"
+            ]
+        },
         "isStartServiceSource": {
             "storages": ["SQL"],
             "default": "false",
