@@ -6,6 +6,17 @@
     "title": "DNS record",
     "type": "object",
     "properties": {
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_providerSideId",
+            "title": "DnsRecord.providerSideId",
+            "type": "string",
+            "maxLength": 32
+        },
         "recordType": {
             "storages": ["SQL"],
             "default": "A",
