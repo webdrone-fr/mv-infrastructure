@@ -25,6 +25,8 @@ public class Server implements CustomEntity {
 
     private ServerImage image;
 
+    private String zone;
+
     private String domainName;
 
     private String organization;
@@ -66,6 +68,14 @@ public class Server implements CustomEntity {
 
     public void setImage(ServerImage image) {
         this.image = image;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public String getDomainName() {
