@@ -39,6 +39,17 @@
             "type": "string",
             "maxLength": 1000
         },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_zone",
+            "title": "Bootscript.zone",
+            "type": "string",
+            "maxLength": 255
+        },
         "kernel": {
             "storages": ["SQL"],
             "nullable": true,
