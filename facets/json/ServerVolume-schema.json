@@ -46,6 +46,17 @@
                 "nl-ams-1"
             ]
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name of Volume",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_name",
+            "title": "ServerVolume.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "state": {
             "storages": ["SQL"],
             "default": "available",
