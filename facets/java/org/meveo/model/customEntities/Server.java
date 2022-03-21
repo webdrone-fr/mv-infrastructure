@@ -4,9 +4,9 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.ServerImage;
+import org.meveo.model.customEntities.SecurityGroup;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServerVolume;
-import org.meveo.model.customEntities.SecurityGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -25,25 +25,27 @@ public class Server implements CustomEntity {
 
     private ServerImage image;
 
+    private String keyName;
+
+    private String sergentUrl;
+
+    private String publicIp;
+
+    private SecurityGroup securityGroup;
+
+    private String volumeSize;
+
     private String zone;
 
     private String domainName;
 
     private String organization;
 
-    private String keyName;
-
-    private String sergentUrl;
-
     private List<String> serverActions = new ArrayList<>();
 
     private ServerVolume rootVolume;
 
-    private SecurityGroup securityGroup;
-
     private String backupName;
-
-    private String volumeSize;
 
     private String status;
 
@@ -72,6 +74,46 @@ public class Server implements CustomEntity {
         this.image = image;
     }
 
+    public String getKeyName() {
+        return keyName;
+    }
+
+    public void setKeyName(String keyName) {
+        this.keyName = keyName;
+    }
+
+    public String getSergentUrl() {
+        return sergentUrl;
+    }
+
+    public void setSergentUrl(String sergentUrl) {
+        this.sergentUrl = sergentUrl;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
+    }
+
+    public String getVolumeSize() {
+        return volumeSize;
+    }
+
+    public void setVolumeSize(String volumeSize) {
+        this.volumeSize = volumeSize;
+    }
+
     public String getZone() {
         return zone;
     }
@@ -96,22 +138,6 @@ public class Server implements CustomEntity {
         this.organization = organization;
     }
 
-    public String getKeyName() {
-        return keyName;
-    }
-
-    public void setKeyName(String keyName) {
-        this.keyName = keyName;
-    }
-
-    public String getSergentUrl() {
-        return sergentUrl;
-    }
-
-    public void setSergentUrl(String sergentUrl) {
-        this.sergentUrl = sergentUrl;
-    }
-
     public List<String> getServerActions() {
         return serverActions;
     }
@@ -128,28 +154,12 @@ public class Server implements CustomEntity {
         this.rootVolume = rootVolume;
     }
 
-    public SecurityGroup getSecurityGroup() {
-        return securityGroup;
-    }
-
-    public void setSecurityGroup(SecurityGroup securityGroup) {
-        this.securityGroup = securityGroup;
-    }
-
     public String getBackupName() {
         return backupName;
     }
 
     public void setBackupName(String backupName) {
         this.backupName = backupName;
-    }
-
-    public String getVolumeSize() {
-        return volumeSize;
-    }
-
-    public void setVolumeSize(String volumeSize) {
-        this.volumeSize = volumeSize;
     }
 
     public String getStatus() {
