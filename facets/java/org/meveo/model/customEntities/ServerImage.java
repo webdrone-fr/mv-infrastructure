@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.ServerVolume;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerImage implements CustomEntity {
@@ -38,6 +39,8 @@ public class ServerImage implements CustomEntity {
     private ServerVolume rootVolume;
 
     private String state;
+
+    private List<String> tags = new ArrayList<>();
 
     @Override()
     public String getUuid() {
@@ -126,6 +129,14 @@ public class ServerImage implements CustomEntity {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override()
