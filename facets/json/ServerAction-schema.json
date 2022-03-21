@@ -16,6 +16,22 @@
             "title": "ServerAction.server",
             "$ref": "#/definitions/Server"
         },
+        "response": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Response",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_response",
+            "title": "ServerAction.response",
+            "enum": [
+                "failure",
+                "success",
+                "pending",
+                "started",
+                "retry"
+            ]
+        },
         "action": {
             "storages": ["SQL"],
             "default": "poweron",
