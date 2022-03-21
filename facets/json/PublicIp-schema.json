@@ -81,6 +81,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "locationDefinition": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Location Definition",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_locationDefinition",
+            "title": "PublicIp.locationDefinition",
+            "type": "string",
+            "maxLength": 255
+        },
         "reverse": {
             "storages": ["SQL"],
             "nullable": true,
