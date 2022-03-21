@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.Server;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class PublicIp implements CustomEntity {
@@ -27,6 +28,8 @@ public class PublicIp implements CustomEntity {
     private String organization;
 
     private String project;
+
+    private List<String> tags = new ArrayList<>();
 
     @Override()
     public String getUuid() {
@@ -75,6 +78,14 @@ public class PublicIp implements CustomEntity {
 
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override()
