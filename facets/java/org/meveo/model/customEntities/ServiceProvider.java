@@ -26,6 +26,8 @@ public class ServiceProvider implements CustomEntity {
 
     private Map<String, String> organization = new HashMap<>();
 
+    private List<String> publicIp = new ArrayList<>();
+
     private List<String> status = new ArrayList<>();
 
     @Override()
@@ -59,6 +61,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setOrganization(Map<String, String> organization) {
         this.organization = organization;
+    }
+
+    public List<String> getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(List<String> publicIp) {
+        this.publicIp = publicIp;
     }
 
     public List<String> getStatus() {
