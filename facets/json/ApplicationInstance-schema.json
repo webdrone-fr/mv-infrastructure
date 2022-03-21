@@ -5,15 +5,28 @@
     "id": "ApplicationInstance",
     "title": "Apps",
     "type": "object",
-    "properties": {"repoName": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "name repository",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ApplicationInstance_repoName",
-        "title": "ApplicationInstance.repoName",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "isStartServiceSource": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Is a source of Start Service definition",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_isStartServiceSource",
+            "title": "ApplicationInstance.isStartServiceSource",
+            "type": "string"
+        },
+        "repoName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "name repository",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_repoName",
+            "title": "ApplicationInstance.repoName",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
