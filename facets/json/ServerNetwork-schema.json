@@ -4,57 +4,5 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerNetwork",
     "title": "Server Network",
-    "type": "object",
-    "properties": {
-        "lastUpdated": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Last Updated",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerNetwork_lastUpdated",
-            "title": "ServerNetwork.lastUpdated",
-            "type": "string"
-        },
-        "subnet": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "uniqueItems": true,
-            "description": "Subnet",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerNetwork_subnet",
-            "title": "ServerNetwork.subnet",
-            "type": "array",
-            "items": {
-                "id": "CE_ServerNetwork_subnet_item",
-                "title": "ServerNetwork.subnet item",
-                "type": "string",
-                "maxLength": 255
-            }
-        },
-        "name": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_ServerNetwork_name",
-            "title": "ServerNetwork.name",
-            "type": "string",
-            "maxLength": 255
-        },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Creation Date",
-            "readOnly": true,
-            "versionable": false,
-            "id": "CE_ServerNetwork_creationDate",
-            "title": "ServerNetwork.creationDate",
-            "type": "string"
-        }
-    }
+    "type": "object"
 }
