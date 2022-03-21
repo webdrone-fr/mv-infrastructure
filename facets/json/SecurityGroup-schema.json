@@ -6,6 +6,23 @@
     "title": "Security Group",
     "type": "object",
     "properties": {
+        "servers": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Servers",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_servers",
+            "title": "SecurityGroup.servers",
+            "type": "array",
+            "items": {
+                "id": "CE_SecurityGroup_servers_item",
+                "title": "SecurityGroup.servers item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
