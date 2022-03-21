@@ -232,17 +232,6 @@
                 "maxLength": 255
             }
         },
-        "flavorRef": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Flavor Ref",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_flavorRef",
-            "title": "Server.flavorRef",
-            "type": "string",
-            "maxLength": 255
-        },
         "rootVolume": {
             "storages": ["SQL"],
             "nullable": true,
