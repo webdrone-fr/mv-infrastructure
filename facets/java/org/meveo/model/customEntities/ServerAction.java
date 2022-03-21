@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.Server;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerAction implements CustomEntity {
@@ -19,6 +20,8 @@ public class ServerAction implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Server server;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +37,14 @@ public class ServerAction implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
     }
 
     @Override()
