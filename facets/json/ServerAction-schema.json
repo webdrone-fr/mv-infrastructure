@@ -33,6 +33,17 @@
                 "stop_in_place",
                 "terminate"
             ]
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_creationDate",
+            "title": "ServerAction.creationDate",
+            "type": "string"
         }
     }
 }
