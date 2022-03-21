@@ -22,6 +22,8 @@ public class ServerAction implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String providerSideId;
+
     private Server server;
 
     private ServiceProvider provider;
@@ -53,6 +55,14 @@ public class ServerAction implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
     }
 
     public Server getServer() {
