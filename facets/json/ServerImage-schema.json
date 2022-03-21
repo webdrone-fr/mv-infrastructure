@@ -17,6 +17,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "defaultBootscript": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Default Bootscript",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_defaultBootscript",
+            "title": "ServerImage.defaultBootscript",
+            "$ref": "#/definitions/Bootscript"
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
