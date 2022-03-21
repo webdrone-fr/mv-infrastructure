@@ -43,6 +43,8 @@ public class Server implements CustomEntity {
 
     private String backupName;
 
+    private String volumeSize;
+
     private String status;
 
     @Override()
@@ -140,6 +142,14 @@ public class Server implements CustomEntity {
 
     public void setBackupName(String backupName) {
         this.backupName = backupName;
+    }
+
+    public String getVolumeSize() {
+        return volumeSize;
+    }
+
+    public void setVolumeSize(String volumeSize) {
+        this.volumeSize = volumeSize;
     }
 
     public String getStatus() {
