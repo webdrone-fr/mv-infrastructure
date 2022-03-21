@@ -27,6 +27,8 @@ public class ServerImage implements CustomEntity {
 
     private String organization;
 
+    private String project;
+
     private ServerVolume rootVolume;
 
     private String state;
@@ -70,6 +72,14 @@ public class ServerImage implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public ServerVolume getRootVolume() {
