@@ -28,6 +28,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "position": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Position",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_position",
+            "title": "SecurityRule.position",
+            "type": "integer"
+        },
         "securityGroup": {
             "storages": ["SQL"],
             "nullable": true,
