@@ -24,6 +24,8 @@ public class SecurityRule implements CustomEntity {
 
     private Long destPortTo;
 
+    private String providerSideId;
+
     private String protocol;
 
     private String zone;
@@ -71,6 +73,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setDestPortTo(Long destPortTo) {
         this.destPortTo = destPortTo;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
     }
 
     public String getProtocol() {
