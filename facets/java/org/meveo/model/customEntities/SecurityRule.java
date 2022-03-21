@@ -24,6 +24,8 @@ public class SecurityRule implements CustomEntity {
 
     private String ipRange;
 
+    private Long position;
+
     private SecurityGroup securityGroup;
 
     @Override()
@@ -57,6 +59,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setIpRange(String ipRange) {
         this.ipRange = ipRange;
+    }
+
+    public Long getPosition() {
+        return position;
+    }
+
+    public void setPosition(Long position) {
+        this.position = position;
     }
 
     public SecurityGroup getSecurityGroup() {
