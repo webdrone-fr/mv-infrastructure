@@ -4,5 +4,21 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServiceProvider",
     "title": "Server provider",
-    "type": "object"
+    "type": "object",
+    "properties": {"organization": {
+        "storages": ["SQL"],
+        "patternProperties": {"^.*$": {
+            "id": "CE_ServiceProvider_organization_item",
+            "title": "ServiceProvider.organization item",
+            "type": "string",
+            "maxLength": 255
+        }},
+        "nullable": true,
+        "description": "Organization",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ServiceProvider_organization",
+        "title": "ServiceProvider.organization",
+        "type": "object"
+    }}
 }
