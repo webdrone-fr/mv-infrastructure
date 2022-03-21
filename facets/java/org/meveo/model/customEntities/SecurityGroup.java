@@ -19,6 +19,8 @@ public class SecurityGroup implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String zone;
+
     private Boolean projectDefault;
 
     private String project;
@@ -40,6 +42,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public Boolean getProjectDefault() {
