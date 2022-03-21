@@ -16,6 +16,16 @@
             "title": "ServerAction.server",
             "$ref": "#/definitions/Server"
         },
+        "provider": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_provider",
+            "title": "ServerAction.provider",
+            "$ref": "#/definitions/ServiceProvider"
+        },
         "response": {
             "storages": ["SQL"],
             "nullable": true,
