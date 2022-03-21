@@ -41,6 +41,8 @@ public class Server implements CustomEntity {
 
     private String organization;
 
+    private String name;
+
     private List<String> serverActions = new ArrayList<>();
 
     private ServerVolume rootVolume;
@@ -136,6 +138,14 @@ public class Server implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<String> getServerActions() {
