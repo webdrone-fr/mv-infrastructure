@@ -5,21 +5,40 @@
     "id": "LockdownRule",
     "title": "Lockdown Rule",
     "type": "object",
-    "properties": {"ipRanges": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "uniqueItems": true,
-        "description": "IP ranges",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_LockdownRule_ipRanges",
-        "title": "LockdownRule.ipRanges",
-        "type": "array",
-        "items": {
-            "id": "CE_LockdownRule_ipRanges_item",
-            "title": "LockdownRule.ipRanges item",
-            "type": "string",
-            "maxLength": 50
+    "properties": {
+        "ipRanges": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "IP ranges",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_ipRanges",
+            "title": "LockdownRule.ipRanges",
+            "type": "array",
+            "items": {
+                "id": "CE_LockdownRule_ipRanges_item",
+                "title": "LockdownRule.ipRanges item",
+                "type": "string",
+                "maxLength": 50
+            }
+        },
+        "urls": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Urls",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_urls",
+            "title": "LockdownRule.urls",
+            "type": "array",
+            "items": {
+                "id": "CE_LockdownRule_urls_item",
+                "title": "LockdownRule.urls item",
+                "type": "string",
+                "maxLength": 255
+            }
         }
-    }}
+    }
 }
