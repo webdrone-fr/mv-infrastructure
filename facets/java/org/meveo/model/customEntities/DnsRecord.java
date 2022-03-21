@@ -29,6 +29,8 @@ public class DnsRecord implements CustomEntity {
 
     private String name;
 
+    private Instant lastSyncDate;
+
     private Boolean proxied;
 
     private Instant creationDate;
@@ -84,6 +86,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getLastSyncDate() {
+        return lastSyncDate;
+    }
+
+    public void setLastSyncDate(Instant lastSyncDate) {
+        this.lastSyncDate = lastSyncDate;
     }
 
     public Boolean getProxied() {
