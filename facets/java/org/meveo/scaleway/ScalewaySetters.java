@@ -73,7 +73,7 @@ public class ScalewaySetters extends Script{
         if (!imageObj.get("from_server").isJsonNull()) {
             String serverId = imageObj.get("from_server").getAsString();
             try {
-                if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult()!=null) { // TODO
+                if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
                     image.setFromServer(serverId);
                 }                
             } catch (Exception e) {
@@ -93,6 +93,7 @@ public class ScalewaySetters extends Script{
                         } else {
                             rootVolume = new ServerVolume();
                             rootVolume.setUuid(rootVolumeId);
+                            rootVolume.setServer(serverId);
                         }
                         rootVolume = ScalewaySetters.setServerVolume(rootVolumeObj, rootVolume, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, rootVolume);
@@ -409,7 +410,7 @@ public class ScalewaySetters extends Script{
             String serverName = publicIpObj.get("server").getAsJsonObject().get("name").getAsString();
             if (serverName.toLowerCase().startsWith("dev-")|| serverName.toLowerCase().startsWith("int")){
                 try {
-                    if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult()!=null) { // TODO
+                    if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) { // TODO
                         ScalewayServer server = crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult();
                         publicIp.setServer(server);
                     }

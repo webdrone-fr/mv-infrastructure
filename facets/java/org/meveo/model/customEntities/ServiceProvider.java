@@ -33,6 +33,8 @@ public class ServiceProvider implements CustomEntity {
 
     private Map<String, String> serverType = new HashMap<>();
 
+    private MeveoMatrix<String> providerServerTypes;
+
     private String description;
 
     private List<String> publicIp = new ArrayList<>();
@@ -96,6 +98,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setServerType(Map<String, String> serverType) {
         this.serverType = serverType;
+    }
+
+    public MeveoMatrix<String> getProviderServerTypes() {
+        return providerServerTypes;
+    }
+
+    public void setProviderServerTypes(MeveoMatrix<String> providerServerTypes) {
+        this.providerServerTypes = providerServerTypes;
     }
 
     public String getDescription() {

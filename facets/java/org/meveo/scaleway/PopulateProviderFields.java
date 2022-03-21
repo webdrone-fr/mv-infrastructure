@@ -60,6 +60,7 @@ public class PopulateProviderFields extends Script {
         List<String> providerZones = new ArrayList<String>();
         Map<String, String> providerOrganizations = new HashMap<String, String>();
         Map<String, String> serverTypes = new HashMap<String, String>();
+        MeveoMatrix<String> serverTypesMatrix = new MeveoMatrix<String>();
         MeveoMatrix<String> imagesMatrix = new MeveoMatrix<String>();
         
         List<String> providerSideImageIds = new ArrayList<String>();
@@ -79,6 +80,12 @@ public class PopulateProviderFields extends Script {
                 JsonObject serverTypeObj =  entry.getValue().getAsJsonObject();
                 Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
                 serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
+
+                String ram = serverType.get("ram").toString();
+                String disk = serverType.get("volumes_constraint").toString();
+                String ncpus = serverType.get("ncpus").toString();
+                String name = entry.getKey();
+                serverTypesMatrix.set(zone, ram, disk, ncpus, name, JacksonUtil.toStringPrettyPrinted(serverType));
             }
             
             // Images
@@ -141,7 +148,7 @@ public class PopulateProviderFields extends Script {
 
         // Sort Provider Server Types
         Map<String, String> sortedServerTypes = new TreeMap<String, String>(serverTypes);
-        logger.info("sorted server types: {}", sortedServerTypes);
+        // logger.info("sorted server types: {}", sortedServerTypes);
 
         // clear values that are not present on provider side
         // server images
@@ -152,9 +159,10 @@ public class PopulateProviderFields extends Script {
         provider.setZones(providerZones);
         provider.setOrganization(providerOrganizations);
         provider.setServerType(sortedServerTypes);
+        provider.setProviderServerTypes(serverTypesMatrix);
         provider.setProviderImages(imagesMatrix);
         logger.info("query matrix : {}", imagesMatrix.getClosestMatch("fr-par-3", "ArchLinux"));
-        logger.info("Images Matrix : {}", JacksonUtil.toStringPrettyPrinted(imagesMatrix));
+        // logger.info("Images Matrix : {}", JacksonUtil.toStringPrettyPrinted(imagesMatrix));
         provider.setPublicIp(publicIpRecords);
         try {
             crossStorageApi.createOrUpdate(defaultRepo, provider);
