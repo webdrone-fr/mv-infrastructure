@@ -67,8 +67,6 @@ public class Server implements CustomEntity {
 
     private String location;
 
-    private String imageRef;
-
     private String backupName;
 
     private String status;
@@ -248,14 +246,6 @@ public class Server implements CustomEntity {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getImageRef() {
-        return imageRef;
-    }
-
-    public void setImageRef(String imageRef) {
-        this.imageRef = imageRef;
     }
 
     public String getBackupName() {
