@@ -146,17 +146,6 @@
             "title": "Server.additionalVolumes",
             "type": "object"
         },
-        "keyName": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Key Name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_keyName",
-            "title": "Server.keyName",
-            "type": "string",
-            "maxLength": 255
-        },
         "publicIp": {
             "storages": ["SQL"],
             "nullable": true,
