@@ -75,6 +75,23 @@
             "id": "CE_SecurityGroup_stateful",
             "title": "SecurityGroup.stateful",
             "type": "string"
+        },
+        "tags": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "tags",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_tags",
+            "title": "SecurityGroup.tags",
+            "type": "array",
+            "items": {
+                "id": "CE_SecurityGroup_tags_item",
+                "title": "SecurityGroup.tags item",
+                "type": "string",
+                "maxLength": 255
+            }
         }
     }
 }
