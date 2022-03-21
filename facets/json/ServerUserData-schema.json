@@ -6,6 +6,16 @@
     "title": "Server User Data",
     "type": "object",
     "properties": {
+        "server": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "server",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerUserData_server",
+            "title": "ServerUserData.server",
+            "$ref": "#/definitions/Server"
+        },
         "content": {
             "storages": ["SQL"],
             "nullable": true,
