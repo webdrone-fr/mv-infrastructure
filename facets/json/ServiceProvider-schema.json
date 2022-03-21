@@ -50,6 +50,23 @@
                 "maxLength": 255
             }
         },
+        "zones": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Zones",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_zones",
+            "title": "ServiceProvider.zones",
+            "type": "array",
+            "items": {
+                "id": "CE_ServiceProvider_zones_item",
+                "title": "ServiceProvider.zones item",
+                "type": "string",
+                "maxLength": 20
+            }
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
