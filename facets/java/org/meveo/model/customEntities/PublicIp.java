@@ -22,6 +22,8 @@ public class PublicIp implements CustomEntity {
 
     private Server server;
 
+    private String zone;
+
     private String organization;
 
     private String project;
@@ -49,6 +51,14 @@ public class PublicIp implements CustomEntity {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public String getOrganization() {
