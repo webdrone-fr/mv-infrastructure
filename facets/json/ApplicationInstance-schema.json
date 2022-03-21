@@ -6,6 +6,30 @@
     "title": "Apps",
     "type": "object",
     "properties": {
+        "investigationTypes": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Investigation Types",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ApplicationInstance_investigationTypes",
+            "title": "ApplicationInstance.investigationTypes",
+            "type": "array",
+            "items": {
+                "id": "CE_ApplicationInstance_investigationTypes_item",
+                "title": "ApplicationInstance.investigationTypes item",
+                "enum": [
+                    "ScanWebsite",
+                    "Agent",
+                    "Product",
+                    "IllicitWebsite",
+                    "BrandAndProductDetection",
+                    "BrandAndProductMonitoring",
+                    "Monitoring"
+                ]
+            }
+        },
         "application": {
             "storages": ["SQL"],
             "nullable": true,
