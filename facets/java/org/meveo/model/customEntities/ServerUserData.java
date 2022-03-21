@@ -21,6 +21,8 @@ public class ServerUserData implements CustomEntity {
 
     private String content;
 
+    private String serverSideKey;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -44,6 +46,14 @@ public class ServerUserData implements CustomEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getServerSideKey() {
+        return serverSideKey;
+    }
+
+    public void setServerSideKey(String serverSideKey) {
+        this.serverSideKey = serverSideKey;
     }
 
     @Override()
