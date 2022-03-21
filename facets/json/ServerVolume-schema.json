@@ -5,17 +5,30 @@
     "id": "ServerVolume",
     "title": "Server Volume",
     "type": "object",
-    "properties": {"volumeType": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Volume Type",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServerVolume_volumeType",
-        "title": "ServerVolume.volumeType",
-        "enum": [
-            "b_ssd",
-            "l_ssd"
-        ]
-    }}
+    "properties": {
+        "server": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server volume is attached to",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_server",
+            "title": "ServerVolume.server",
+            "type": "string",
+            "maxLength": 255
+        },
+        "volumeType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Volume Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_volumeType",
+            "title": "ServerVolume.volumeType",
+            "enum": [
+                "b_ssd",
+                "l_ssd"
+            ]
+        }
+    }
 }
