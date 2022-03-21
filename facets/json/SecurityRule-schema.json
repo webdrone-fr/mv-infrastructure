@@ -97,6 +97,20 @@
             "id": "CE_SecurityRule_securityGroup",
             "title": "SecurityRule.securityGroup",
             "$ref": "#/definitions/SecurityGroup"
+        },
+        "direction": {
+            "storages": ["SQL"],
+            "default": "inbound",
+            "nullable": true,
+            "description": "Direction",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_direction",
+            "title": "SecurityRule.direction",
+            "enum": [
+                "inbound",
+                "outbound"
+            ]
         }
     }
 }
