@@ -4,5 +4,15 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerUserData",
     "title": "Server User Data",
-    "type": "object"
+    "type": "object",
+    "properties": {"content": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Content",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ServerUserData_content",
+        "title": "ServerUserData.content",
+        "type": "string"
+    }}
 }
