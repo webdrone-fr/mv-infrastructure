@@ -6,6 +6,17 @@
     "title": "Server Image",
     "type": "object",
     "properties": {
+        "fromServer": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "From Server",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_fromServer",
+            "title": "ServerImage.fromServer",
+            "type": "string",
+            "maxLength": 255
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
