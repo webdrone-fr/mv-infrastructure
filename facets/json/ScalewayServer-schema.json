@@ -6,15 +6,34 @@
     "id": "ScalewayServer",
     "title": "Scaleway Server",
     "type": "object",
-    "properties": {"privateIp": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Private Ip",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ScalewayServer_privateIp",
-        "title": "ScalewayServer.privateIp",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "privateIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Private Ip",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_privateIp",
+            "title": "ScalewayServer.privateIp",
+            "type": "string",
+            "maxLength": 255
+        },
+        "privateNics": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Private NICs",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_privateNics",
+            "title": "ScalewayServer.privateNics",
+            "type": "array",
+            "items": {
+                "id": "CE_ScalewayServer_privateNics_item",
+                "title": "ScalewayServer.privateNics item",
+                "type": "string",
+                "maxLength": 255
+            }
+        }
+    }
 }
