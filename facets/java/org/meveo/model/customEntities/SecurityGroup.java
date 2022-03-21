@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SecurityGroup implements CustomEntity {
@@ -30,6 +31,8 @@ public class SecurityGroup implements CustomEntity {
     private String state;
 
     private Boolean stateful;
+
+    private List<String> tags = new ArrayList<>();
 
     @Override()
     public String getUuid() {
@@ -94,6 +97,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setStateful(Boolean stateful) {
         this.stateful = stateful;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     @Override()
