@@ -6,6 +6,17 @@
     "title": "Security Rule",
     "type": "object",
     "properties": {
+        "editable": {
+            "storages": ["SQL"],
+            "default": "true",
+            "nullable": true,
+            "description": "Editable",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_editable",
+            "title": "SecurityRule.editable",
+            "type": "string"
+        },
         "ipRange": {
             "storages": ["SQL"],
             "nullable": true,
