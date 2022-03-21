@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "SecurityRule",
     "title": "Security Rule",
-    "type": "object"
+    "type": "object",
+    "properties": {"ipRange": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "IP Range",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_SecurityRule_ipRange",
+        "title": "SecurityRule.ipRange",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
