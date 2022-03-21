@@ -27,6 +27,17 @@
             "type": "string",
             "maxLength": 15
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerUserData_name",
+            "title": "ServerUserData.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "content": {
             "storages": ["SQL"],
             "nullable": true,
