@@ -17,6 +17,20 @@
             "type": "string",
             "maxLength": 255
         },
+        "inboundDefaultPolicy": {
+            "storages": ["SQL"],
+            "default": "accept",
+            "nullable": true,
+            "description": "Inbound Default Policy",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_inboundDefaultPolicy",
+            "title": "SecurityGroup.inboundDefaultPolicy",
+            "enum": [
+                "drop",
+                "accept"
+            ]
+        },
         "outboundDefaultPolicy": {
             "storages": ["SQL"],
             "default": "accept",
