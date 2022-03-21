@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.Bootscript;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.Server;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +27,8 @@ public class ScalewayServer extends Server implements CustomEntity {
     private Boolean dynamicIpRequired;
 
     private String privateIp;
+
+    private Bootscript bootscript;
 
     private String project;
 
@@ -78,6 +81,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPrivateIp(String privateIp) {
         this.privateIp = privateIp;
+    }
+
+    public Bootscript getBootscript() {
+        return bootscript;
+    }
+
+    public void setBootscript(Bootscript bootscript) {
+        this.bootscript = bootscript;
     }
 
     public String getProject() {
