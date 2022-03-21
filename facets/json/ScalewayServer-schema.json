@@ -18,6 +18,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "placementGroup": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Placement Group",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_placementGroup",
+            "title": "ScalewayServer.placementGroup",
+            "type": "string",
+            "maxLength": 255
+        },
         "privateNics": {
             "storages": ["SQL"],
             "nullable": true,
