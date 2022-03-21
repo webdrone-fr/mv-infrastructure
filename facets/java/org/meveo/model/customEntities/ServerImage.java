@@ -6,9 +6,9 @@ import org.meveo.model.persistence.DBStorageType;
 import java.util.Map;
 import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
-import org.meveo.model.customEntities.Bootscript;
 import java.time.Instant;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.Bootscript;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServerImage implements CustomEntity {
@@ -29,6 +29,12 @@ public class ServerImage implements CustomEntity {
 
     private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
+    private String project;
+
+    private Instant creationDate;
+
+    private List<String> tags = new ArrayList<>();
+
     private String zone;
 
     private Bootscript defaultBootscript;
@@ -39,15 +45,11 @@ public class ServerImage implements CustomEntity {
 
     private Boolean isPublic;
 
-    private String project;
-
     private ServerVolume rootVolume;
 
+    private String arch;
+
     private String state;
-
-    private Instant creationDate;
-
-    private List<String> tags = new ArrayList<>();
 
     @Override()
     public String getUuid() {
@@ -80,6 +82,30 @@ public class ServerImage implements CustomEntity {
 
     public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
         this.additionalVolumes = additionalVolumes;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public String getZone() {
@@ -122,14 +148,6 @@ public class ServerImage implements CustomEntity {
         this.isPublic = isPublic;
     }
 
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
     public ServerVolume getRootVolume() {
         return rootVolume;
     }
@@ -138,28 +156,20 @@ public class ServerImage implements CustomEntity {
         this.rootVolume = rootVolume;
     }
 
+    public String getArch() {
+        return arch;
+    }
+
+    public void setArch(String arch) {
+        this.arch = arch;
+    }
+
     public String getState() {
         return state;
     }
 
     public void setState(String state) {
         this.state = state;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
     }
 
     @Override()
