@@ -5,15 +5,28 @@
     "id": "DomainName",
     "title": "Domain name",
     "type": "object",
-    "properties": {"name": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "domain name",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_DomainName_name",
-        "title": "DomainName.name",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "lastUpdate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last update",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_lastUpdate",
+            "title": "DomainName.lastUpdate",
+            "type": "string"
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "domain name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DomainName_name",
+            "title": "DomainName.name",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
