@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "Bootscript",
     "title": "Bootscript",
-    "type": "object"
+    "type": "object",
+    "properties": {"dtb": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Device Binary Tree (C1 Servers)",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_Bootscript_dtb",
+        "title": "Bootscript.dtb",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
