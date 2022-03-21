@@ -59,6 +59,17 @@
             "type": "string",
             "maxLength": 50
         },
+        "location": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Location",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_location",
+            "title": "PublicIp.location",
+            "type": "string",
+            "maxLength": 255
+        },
         "reverse": {
             "storages": ["SQL"],
             "nullable": true,
