@@ -82,6 +82,17 @@
                 "maxLength": 255
             }
         },
+        "lastUpdated": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last Updated",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_lastUpdated",
+            "title": "ServerImage.lastUpdated",
+            "type": "string"
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
