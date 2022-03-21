@@ -35,8 +35,6 @@ public class Server implements CustomEntity {
 
     private String locationDefinition;
 
-    private List<String> networks = new ArrayList<>();
-
     private String volumeSize;
 
     private ServiceProvider provider;
@@ -48,8 +46,6 @@ public class Server implements CustomEntity {
     private ServerImage image;
 
     private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
-
-    private String keyName;
 
     private String publicIp;
 
@@ -65,15 +61,9 @@ public class Server implements CustomEntity {
 
     private String serverType;
 
-    private String name;
-
-    private String flavorRef;
-
     private ServerVolume rootVolume;
 
     private String location;
-
-    private String imageRef;
 
     private String backupName;
 
