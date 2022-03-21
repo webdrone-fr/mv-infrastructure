@@ -34,6 +34,8 @@ public class Server implements CustomEntity {
 
     private SecurityGroup securityGroup;
 
+    private String backupName;
+
     private String status;
 
     @Override()
@@ -99,6 +101,14 @@ public class Server implements CustomEntity {
 
     public void setSecurityGroup(SecurityGroup securityGroup) {
         this.securityGroup = securityGroup;
+    }
+
+    public String getBackupName() {
+        return backupName;
+    }
+
+    public void setBackupName(String backupName) {
+        this.backupName = backupName;
     }
 
     public String getStatus() {
