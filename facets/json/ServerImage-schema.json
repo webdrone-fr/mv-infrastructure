@@ -47,6 +47,21 @@
             "id": "CE_ServerImage_rootVolume",
             "title": "ServerImage.rootVolume",
             "$ref": "#/definitions/ServerVolume"
+        },
+        "state": {
+            "storages": ["SQL"],
+            "default": "available",
+            "nullable": true,
+            "description": "State",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_state",
+            "title": "ServerImage.state",
+            "enum": [
+                "available",
+                "creating",
+                "error"
+            ]
         }
     }
 }
