@@ -36,6 +36,8 @@ public class SecurityRule implements CustomEntity {
 
     private SecurityGroup securityGroup;
 
+    private String direction;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -115,6 +117,14 @@ public class SecurityRule implements CustomEntity {
 
     public void setSecurityGroup(SecurityGroup securityGroup) {
         this.securityGroup = securityGroup;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
     @Override()
