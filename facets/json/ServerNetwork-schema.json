@@ -33,6 +33,17 @@
             "title": "ServerNetwork.name",
             "type": "string",
             "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerNetwork_creationDate",
+            "title": "ServerNetwork.creationDate",
+            "type": "string"
         }
     }
 }
