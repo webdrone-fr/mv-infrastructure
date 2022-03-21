@@ -19,6 +19,8 @@ public class Bootscript implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String dtb;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class Bootscript implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getDtb() {
+        return dtb;
+    }
+
+    public void setDtb(String dtb) {
+        this.dtb = dtb;
     }
 
     @Override()
