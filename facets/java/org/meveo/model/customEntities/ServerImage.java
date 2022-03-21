@@ -37,6 +37,8 @@ public class ServerImage implements CustomEntity {
 
     private List<String> tags = new ArrayList<>();
 
+    private Instant lastUpdated;
+
     private String zone;
 
     private Bootscript defaultBootscript;
@@ -116,6 +118,14 @@ public class ServerImage implements CustomEntity {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public Instant getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public String getZone() {
