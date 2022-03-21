@@ -43,6 +43,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "bootscript": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Bootscript",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_bootscript",
+            "title": "ScalewayServer.bootscript",
+            "$ref": "#/definitions/Bootscript"
+        },
         "project": {
             "storages": ["SQL"],
             "nullable": true,
