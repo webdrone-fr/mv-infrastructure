@@ -77,6 +77,17 @@
                 "maxLength": 255
             }
         },
+        "lastUpdated": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last Updated",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_lastUpdated",
+            "title": "SecurityGroup.lastUpdated",
+            "type": "string"
+        },
         "servers": {
             "storages": ["SQL"],
             "nullable": true,
