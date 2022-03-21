@@ -27,6 +27,8 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     private String placementGroup;
 
+    private List<String> maintenances = new ArrayList<>();
+
     private List<String> privateNics = new ArrayList<>();
 
     @Override()
@@ -68,6 +70,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPlacementGroup(String placementGroup) {
         this.placementGroup = placementGroup;
+    }
+
+    public List<String> getMaintenances() {
+        return maintenances;
+    }
+
+    public void setMaintenances(List<String> maintenances) {
+        this.maintenances = maintenances;
     }
 
     public List<String> getPrivateNics() {
