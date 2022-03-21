@@ -28,6 +28,8 @@ public class ServiceProvider implements CustomEntity {
 
     private List<String> publicIp = new ArrayList<>();
 
+    private List<String> zones = new ArrayList<>();
+
     private List<String> status = new ArrayList<>();
 
     @Override()
@@ -69,6 +71,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setPublicIp(List<String> publicIp) {
         this.publicIp = publicIp;
+    }
+
+    public List<String> getZones() {
+        return zones;
+    }
+
+    public void setZones(List<String> zones) {
+        this.zones = zones;
     }
 
     public List<String> getStatus() {
