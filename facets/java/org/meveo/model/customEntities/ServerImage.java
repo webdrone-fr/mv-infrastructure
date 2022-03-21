@@ -23,6 +23,8 @@ public class ServerImage implements CustomEntity {
 
     private String fromServer;
 
+    private String zone;
+
     private Bootscript defaultBootscript;
 
     private String organization;
@@ -58,6 +60,14 @@ public class ServerImage implements CustomEntity {
 
     public void setFromServer(String fromServer) {
         this.fromServer = fromServer;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
     }
 
     public Bootscript getDefaultBootscript() {
