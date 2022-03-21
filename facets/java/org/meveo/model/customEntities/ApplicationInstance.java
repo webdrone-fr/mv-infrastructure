@@ -23,6 +23,8 @@ public class ApplicationInstance implements CustomEntity {
 
     private Boolean isStartServiceSource;
 
+    private Long port;
+
     private String repoName;
 
     @Override()
@@ -56,6 +58,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setIsStartServiceSource(Boolean isStartServiceSource) {
         this.isStartServiceSource = isStartServiceSource;
+    }
+
+    public Long getPort() {
+        return port;
+    }
+
+    public void setPort(Long port) {
+        this.port = port;
     }
 
     public String getRepoName() {
