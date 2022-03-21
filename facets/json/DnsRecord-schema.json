@@ -16,6 +16,17 @@
             "title": "DnsRecord.domainName",
             "$ref": "#/definitions/DomainName"
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_name",
+            "title": "DnsRecord.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "value": {
             "storages": ["SQL"],
             "nullable": true,
