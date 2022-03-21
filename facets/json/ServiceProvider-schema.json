@@ -60,6 +60,21 @@
             "title": "ServiceProvider.organization",
             "type": "object"
         },
+        "serverType": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_ServiceProvider_serverType_item",
+                "title": "ServiceProvider.serverType item",
+                "type": "string"
+            }},
+            "nullable": true,
+            "description": "Server Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServiceProvider_serverType",
+            "title": "ServiceProvider.serverType",
+            "type": "object"
+        },
         "description": {
             "storages": ["SQL"],
             "nullable": true,
