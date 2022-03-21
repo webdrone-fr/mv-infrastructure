@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.Bootscript;
 import org.meveo.model.customEntities.ServerVolume;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,6 +22,8 @@ public class ServerImage implements CustomEntity {
     private DBStorageType storages;
 
     private String fromServer;
+
+    private Bootscript defaultBootscript;
 
     private String organization;
 
@@ -49,6 +52,14 @@ public class ServerImage implements CustomEntity {
 
     public void setFromServer(String fromServer) {
         this.fromServer = fromServer;
+    }
+
+    public Bootscript getDefaultBootscript() {
+        return defaultBootscript;
+    }
+
+    public void setDefaultBootscript(Bootscript defaultBootscript) {
+        this.defaultBootscript = defaultBootscript;
     }
 
     public String getOrganization() {
