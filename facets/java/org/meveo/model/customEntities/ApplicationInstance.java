@@ -19,6 +19,8 @@ public class ApplicationInstance implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String application;
+
     private Boolean isStartServiceSource;
 
     private String repoName;
@@ -38,6 +40,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
     }
 
     public Boolean getIsStartServiceSource() {
