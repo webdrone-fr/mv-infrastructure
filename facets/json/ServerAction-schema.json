@@ -70,6 +70,17 @@
             "id": "CE_ServerAction_creationDate",
             "title": "ServerAction.creationDate",
             "type": "string"
+        },
+        "responseStatus": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Response status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerAction_responseStatus",
+            "title": "ServerAction.responseStatus",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
