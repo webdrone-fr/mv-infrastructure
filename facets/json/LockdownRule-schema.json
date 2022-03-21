@@ -23,6 +23,17 @@
                 "maxLength": 50
             }
         },
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_providerSideId",
+            "title": "LockdownRule.providerSideId",
+            "type": "string",
+            "maxLength": 32
+        },
         "paused": {
             "storages": ["SQL"],
             "default": "false",
