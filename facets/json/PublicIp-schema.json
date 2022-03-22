@@ -16,6 +16,17 @@
             "title": "PublicIp.server",
             "$ref": "#/definitions/Server"
         },
+        "zone": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Zone",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_zone",
+            "title": "PublicIp.zone",
+            "type": "string",
+            "maxLength": 15
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
