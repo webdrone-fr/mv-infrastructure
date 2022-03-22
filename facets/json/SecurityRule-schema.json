@@ -5,15 +5,27 @@
     "id": "SecurityRule",
     "title": "Security Rule",
     "type": "object",
-    "properties": {"ipRange": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "IP Range",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_SecurityRule_ipRange",
-        "title": "SecurityRule.ipRange",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "ipRange": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "IP Range",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_ipRange",
+            "title": "SecurityRule.ipRange",
+            "type": "string",
+            "maxLength": 255
+        },
+        "securityGroup": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Security Group",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_securityGroup",
+            "title": "SecurityRule.securityGroup",
+            "$ref": "#/definitions/SecurityGroup"
+        }
+    }
 }
