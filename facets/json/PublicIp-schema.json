@@ -26,6 +26,17 @@
             "title": "PublicIp.organization",
             "type": "string",
             "maxLength": 50
+        },
+        "project": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Project ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_project",
+            "title": "PublicIp.project",
+            "type": "string",
+            "maxLength": 50
         }
     }
 }
