@@ -30,6 +30,17 @@
             "title": "DnsRecord.domainName",
             "$ref": "#/definitions/DomainName"
         },
+        "isLocked": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Locked",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_isLocked",
+            "title": "DnsRecord.isLocked",
+            "type": "string"
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
