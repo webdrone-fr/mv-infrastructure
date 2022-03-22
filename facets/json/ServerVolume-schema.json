@@ -4,5 +4,18 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "ServerVolume",
     "title": "Server Volume",
-    "type": "object"
+    "type": "object",
+    "properties": {"volumeType": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Volume Type",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_ServerVolume_volumeType",
+        "title": "ServerVolume.volumeType",
+        "enum": [
+            "b_ssd",
+            "l_ssd"
+        ]
+    }}
 }
