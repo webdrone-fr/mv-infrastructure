@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.DomainName;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class LockdownRule implements CustomEntity {
@@ -26,6 +27,8 @@ public class LockdownRule implements CustomEntity {
     private List<String> urls = new ArrayList<>();
 
     private DomainName domainName;
+
+    private Instant creationDate;
 
     @Override()
     public String getUuid() {
@@ -66,6 +69,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setDomainName(DomainName domainName) {
         this.domainName = domainName;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override()
