@@ -23,6 +23,8 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     private String privateIp;
 
+    private String placementGroup;
+
     private List<String> privateNics = new ArrayList<>();
 
     @Override()
@@ -48,6 +50,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPrivateIp(String privateIp) {
         this.privateIp = privateIp;
+    }
+
+    public String getPlacementGroup() {
+        return placementGroup;
+    }
+
+    public void setPlacementGroup(String placementGroup) {
+        this.placementGroup = placementGroup;
     }
 
     public List<String> getPrivateNics() {
