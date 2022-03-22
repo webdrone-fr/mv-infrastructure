@@ -3,8 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SecurityGroup implements CustomEntity {
@@ -20,6 +20,8 @@ public class SecurityGroup implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
+
+    private List<String> servers = new ArrayList<>();
 
     private String zone;
 
@@ -56,6 +58,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public List<String> getServers() {
+        return servers;
+    }
+
+    public void setServers(List<String> servers) {
+        this.servers = servers;
     }
 
     public String getZone() {
