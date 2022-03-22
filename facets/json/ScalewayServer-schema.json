@@ -51,6 +51,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "ipVSix": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Ipv6",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_ipVSix",
+            "title": "ScalewayServer.ipVSix",
+            "type": "string",
+            "maxLength": 255
+        },
         "totalLocalVolumesSize": {
             "storages": ["SQL"],
             "nullable": true,
