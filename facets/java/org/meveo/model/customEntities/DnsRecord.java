@@ -39,6 +39,8 @@ public class DnsRecord implements CustomEntity {
 
     private Boolean proxiable;
 
+    private Long ttl;
+
     private String value;
 
     @Override()
@@ -128,6 +130,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setProxiable(Boolean proxiable) {
         this.proxiable = proxiable;
+    }
+
+    public Long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(Long ttl) {
+        this.ttl = ttl;
     }
 
     public String getValue() {
