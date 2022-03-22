@@ -23,6 +23,8 @@ public class SecurityGroup implements CustomEntity {
 
     private String zone;
 
+    private String inboundDefaultPolicy;
+
     private String outboundDefaultPolicy;
 
     private Boolean projectDefault;
@@ -62,6 +64,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    public String getInboundDefaultPolicy() {
+        return inboundDefaultPolicy;
+    }
+
+    public void setInboundDefaultPolicy(String inboundDefaultPolicy) {
+        this.inboundDefaultPolicy = inboundDefaultPolicy;
     }
 
     public String getOutboundDefaultPolicy() {
