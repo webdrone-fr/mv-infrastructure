@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.DomainName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class LockdownRule implements CustomEntity {
@@ -23,6 +24,8 @@ public class LockdownRule implements CustomEntity {
     private List<String> ipRanges = new ArrayList<>();
 
     private List<String> urls = new ArrayList<>();
+
+    private DomainName domainName;
 
     @Override()
     public String getUuid() {
@@ -55,6 +58,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setUrls(List<String> urls) {
         this.urls = urls;
+    }
+
+    public DomainName getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(DomainName domainName) {
+        this.domainName = domainName;
     }
 
     @Override()
