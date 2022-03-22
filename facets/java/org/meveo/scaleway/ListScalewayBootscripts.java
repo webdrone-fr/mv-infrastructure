@@ -76,7 +76,7 @@ public class ListScalewayBootscripts extends Script {
                     }
                 }
             }
-            ScalewayHelperService.filterToLatestValues("Bootscript", providerSideIds, crossStorageApi, defaultRepo);
+            // ScalewayHelperService.filterToLatestValues("Bootscript", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

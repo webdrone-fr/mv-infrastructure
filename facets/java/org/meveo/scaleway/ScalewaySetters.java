@@ -93,7 +93,14 @@ public class ScalewaySetters extends Script{
                         } else {
                             rootVolume = new ServerVolume();
                             rootVolume.setUuid(rootVolumeId);
-                            rootVolume.setServer(serverId);
+                            if(crossStorageApi.find(defaultRepo, ScalewayServer.class).by("providerSideId", serverId).getResult()!=null) {
+                                rootVolume.setServer(serverId);
+                            } else {
+                                rootVolume.setServer(imageId);
+                                rootVolume.setCreationDate(OffsetDateTime.parse(imageObj.get("creation_date").getAsString()).toInstant());
+                                rootVolume.setLastUpdated(OffsetDateTime.parse(imageObj.get("modification_date").getAsString()).toInstant());
+                                rootVolume.setZone(imageObj.get("zone").getAsString());
+                            }
                         }
                         rootVolume = ScalewaySetters.setServerVolume(rootVolumeObj, rootVolume, crossStorageApi, defaultRepo);
                         crossStorageApi.createOrUpdate(defaultRepo, rootVolume);

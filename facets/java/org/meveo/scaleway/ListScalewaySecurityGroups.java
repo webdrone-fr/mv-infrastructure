@@ -79,7 +79,7 @@ public class ListScalewaySecurityGroups extends Script {
                     }
                 }
             }
-            ScalewayHelperService.filterToLatestValues("SecurityGroup", providerSideIds, crossStorageApi, defaultRepo);
+            // ScalewayHelperService.filterToLatestValues("SecurityGroup", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

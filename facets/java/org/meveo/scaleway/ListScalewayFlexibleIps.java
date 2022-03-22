@@ -96,7 +96,7 @@ public class ListScalewayFlexibleIps extends Script{
                     logger.error("Error retrieving public ip records for provider : {}", provider.getCode(), e.getMessage());
                 }
             }
-            ScalewayHelperService.filterToLatestValues("PublicIp", providerSideIds, crossStorageApi, defaultRepo);
+            // ScalewayHelperService.filterToLatestValues("PublicIp", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

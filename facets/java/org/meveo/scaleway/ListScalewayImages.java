@@ -75,7 +75,7 @@ public class ListScalewayImages extends Script{
                     }
                 }
             }
-            ScalewayHelperService.filterToLatestValues("ServerImage", providerSideIds, crossStorageApi, defaultRepo);
+            // ScalewayHelperService.filterToLatestValues("ServerImage", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

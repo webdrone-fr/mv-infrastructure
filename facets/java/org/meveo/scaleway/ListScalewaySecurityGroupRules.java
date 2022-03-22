@@ -77,7 +77,7 @@ public class ListScalewaySecurityGroupRules extends Script{
                 }
             }
         }
-        ScalewayHelperService.filterToLatestValues("SecurityRule", providerSideIds, crossStorageApi, defaultRepo);
+        // ScalewayHelperService.filterToLatestValues("SecurityRule", providerSideIds, crossStorageApi, defaultRepo);
         response.close();
     }
 }

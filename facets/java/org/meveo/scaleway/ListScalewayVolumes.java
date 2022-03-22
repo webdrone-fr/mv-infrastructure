@@ -80,7 +80,7 @@ public class ListScalewayVolumes extends Script{
                     }
                 }
             }
-            ScalewayHelperService.filterToLatestValues("ServerVolume", providerSideIds, crossStorageApi, defaultRepo);
+            // ScalewayHelperService.filterToLatestValues("ServerVolume", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

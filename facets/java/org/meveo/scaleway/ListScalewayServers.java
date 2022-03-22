@@ -63,7 +63,7 @@ public class ListScalewayServers extends Script {
                     ScalewayServer server = null;
                     String name = serverObj.get("name").getAsString(); // used for check
                     String serverId = serverObj.get("id").getAsString();
-                    if (name.startsWith("dev-") || name.startsWith("int")) { // check for case for intégration servers
+                    if (name.startsWith("dev-") || name.startsWith("int") || name.startsWith("torrent")) { // check for case for intégration servers
                         providerSideIds.add(serverId);
                         try {
                             if(crossStorageApi.find(defaultRepo, Server.class).by("providerSideId", serverId).getResult() != null) {
@@ -80,7 +80,7 @@ public class ListScalewayServers extends Script {
                     }
                 }
             }
-            ScalewayHelperService.filterToLatestValues("ScalewayServer", providerSideIds, crossStorageApi, defaultRepo);
+            // ScalewayHelperService.filterToLatestValues("ScalewayServer", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }
