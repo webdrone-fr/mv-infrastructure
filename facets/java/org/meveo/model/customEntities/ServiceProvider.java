@@ -24,6 +24,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String apiBaseUrl;
 
+    private Map<String, String> images = new HashMap<>();
+
     private String code;
 
     private Map<String, String> organization = new HashMap<>();
@@ -57,6 +59,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setApiBaseUrl(String apiBaseUrl) {
         this.apiBaseUrl = apiBaseUrl;
+    }
+
+    public Map<String, String> getImages() {
+        return images;
+    }
+
+    public void setImages(Map<String, String> images) {
+        this.images = images;
     }
 
     public String getCode() {
