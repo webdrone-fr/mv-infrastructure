@@ -24,6 +24,8 @@ public class ServiceProvider implements CustomEntity {
 
     private String apiBaseUrl;
 
+    private String code;
+
     private Map<String, String> organization = new HashMap<>();
 
     private List<String> publicIp = new ArrayList<>();
@@ -55,6 +57,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setApiBaseUrl(String apiBaseUrl) {
         this.apiBaseUrl = apiBaseUrl;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Map<String, String> getOrganization() {
