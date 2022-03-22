@@ -64,6 +64,17 @@
                 "syncing_error",
                 "available"
             ]
+        },
+        "stateful": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Stateful",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_stateful",
+            "title": "SecurityGroup.stateful",
+            "type": "string"
         }
     }
 }
