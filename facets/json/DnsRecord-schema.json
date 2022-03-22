@@ -38,6 +38,17 @@
             "title": "DnsRecord.proxied",
             "type": "string"
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_creationDate",
+            "title": "DnsRecord.creationDate",
+            "type": "string"
+        },
         "value": {
             "storages": ["SQL"],
             "nullable": true,
