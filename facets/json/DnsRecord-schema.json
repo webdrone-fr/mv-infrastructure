@@ -4,5 +4,15 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "DnsRecord",
     "title": "DNS record",
-    "type": "object"
+    "type": "object",
+    "properties": {"domainName": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Domain name",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_DnsRecord_domainName",
+        "title": "DnsRecord.domainName",
+        "$ref": "#/definitions/DomainName"
+    }}
 }
