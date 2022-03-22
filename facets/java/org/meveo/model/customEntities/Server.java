@@ -31,6 +31,8 @@ public class Server implements CustomEntity {
 
     private Map<String, ServerVolume> additionalVolumes = new HashMap<>();
 
+    private String instanceName;
+
     private String sergentUrl;
 
     private String publicIp;
@@ -92,6 +94,14 @@ public class Server implements CustomEntity {
 
     public void setAdditionalVolumes(Map<String, ServerVolume> additionalVolumes) {
         this.additionalVolumes = additionalVolumes;
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
     }
 
     public String getSergentUrl() {
