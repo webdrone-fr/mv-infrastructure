@@ -41,6 +41,17 @@
                 "l_ssd"
             ]
         },
+        "size": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Size",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_size",
+            "title": "ServerVolume.size",
+            "type": "string",
+            "maxLength": 255
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
