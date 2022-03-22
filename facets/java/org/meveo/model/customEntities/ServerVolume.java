@@ -19,6 +19,8 @@ public class ServerVolume implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String server;
+
     private String volumeType;
 
     @Override()
@@ -36,6 +38,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
     }
 
     public String getVolumeType() {
