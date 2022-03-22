@@ -5,21 +5,34 @@
     "id": "ServerNetwork",
     "title": "Server Network",
     "type": "object",
-    "properties": {"subnet": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "uniqueItems": true,
-        "description": "Subnet",
-        "readOnly": true,
-        "versionable": false,
-        "id": "CE_ServerNetwork_subnet",
-        "title": "ServerNetwork.subnet",
-        "type": "array",
-        "items": {
-            "id": "CE_ServerNetwork_subnet_item",
-            "title": "ServerNetwork.subnet item",
+    "properties": {
+        "subnet": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Subnet",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerNetwork_subnet",
+            "title": "ServerNetwork.subnet",
+            "type": "array",
+            "items": {
+                "id": "CE_ServerNetwork_subnet_item",
+                "title": "ServerNetwork.subnet item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerNetwork_name",
+            "title": "ServerNetwork.name",
             "type": "string",
             "maxLength": 255
         }
-    }}
+    }
 }
