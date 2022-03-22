@@ -5,15 +5,27 @@
     "id": "PublicIp",
     "title": "Public Ip",
     "type": "object",
-    "properties": {"organization": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Organization ID",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_PublicIp_organization",
-        "title": "PublicIp.organization",
-        "type": "string",
-        "maxLength": 50
-    }}
+    "properties": {
+        "server": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_server",
+            "title": "PublicIp.server",
+            "$ref": "#/definitions/Server"
+        },
+        "organization": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Organization ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_organization",
+            "title": "PublicIp.organization",
+            "type": "string",
+            "maxLength": 50
+        }
+    }
 }
