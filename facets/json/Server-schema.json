@@ -53,6 +53,17 @@
             "type": "string",
             "maxLength": 500
         },
+        "locationDefinition": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Location Definition",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_locationDefinition",
+            "title": "Server.locationDefinition",
+            "type": "string",
+            "maxLength": 255
+        },
         "publicIp": {
             "storages": ["SQL"],
             "nullable": true,
