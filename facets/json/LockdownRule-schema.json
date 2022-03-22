@@ -39,6 +39,16 @@
                 "type": "string",
                 "maxLength": 255
             }
+        },
+        "domainName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Domain Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_LockdownRule_domainName",
+            "title": "LockdownRule.domainName",
+            "$ref": "#/definitions/DomainName"
         }
     }
 }
