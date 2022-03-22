@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_providerSideId",
+            "title": "ServerImage.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "additionalVolumes": {
             "storages": ["SQL"],
             "patternProperties": {"^.*$": {
