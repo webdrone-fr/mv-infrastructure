@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import org.meveo.model.customEntities.Server;
+import org.meveo.model.customEntities.ServiceProvider;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,6 +23,8 @@ public class ServerAction implements CustomEntity {
     private DBStorageType storages;
 
     private Server server;
+
+    private ServiceProvider provider;
 
     private String response;
 
@@ -52,6 +55,14 @@ public class ServerAction implements CustomEntity {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public ServiceProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(ServiceProvider provider) {
+        this.provider = provider;
     }
 
     public String getResponse() {
