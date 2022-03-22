@@ -30,6 +30,8 @@ public class ServerVolume implements CustomEntity {
 
     private String state;
 
+    private String baseVolume;
+
     private Instant creationDate;
 
     private Boolean isBoot;
@@ -89,6 +91,14 @@ public class ServerVolume implements CustomEntity {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getBaseVolume() {
+        return baseVolume;
+    }
+
+    public void setBaseVolume(String baseVolume) {
+        this.baseVolume = baseVolume;
     }
 
     public Instant getCreationDate() {
