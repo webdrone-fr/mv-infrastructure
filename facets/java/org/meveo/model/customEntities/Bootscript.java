@@ -19,30 +19,6 @@ public class Bootscript implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private String providerSideId;
-
-    private Boolean isDefault;
-
-    private String dtb;
-
-    private String bootcmdargs;
-
-    private String zone;
-
-    private String kernel;
-
-    private String organization;
-
-    private Boolean isPublic;
-
-    private String project;
-
-    private String arch;
-
-    private String title;
-
-    private String initrd;
-
     @Override()
     public String getUuid() {
         return uuid;
@@ -58,102 +34,6 @@ public class Bootscript implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public String getProviderSideId() {
-        return providerSideId;
-    }
-
-    public void setProviderSideId(String providerSideId) {
-        this.providerSideId = providerSideId;
-    }
-
-    public Boolean getIsDefault() {
-        return isDefault;
-    }
-
-    public void setIsDefault(Boolean isDefault) {
-        this.isDefault = isDefault;
-    }
-
-    public String getDtb() {
-        return dtb;
-    }
-
-    public void setDtb(String dtb) {
-        this.dtb = dtb;
-    }
-
-    public String getBootcmdargs() {
-        return bootcmdargs;
-    }
-
-    public void setBootcmdargs(String bootcmdargs) {
-        this.bootcmdargs = bootcmdargs;
-    }
-
-    public String getZone() {
-        return zone;
-    }
-
-    public void setZone(String zone) {
-        this.zone = zone;
-    }
-
-    public String getKernel() {
-        return kernel;
-    }
-
-    public void setKernel(String kernel) {
-        this.kernel = kernel;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public Boolean getIsPublic() {
-        return isPublic;
-    }
-
-    public void setIsPublic(Boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    public String getArch() {
-        return arch;
-    }
-
-    public void setArch(String arch) {
-        this.arch = arch;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getInitrd() {
-        return initrd;
-    }
-
-    public void setInitrd(String initrd) {
-        this.initrd = initrd;
     }
 
     @Override()
