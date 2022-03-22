@@ -51,6 +51,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "totalLocalVolumesSize": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total Local Volume Size",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_totalLocalVolumesSize",
+            "title": "ScalewayServer.totalLocalVolumesSize",
+            "type": "string",
+            "maxLength": 255
+        },
         "maintenances": {
             "storages": ["SQL"],
             "nullable": true,
