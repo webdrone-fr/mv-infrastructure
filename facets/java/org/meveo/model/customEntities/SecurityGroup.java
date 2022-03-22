@@ -33,6 +33,8 @@ public class SecurityGroup implements CustomEntity {
 
     private String name;
 
+    private String description;
+
     private String project;
 
     private String state;
@@ -106,6 +108,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getProject() {
