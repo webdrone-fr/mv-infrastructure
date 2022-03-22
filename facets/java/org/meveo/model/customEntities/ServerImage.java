@@ -20,6 +20,8 @@ public class ServerImage implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String fromServer;
+
     private String organization;
 
     private ServerVolume rootVolume;
@@ -39,6 +41,14 @@ public class ServerImage implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getFromServer() {
+        return fromServer;
+    }
+
+    public void setFromServer(String fromServer) {
+        this.fromServer = fromServer;
     }
 
     public String getOrganization() {
