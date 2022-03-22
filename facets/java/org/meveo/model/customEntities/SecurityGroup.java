@@ -19,6 +19,8 @@ public class SecurityGroup implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean projectDefault;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getProjectDefault() {
+        return projectDefault;
+    }
+
+    public void setProjectDefault(Boolean projectDefault) {
+        this.projectDefault = projectDefault;
     }
 
     @Override()
