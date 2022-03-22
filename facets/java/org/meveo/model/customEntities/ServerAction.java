@@ -34,6 +34,8 @@ public class ServerAction implements CustomEntity {
 
     private String responseStatus;
 
+    private Long elapsedTimeMs;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -97,6 +99,14 @@ public class ServerAction implements CustomEntity {
 
     public void setResponseStatus(String responseStatus) {
         this.responseStatus = responseStatus;
+    }
+
+    public Long getElapsedTimeMs() {
+        return elapsedTimeMs;
+    }
+
+    public void setElapsedTimeMs(Long elapsedTimeMs) {
+        this.elapsedTimeMs = elapsedTimeMs;
     }
 
     @Override()
