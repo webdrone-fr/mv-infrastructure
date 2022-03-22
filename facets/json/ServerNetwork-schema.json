@@ -6,6 +6,17 @@
     "title": "Server Network",
     "type": "object",
     "properties": {
+        "lastUpdated": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last Updated",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_ServerNetwork_lastUpdated",
+            "title": "ServerNetwork.lastUpdated",
+            "type": "string"
+        },
         "subnet": {
             "storages": ["SQL"],
             "nullable": true,
