@@ -5,15 +5,27 @@
     "id": "ServerImage",
     "title": "Server Image",
     "type": "object",
-    "properties": {"organization": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Organization ID",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_ServerImage_organization",
-        "title": "ServerImage.organization",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "organization": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Organization ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_organization",
+            "title": "ServerImage.organization",
+            "type": "string",
+            "maxLength": 255
+        },
+        "rootVolume": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Root Volume",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerImage_rootVolume",
+            "title": "ServerImage.rootVolume",
+            "$ref": "#/definitions/ServerVolume"
+        }
+    }
 }
