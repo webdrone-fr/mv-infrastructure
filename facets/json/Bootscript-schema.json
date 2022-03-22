@@ -27,6 +27,17 @@
             "title": "Bootscript.organization",
             "type": "string",
             "maxLength": 255
+        },
+        "initrd": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Initial ramdisk Configuration",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_initrd",
+            "title": "Bootscript.initrd",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
