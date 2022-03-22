@@ -24,6 +24,8 @@ public class DomainName implements CustomEntity {
 
     private String name;
 
+    private Instant creationDate;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -55,6 +57,14 @@ public class DomainName implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override()
