@@ -32,6 +32,8 @@ public class Server implements CustomEntity {
 
     private SecurityGroup securityGroup;
 
+    private Instant creationDate;
+
     private String volumeSize;
 
     private String zone;
@@ -97,6 +99,14 @@ public class Server implements CustomEntity {
 
     public void setSecurityGroup(SecurityGroup securityGroup) {
         this.securityGroup = securityGroup;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getVolumeSize() {
