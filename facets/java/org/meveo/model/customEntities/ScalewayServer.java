@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.ArrayList;
 import org.meveo.model.customEntities.Server;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,6 +22,8 @@ public class ScalewayServer extends Server implements CustomEntity {
     private DBStorageType storages;
 
     private String privateIp;
+
+    private List<String> privateNics = new ArrayList<>();
 
     @Override()
     public String getUuid() {
@@ -45,6 +48,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPrivateIp(String privateIp) {
         this.privateIp = privateIp;
+    }
+
+    public List<String> getPrivateNics() {
+        return privateNics;
+    }
+
+    public void setPrivateNics(List<String> privateNics) {
+        this.privateNics = privateNics;
     }
 
     @Override()
