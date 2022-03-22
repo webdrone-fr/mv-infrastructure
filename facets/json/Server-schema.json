@@ -48,6 +48,17 @@
             "title": "Server.securityGroup",
             "$ref": "#/definitions/SecurityGroup"
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_creationDate",
+            "title": "Server.creationDate",
+            "type": "string"
+        },
         "volumeSize": {
             "storages": ["SQL"],
             "nullable": true,
