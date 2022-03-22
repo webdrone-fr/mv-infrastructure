@@ -22,6 +22,8 @@ public class ScalewayServer extends Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Boolean enableIPvSix;
+
     private String bootType;
 
     private Boolean dynamicIpRequired;
@@ -57,6 +59,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Boolean getEnableIPvSix() {
+        return enableIPvSix;
+    }
+
+    public void setEnableIPvSix(Boolean enableIPvSix) {
+        this.enableIPvSix = enableIPvSix;
     }
 
     public String getBootType() {
