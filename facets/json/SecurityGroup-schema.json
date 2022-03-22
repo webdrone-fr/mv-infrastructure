@@ -17,6 +17,17 @@
             "title": "SecurityGroup.enableDefaultSecurity",
             "type": "string"
         },
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_providerSideId",
+            "title": "SecurityGroup.providerSideId",
+            "type": "string",
+            "maxLength": 255
+        },
         "description": {
             "storages": ["SQL"],
             "nullable": true,
