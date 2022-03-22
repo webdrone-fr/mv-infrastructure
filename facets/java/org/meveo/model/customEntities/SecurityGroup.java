@@ -23,6 +23,8 @@ public class SecurityGroup implements CustomEntity {
 
     private Boolean enableDefaultSecurity;
 
+    private String providerSideId;
+
     private String description;
 
     private String project;
@@ -70,6 +72,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setEnableDefaultSecurity(Boolean enableDefaultSecurity) {
         this.enableDefaultSecurity = enableDefaultSecurity;
+    }
+
+    public String getProviderSideId() {
+        return providerSideId;
+    }
+
+    public void setProviderSideId(String providerSideId) {
+        this.providerSideId = providerSideId;
     }
 
     public String getDescription() {
