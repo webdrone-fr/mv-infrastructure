@@ -27,6 +27,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "proxied": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Proxied",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_proxied",
+            "title": "DnsRecord.proxied",
+            "type": "string"
+        },
         "value": {
             "storages": ["SQL"],
             "nullable": true,
