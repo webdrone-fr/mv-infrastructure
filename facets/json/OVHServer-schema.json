@@ -6,15 +6,33 @@
     "id": "OVHServer",
     "title": "OVH Server",
     "type": "object",
-    "properties": {"keyName": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Ssh Key Name",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_OVHServer_keyName",
-        "title": "OVHServer.keyName",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "keyName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Ssh Key Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_OVHServer_keyName",
+            "title": "OVHServer.keyName",
+            "type": "string",
+            "maxLength": 255
+        },
+        "network": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Network",
+            "readOnly": true,
+            "versionable": false,
+            "id": "CE_OVHServer_network",
+            "title": "OVHServer.network",
+            "type": "array",
+            "items": {
+                "id": "CE_OVHServer_network_item",
+                "title": "OVHServer.network item",
+                "$ref": "#/definitions/ServerNetwork"
+            }
+        }
+    }
 }
