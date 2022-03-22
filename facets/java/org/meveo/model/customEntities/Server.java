@@ -9,6 +9,7 @@ import org.meveo.model.customEntities.ServerVolume;
 import java.util.HashMap;
 import org.meveo.model.customEntities.SecurityGroup;
 import java.time.Instant;
+import org.meveo.model.customEntities.ServiceProvider;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +40,8 @@ public class Server implements CustomEntity {
     private Instant creationDate;
 
     private String volumeSize;
+
+    private ServiceProvider provider;
 
     private String zone;
 
@@ -127,6 +130,14 @@ public class Server implements CustomEntity {
 
     public void setVolumeSize(String volumeSize) {
         this.volumeSize = volumeSize;
+    }
+
+    public ServiceProvider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(ServiceProvider provider) {
+        this.provider = provider;
     }
 
     public String getZone() {
