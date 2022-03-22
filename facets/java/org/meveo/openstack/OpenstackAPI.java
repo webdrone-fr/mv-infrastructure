@@ -11,6 +11,7 @@ import com.google.gson.*;
 import java.util.List;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.persistence.JacksonUtil;
 
 public class OpenstackAPI extends Script {
 
@@ -41,6 +42,7 @@ public class OpenstackAPI extends Script {
             WebTarget target = client.target(this.computeBaseAPI + url);
             Response response = target.request().header("X-Auth-Token", token.getToken()).get();
             String value = response.readEntity(String.class);
+            log.info("value: {}", JacksonUtil.toStringPrettyPrinted(value));
             if (response.getStatus() < 300) {
               	String isList = "\"" + objReturn + "s\": [";
                 if (value.contains(isList)) {
