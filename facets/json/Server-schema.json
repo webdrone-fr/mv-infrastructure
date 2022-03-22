@@ -171,6 +171,17 @@
             "title": "Server.rootVolume",
             "$ref": "#/definitions/ServerVolume"
         },
+        "location": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Location",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_location",
+            "title": "Server.location",
+            "type": "string",
+            "maxLength": 255
+        },
         "backupName": {
             "storages": ["SQL"],
             "nullable": true,
