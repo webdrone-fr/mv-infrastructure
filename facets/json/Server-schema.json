@@ -16,6 +16,17 @@
             "title": "Server.image",
             "$ref": "#/definitions/ServerImage"
         },
+        "domainName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Domain Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_domainName",
+            "title": "Server.domainName",
+            "type": "string",
+            "maxLength": 255
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
