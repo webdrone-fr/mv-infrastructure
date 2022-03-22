@@ -33,6 +33,8 @@ public class SecurityGroup implements CustomEntity {
 
     private List<String> tags = new ArrayList<>();
 
+    private Instant lastUpdated;
+
     private List<String> servers = new ArrayList<>();
 
     private String zone;
@@ -112,6 +114,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public Instant getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public List<String> getServers() {
