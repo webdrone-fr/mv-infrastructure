@@ -25,6 +25,8 @@ public class DnsRecord implements CustomEntity {
 
     private DomainName domainName;
 
+    private Boolean isLocked;
+
     private String name;
 
     private Boolean proxied;
@@ -64,6 +66,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setDomainName(DomainName domainName) {
         this.domainName = domainName;
+    }
+
+    public Boolean getIsLocked() {
+        return isLocked;
+    }
+
+    public void setIsLocked(Boolean isLocked) {
+        this.isLocked = isLocked;
     }
 
     public String getName() {
