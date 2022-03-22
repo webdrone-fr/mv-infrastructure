@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "SecurityGroup",
     "title": "Security Group",
-    "type": "object"
+    "type": "object",
+    "properties": {"projectDefault": {
+        "storages": ["SQL"],
+        "default": "false",
+        "nullable": true,
+        "description": "Project Default",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_SecurityGroup_projectDefault",
+        "title": "SecurityGroup.projectDefault",
+        "type": "string"
+    }}
 }
