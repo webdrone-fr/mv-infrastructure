@@ -16,6 +16,49 @@
             "title": "Server.image",
             "$ref": "#/definitions/ServerImage"
         },
+        "sergentUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Sergent URL",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_sergentUrl",
+            "title": "Server.sergentUrl",
+            "type": "string",
+            "maxLength": 500
+        },
+        "publicIp": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Public IP",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_publicIp",
+            "title": "Server.publicIp",
+            "type": "string",
+            "maxLength": 16
+        },
+        "securityGroup": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Security Group",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_securityGroup",
+            "title": "Server.securityGroup",
+            "$ref": "#/definitions/SecurityGroup"
+        },
+        "volumeSize": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total volume size",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_volumeSize",
+            "title": "Server.volumeSize",
+            "type": "string",
+            "maxLength": 20
+        },
         "zone": {
             "storages": ["SQL"],
             "nullable": true,
@@ -43,6 +86,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "lastUpdate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last update",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_lastUpdate",
+            "title": "Server.lastUpdate",
+            "type": "string"
+        },
         "organization": {
             "storages": ["SQL"],
             "nullable": true,
@@ -53,17 +107,6 @@
             "title": "Server.organization",
             "type": "string",
             "maxLength": 255
-        },
-        "sergentUrl": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Sergent URL",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_sergentUrl",
-            "title": "Server.sergentUrl",
-            "type": "string",
-            "maxLength": 500
         },
         "serverActions": {
             "storages": ["SQL"],
@@ -92,27 +135,6 @@
             "title": "Server.rootVolume",
             "$ref": "#/definitions/ServerVolume"
         },
-        "publicIp": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Public IP",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_publicIp",
-            "title": "Server.publicIp",
-            "type": "string",
-            "maxLength": 16
-        },
-        "securityGroup": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Security Group",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_securityGroup",
-            "title": "Server.securityGroup",
-            "$ref": "#/definitions/SecurityGroup"
-        },
         "backupName": {
             "storages": ["SQL"],
             "nullable": true,
@@ -123,17 +145,6 @@
             "title": "Server.backupName",
             "type": "string",
             "maxLength": 255
-        },
-        "volumeSize": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Total volume size",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_Server_volumeSize",
-            "title": "Server.volumeSize",
-            "type": "string",
-            "maxLength": 20
         },
         "status": {
             "storages": ["SQL"],
