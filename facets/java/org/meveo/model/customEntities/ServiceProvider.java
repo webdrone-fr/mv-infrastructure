@@ -22,6 +22,8 @@ public class ServiceProvider implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String apiBaseUrl;
+
     private Map<String, String> organization = new HashMap<>();
 
     private List<String> status = new ArrayList<>();
@@ -41,6 +43,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getApiBaseUrl() {
+        return apiBaseUrl;
+    }
+
+    public void setApiBaseUrl(String apiBaseUrl) {
+        this.apiBaseUrl = apiBaseUrl;
     }
 
     public Map<String, String> getOrganization() {
