@@ -29,6 +29,8 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     private String placementGroup;
 
+    private String totalLocalVolumesSize;
+
     private List<String> maintenances = new ArrayList<>();
 
     private List<String> privateNics = new ArrayList<>();
@@ -80,6 +82,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPlacementGroup(String placementGroup) {
         this.placementGroup = placementGroup;
+    }
+
+    public String getTotalLocalVolumesSize() {
+        return totalLocalVolumesSize;
+    }
+
+    public void setTotalLocalVolumesSize(String totalLocalVolumesSize) {
+        this.totalLocalVolumesSize = totalLocalVolumesSize;
     }
 
     public List<String> getMaintenances() {
