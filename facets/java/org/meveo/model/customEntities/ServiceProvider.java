@@ -30,6 +30,8 @@ public class ServiceProvider implements CustomEntity {
 
     private Map<String, String> organization = new HashMap<>();
 
+    private String description;
+
     private List<String> publicIp = new ArrayList<>();
 
     private List<String> zones = new ArrayList<>();
@@ -83,6 +85,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setOrganization(Map<String, String> organization) {
         this.organization = organization;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<String> getPublicIp() {
