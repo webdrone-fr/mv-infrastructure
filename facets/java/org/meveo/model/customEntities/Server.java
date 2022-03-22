@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.ServerImage;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.SecurityGroup;
@@ -21,6 +22,8 @@ public class Server implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
+
+    private ServerImage image;
 
     private String organization;
 
@@ -51,6 +54,14 @@ public class Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public ServerImage getImage() {
+        return image;
+    }
+
+    public void setImage(ServerImage image) {
+        this.image = image;
     }
 
     public String getOrganization() {
