@@ -28,6 +28,17 @@
             "title": "SecurityGroup.projectDefault",
             "type": "string"
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_name",
+            "title": "SecurityGroup.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "project": {
             "storages": ["SQL"],
             "nullable": true,
