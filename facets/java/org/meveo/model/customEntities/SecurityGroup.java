@@ -23,6 +23,8 @@ public class SecurityGroup implements CustomEntity {
 
     private Boolean projectDefault;
 
+    private String name;
+
     private String project;
 
     private String state;
@@ -58,6 +60,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setProjectDefault(Boolean projectDefault) {
         this.projectDefault = projectDefault;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getProject() {
