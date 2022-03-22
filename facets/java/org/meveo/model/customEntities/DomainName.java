@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.ServiceProvider;
 import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,6 +20,8 @@ public class DomainName implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
+
+    private ServiceProvider registrar;
 
     private Instant registrationEndDate;
 
@@ -47,6 +50,14 @@ public class DomainName implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public ServiceProvider getRegistrar() {
+        return registrar;
+    }
+
+    public void setRegistrar(ServiceProvider registrar) {
+        this.registrar = registrar;
     }
 
     public Instant getRegistrationEndDate() {
