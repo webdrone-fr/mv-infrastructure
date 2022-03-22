@@ -29,6 +29,25 @@
                 "b_ssd",
                 "l_ssd"
             ]
+        },
+        "state": {
+            "storages": ["SQL"],
+            "default": "available",
+            "nullable": true,
+            "description": "State",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_state",
+            "title": "ServerVolume.state",
+            "enum": [
+                "saving",
+                "hotsyncing",
+                "available",
+                "resizing",
+                "snapshotting",
+                "fetching",
+                "error"
+            ]
         }
     }
 }
