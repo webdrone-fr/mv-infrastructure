@@ -19,6 +19,8 @@ public class Server implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String organization;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class Server implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     @Override()
