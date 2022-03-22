@@ -59,6 +59,17 @@
             "type": "string",
             "maxLength": 50
         },
+        "ipVFourAddress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "IpV4",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_PublicIp_ipVFourAddress",
+            "title": "PublicIp.ipVFourAddress",
+            "type": "string",
+            "maxLength": 50
+        },
         "location": {
             "storages": ["SQL"],
             "nullable": true,
