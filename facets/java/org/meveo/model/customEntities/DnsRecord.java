@@ -24,6 +24,8 @@ public class DnsRecord implements CustomEntity {
 
     private String name;
 
+    private Boolean proxied;
+
     private String value;
 
     @Override()
@@ -57,6 +59,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getProxied() {
+        return proxied;
+    }
+
+    public void setProxied(Boolean proxied) {
+        this.proxied = proxied;
     }
 
     public String getValue() {
