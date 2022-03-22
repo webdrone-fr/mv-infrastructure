@@ -22,6 +22,8 @@ public class DnsRecord implements CustomEntity {
 
     private DomainName domainName;
 
+    private String name;
+
     private String value;
 
     @Override()
@@ -47,6 +49,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setDomainName(DomainName domainName) {
         this.domainName = domainName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getValue() {
