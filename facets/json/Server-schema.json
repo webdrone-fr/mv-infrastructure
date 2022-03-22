@@ -177,6 +177,33 @@
             "type": "string",
             "maxLength": 255
         },
+        "serverType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Server Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_serverType",
+            "title": "Server.serverType",
+            "enum": [
+                "DEV1-M",
+                "GP1-S",
+                "ENT1-XL",
+                "GP1-M",
+                "DEV1-L",
+                "GP1-XS",
+                "ENT1-2XL",
+                "GP1-L",
+                "Stardust1-s",
+                "ENT1-L",
+                "ENT1-M",
+                "RENDER-S",
+                "ENT1-S",
+                "DEV1-XL",
+                "DEV1-S",
+                "GP1-XL"
+            ]
+        },
         "serverActions": {
             "storages": ["SQL"],
             "nullable": true,
