@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ServiceProvider implements CustomEntity {
@@ -22,6 +23,8 @@ public class ServiceProvider implements CustomEntity {
     private DBStorageType storages;
 
     private Map<String, String> organization = new HashMap<>();
+
+    private List<String> status = new ArrayList<>();
 
     @Override()
     public String getUuid() {
@@ -46,6 +49,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setOrganization(Map<String, String> organization) {
         this.organization = organization;
+    }
+
+    public List<String> getStatus() {
+        return status;
+    }
+
+    public void setStatus(List<String> status) {
+        this.status = status;
     }
 
     @Override()
