@@ -86,6 +86,19 @@
             "type": "string",
             "maxLength": 255
         },
+        "arch": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Arch",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_arch",
+            "title": "ScalewayServer.arch",
+            "enum": [
+                "x86_64",
+                "arm"
+            ]
+        },
         "ipVSix": {
             "storages": ["SQL"],
             "nullable": true,
