@@ -6,6 +6,20 @@
     "title": "DNS record",
     "type": "object",
     "properties": {
+        "recordType": {
+            "storages": ["SQL"],
+            "default": "A",
+            "nullable": true,
+            "description": "Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_recordType",
+            "title": "DnsRecord.recordType",
+            "enum": [
+                "A",
+                "CNAME"
+            ]
+        },
         "domainName": {
             "storages": ["SQL"],
             "nullable": true,
