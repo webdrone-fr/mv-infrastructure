@@ -22,6 +22,8 @@ public class Server implements CustomEntity {
 
     private String organization;
 
+    private String sergentUrl;
+
     private ServerVolume rootVolume;
 
     private String status;
@@ -49,6 +51,14 @@ public class Server implements CustomEntity {
 
     public void setOrganization(String organization) {
         this.organization = organization;
+    }
+
+    public String getSergentUrl() {
+        return sergentUrl;
+    }
+
+    public void setSergentUrl(String sergentUrl) {
+        this.sergentUrl = sergentUrl;
     }
 
     public ServerVolume getRootVolume() {
