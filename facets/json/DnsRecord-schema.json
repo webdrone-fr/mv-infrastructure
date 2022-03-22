@@ -5,14 +5,27 @@
     "id": "DnsRecord",
     "title": "DNS record",
     "type": "object",
-    "properties": {"domainName": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Domain name",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_DnsRecord_domainName",
-        "title": "DnsRecord.domainName",
-        "$ref": "#/definitions/DomainName"
-    }}
+    "properties": {
+        "domainName": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Domain name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_domainName",
+            "title": "DnsRecord.domainName",
+            "$ref": "#/definitions/DomainName"
+        },
+        "value": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Value",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_value",
+            "title": "DnsRecord.value",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
