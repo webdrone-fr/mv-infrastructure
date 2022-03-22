@@ -28,6 +28,23 @@
             "type": "string",
             "maxLength": 500
         },
+        "serverActions": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "Allowed Actions on Server",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_serverActions",
+            "title": "Server.serverActions",
+            "type": "array",
+            "items": {
+                "id": "CE_Server_serverActions_item",
+                "title": "Server.serverActions item",
+                "type": "string",
+                "maxLength": 255
+            }
+        },
         "rootVolume": {
             "storages": ["SQL"],
             "nullable": true,
