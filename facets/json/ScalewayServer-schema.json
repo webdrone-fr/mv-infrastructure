@@ -7,6 +7,20 @@
     "title": "Scaleway Server",
     "type": "object",
     "properties": {
+        "bootType": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Boot Type",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ScalewayServer_bootType",
+            "title": "ScalewayServer.bootType",
+            "enum": [
+                "bootscript",
+                "local",
+                "rescue"
+            ]
+        },
         "dynamicIpRequired": {
             "storages": ["SQL"],
             "default": "true",
