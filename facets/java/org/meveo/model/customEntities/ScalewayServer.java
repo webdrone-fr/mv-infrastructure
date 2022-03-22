@@ -36,6 +36,8 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     private String placementGroup;
 
+    private String arch;
+
     private String ipVSix;
 
     private String totalLocalVolumesSize;
@@ -115,6 +117,14 @@ public class ScalewayServer extends Server implements CustomEntity {
 
     public void setPlacementGroup(String placementGroup) {
         this.placementGroup = placementGroup;
+    }
+
+    public String getArch() {
+        return arch;
+    }
+
+    public void setArch(String arch) {
+        this.arch = arch;
     }
 
     public String getIpVSix() {
