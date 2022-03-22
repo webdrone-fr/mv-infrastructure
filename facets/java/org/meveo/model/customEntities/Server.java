@@ -5,6 +5,7 @@ import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
 import org.meveo.model.customEntities.ServerVolume;
+import org.meveo.model.customEntities.SecurityGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Server implements CustomEntity {
@@ -28,6 +29,8 @@ public class Server implements CustomEntity {
     private List<String> serverActions = new ArrayList<>();
 
     private ServerVolume rootVolume;
+
+    private SecurityGroup securityGroup;
 
     private String status;
 
@@ -78,6 +81,14 @@ public class Server implements CustomEntity {
 
     public void setRootVolume(ServerVolume rootVolume) {
         this.rootVolume = rootVolume;
+    }
+
+    public SecurityGroup getSecurityGroup() {
+        return securityGroup;
+    }
+
+    public void setSecurityGroup(SecurityGroup securityGroup) {
+        this.securityGroup = securityGroup;
     }
 
     public String getStatus() {
