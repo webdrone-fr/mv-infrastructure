@@ -30,6 +30,8 @@ public class LockdownRule implements CustomEntity {
 
     private Instant creationDate;
 
+    private List<String> ips = new ArrayList<>();
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -77,6 +79,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<String> getIps() {
+        return ips;
+    }
+
+    public void setIps(List<String> ips) {
+        this.ips = ips;
     }
 
     @Override()
