@@ -4,8 +4,8 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.util.ArrayList;
-import org.meveo.model.customEntities.DomainName;
 import java.time.Instant;
+import org.meveo.model.customEntities.DomainName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class LockdownRule implements CustomEntity {
@@ -23,6 +23,8 @@ public class LockdownRule implements CustomEntity {
     private DBStorageType storages;
 
     private List<String> ipRanges = new ArrayList<>();
+
+    private Instant lastUpdated;
 
     private String providerSideId;
 
@@ -61,6 +63,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setIpRanges(List<String> ipRanges) {
         this.ipRanges = ipRanges;
+    }
+
+    public Instant getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Instant lastUpdated) {
+        this.lastUpdated = lastUpdated;
     }
 
     public String getProviderSideId() {
