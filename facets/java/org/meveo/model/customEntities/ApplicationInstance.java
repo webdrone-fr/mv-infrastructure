@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ApplicationInstance implements CustomEntity {
@@ -18,6 +19,8 @@ public class ApplicationInstance implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
+
+    private List<String> investigationTypes = new ArrayList<>();
 
     private String application;
 
@@ -42,6 +45,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public List<String> getInvestigationTypes() {
+        return investigationTypes;
+    }
+
+    public void setInvestigationTypes(List<String> investigationTypes) {
+        this.investigationTypes = investigationTypes;
     }
 
     public String getApplication() {
