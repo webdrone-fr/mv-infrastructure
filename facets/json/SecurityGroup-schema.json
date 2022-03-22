@@ -5,15 +5,32 @@
     "id": "SecurityGroup",
     "title": "Security Group",
     "type": "object",
-    "properties": {"projectDefault": {
-        "storages": ["SQL"],
-        "default": "false",
-        "nullable": true,
-        "description": "Project Default",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_SecurityGroup_projectDefault",
-        "title": "SecurityGroup.projectDefault",
-        "type": "string"
-    }}
+    "properties": {
+        "projectDefault": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Project Default",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_projectDefault",
+            "title": "SecurityGroup.projectDefault",
+            "type": "string"
+        },
+        "state": {
+            "storages": ["SQL"],
+            "default": "available",
+            "nullable": true,
+            "description": "State",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_state",
+            "title": "SecurityGroup.state",
+            "enum": [
+                "syncing",
+                "syncing_error",
+                "available"
+            ]
+        }
+    }
 }
