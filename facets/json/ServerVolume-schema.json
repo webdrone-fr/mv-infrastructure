@@ -6,6 +6,17 @@
     "title": "Server Volume",
     "type": "object",
     "properties": {
+        "lastUpdated": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last Updated",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_lastUpdated",
+            "title": "ServerVolume.lastUpdated",
+            "type": "string"
+        },
         "providerSideId": {
             "storages": ["SQL"],
             "nullable": true,
