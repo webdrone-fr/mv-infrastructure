@@ -29,6 +29,8 @@ public class SecurityGroup implements CustomEntity {
 
     private String state;
 
+    private Boolean stateful;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -84,6 +86,14 @@ public class SecurityGroup implements CustomEntity {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Boolean getStateful() {
+        return stateful;
+    }
+
+    public void setStateful(Boolean stateful) {
+        this.stateful = stateful;
     }
 
     @Override()
