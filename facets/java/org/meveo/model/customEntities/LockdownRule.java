@@ -24,6 +24,8 @@ public class LockdownRule implements CustomEntity {
 
     private List<String> ipRanges = new ArrayList<>();
 
+    private Boolean paused;
+
     private List<String> urls = new ArrayList<>();
 
     private DomainName domainName;
@@ -57,6 +59,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setIpRanges(List<String> ipRanges) {
         this.ipRanges = ipRanges;
+    }
+
+    public Boolean getPaused() {
+        return paused;
+    }
+
+    public void setPaused(Boolean paused) {
+        this.paused = paused;
     }
 
     public List<String> getUrls() {
