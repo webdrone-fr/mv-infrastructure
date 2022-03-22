@@ -37,6 +37,8 @@ public class Server implements CustomEntity {
 
     private ServerVolume rootVolume;
 
+    private String publicIp;
+
     private SecurityGroup securityGroup;
 
     private String backupName;
@@ -116,6 +118,14 @@ public class Server implements CustomEntity {
 
     public void setRootVolume(ServerVolume rootVolume) {
         this.rootVolume = rootVolume;
+    }
+
+    public String getPublicIp() {
+        return publicIp;
+    }
+
+    public void setPublicIp(String publicIp) {
+        this.publicIp = publicIp;
     }
 
     public SecurityGroup getSecurityGroup() {
