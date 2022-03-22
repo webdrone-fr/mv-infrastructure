@@ -61,6 +61,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "project": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Project ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_project",
+            "title": "Bootscript.project",
+            "type": "string",
+            "maxLength": 255
+        },
         "initrd": {
             "storages": ["SQL"],
             "nullable": true,
