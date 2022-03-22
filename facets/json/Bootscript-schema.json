@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "bootcmdargs": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Bootscript arguments",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_bootcmdargs",
+            "title": "Bootscript.bootcmdargs",
+            "type": "string",
+            "maxLength": 1000
+        },
         "kernel": {
             "storages": ["SQL"],
             "nullable": true,
