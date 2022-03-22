@@ -16,6 +16,21 @@
             "title": "Server.image",
             "$ref": "#/definitions/ServerImage"
         },
+        "additionalVolumes": {
+            "storages": ["SQL"],
+            "patternProperties": {"^.*$": {
+                "id": "CE_Server_additionalVolumes_item",
+                "title": "Server.additionalVolumes item",
+                "$ref": "#/definitions/ServerVolume"
+            }},
+            "nullable": true,
+            "description": "Additional Volumes",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Server_additionalVolumes",
+            "title": "Server.additionalVolumes",
+            "type": "object"
+        },
         "sergentUrl": {
             "storages": ["SQL"],
             "nullable": true,
