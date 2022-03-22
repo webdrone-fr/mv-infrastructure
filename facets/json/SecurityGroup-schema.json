@@ -17,6 +17,20 @@
             "type": "string",
             "maxLength": 255
         },
+        "outboundDefaultPolicy": {
+            "storages": ["SQL"],
+            "default": "accept",
+            "nullable": true,
+            "description": "Outbound Default Policy",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_outboundDefaultPolicy",
+            "title": "SecurityGroup.outboundDefaultPolicy",
+            "enum": [
+                "drop",
+                "accept"
+            ]
+        },
         "projectDefault": {
             "storages": ["SQL"],
             "default": "false",
