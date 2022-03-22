@@ -22,6 +22,8 @@ public class ServerNetwork implements CustomEntity {
 
     private List<String> subnet = new ArrayList<>();
 
+    private String name;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -45,6 +47,14 @@ public class ServerNetwork implements CustomEntity {
 
     public void setSubnet(List<String> subnet) {
         this.subnet = subnet;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override()
