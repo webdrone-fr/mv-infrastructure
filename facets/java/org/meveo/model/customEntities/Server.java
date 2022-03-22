@@ -24,6 +24,8 @@ public class Server implements CustomEntity {
 
     private ServerVolume rootVolume;
 
+    private String status;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -55,6 +57,14 @@ public class Server implements CustomEntity {
 
     public void setRootVolume(ServerVolume rootVolume) {
         this.rootVolume = rootVolume;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override()
