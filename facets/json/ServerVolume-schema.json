@@ -76,6 +76,17 @@
                 "error"
             ]
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation Date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_ServerVolume_creationDate",
+            "title": "ServerVolume.creationDate",
+            "type": "string"
+        },
         "isBoot": {
             "storages": ["SQL"],
             "default": "false",
