@@ -22,6 +22,8 @@ public class LockdownRule implements CustomEntity {
 
     private List<String> ipRanges = new ArrayList<>();
 
+    private List<String> urls = new ArrayList<>();
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -45,6 +47,14 @@ public class LockdownRule implements CustomEntity {
 
     public void setIpRanges(List<String> ipRanges) {
         this.ipRanges = ipRanges;
+    }
+
+    public List<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
     }
 
     @Override()
