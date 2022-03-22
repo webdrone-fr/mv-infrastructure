@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.DomainName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class DnsRecord implements CustomEntity {
@@ -19,6 +20,8 @@ public class DnsRecord implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private DomainName domainName;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +37,14 @@ public class DnsRecord implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public DomainName getDomainName() {
+        return domainName;
+    }
+
+    public void setDomainName(DomainName domainName) {
+        this.domainName = domainName;
     }
 
     @Override()
