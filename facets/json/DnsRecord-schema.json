@@ -52,6 +52,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "lastSyncDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Last synchronization",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_DnsRecord_lastSyncDate",
+            "title": "DnsRecord.lastSyncDate",
+            "type": "string"
+        },
         "proxied": {
             "storages": ["SQL"],
             "default": "false",
