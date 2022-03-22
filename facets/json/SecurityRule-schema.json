@@ -26,6 +26,17 @@
             "title": "SecurityRule.destPortTo",
             "type": "integer"
         },
+        "providerSideId": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Id assigned by provider",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityRule_providerSideId",
+            "title": "SecurityRule.providerSideId",
+            "type": "string",
+            "maxLength": 50
+        },
         "protocol": {
             "storages": ["SQL"],
             "default": "TCP",
