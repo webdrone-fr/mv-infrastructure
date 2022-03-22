@@ -17,6 +17,17 @@
             "title": "SecurityGroup.projectDefault",
             "type": "string"
         },
+        "project": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Project ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_SecurityGroup_project",
+            "title": "SecurityGroup.project",
+            "type": "string",
+            "maxLength": 255
+        },
         "state": {
             "storages": ["SQL"],
             "default": "available",
