@@ -28,6 +28,8 @@ public class ApplicationInstance implements CustomEntity {
 
     private Long port;
 
+    private String urlDomain;
+
     private String repoName;
 
     @Override()
@@ -77,6 +79,14 @@ public class ApplicationInstance implements CustomEntity {
 
     public void setPort(Long port) {
         this.port = port;
+    }
+
+    public String getUrlDomain() {
+        return urlDomain;
+    }
+
+    public void setUrlDomain(String urlDomain) {
+        this.urlDomain = urlDomain;
     }
 
     public String getRepoName() {
