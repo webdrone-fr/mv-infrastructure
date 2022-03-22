@@ -94,6 +94,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "arch": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Arch",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_Bootscript_arch",
+            "title": "Bootscript.arch",
+            "type": "string",
+            "maxLength": 255
+        },
         "initrd": {
             "storages": ["SQL"],
             "nullable": true,
