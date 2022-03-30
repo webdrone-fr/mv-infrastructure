@@ -142,22 +142,23 @@ public class ScalewayHelperService extends Script{
         return serverAvailabilityObj;
     }
 
-    public static JsonObject getServerUserData(String zone, String serverId, String key, Credential credential) throws BusinessException {
-        JsonObject serverUserDataObj = new JsonObject();
+    public static String getServerUserData(String zone, String serverId, String key, Credential credential) throws BusinessException {
+        String serverUserDataStr = null;
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/user_data/"+key);
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
         String value = response.readEntity(String.class);
+        logger.debug("server user data value: {}", value);
 
         if(response.getStatus()<300) {
-            serverUserDataObj = new JsonParser().parse(value).getAsJsonObject();
+            serverUserDataStr = value;
         } else {
             throw new BusinessException("Error retrieving Server : "+serverId+" User data");
         }
         response.close();
-        return serverUserDataObj;
+        return serverUserDataStr;
     }
 
     public static JsonObject getServerDetails(String zone, String serverId, Credential credential) throws BusinessException {

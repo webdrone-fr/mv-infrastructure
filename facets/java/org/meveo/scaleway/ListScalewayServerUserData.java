@@ -61,16 +61,19 @@ public class ListScalewayServerUserData extends Script {
             for (JsonElement userDataKeyEl : userDataArr) {
                 ServerUserData userData = new ServerUserData();
                 String userDataKey = userDataKeyEl.getAsString();
-                JsonObject serverUserDataObj = ScalewayHelperService.getServerUserData(zone, serverId, userDataKey, credential);
-                userData.setName(serverUserDataObj.get("name").getAsString());
-                userData.setContentType(serverUserDataObj.get("content_type").getAsString());
-                userData.setContent(serverUserDataObj.get("content").getAsString());
+                String serverUserDataValue = ScalewayHelperService.getServerUserData(zone, serverId, userDataKey, credential);
+                userData.setName(userDataKey);
+                userData.setContentType("text/plain");
+                userData.setContent(serverUserDataValue);
+                userData.setServer(server);
+                userData.setZone(server.getZone());
+                userData.setServerSideKey(userDataKey);
 
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, userData);
                     logger.info("User Data : {} successfully retrieved for Server : {}", userDataKey, serverId);
                 } catch (Exception e) {
-                    logger.error("Error retrieving User Data {} for Server", userDataKey, serverId);
+                    logger.error("Error retrieving User Data {} for Server: {}", userDataKey, serverId, e.getMessage());
                 }
             }
         }

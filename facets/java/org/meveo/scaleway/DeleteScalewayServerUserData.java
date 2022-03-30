@@ -66,7 +66,7 @@ public class DeleteScalewayServerUserData extends Script {
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/user_data/"+serverSideKey);
-        Response response = CredentialHelperService.setCredential(target.request("text/plain"), credential).delete();
+        Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());

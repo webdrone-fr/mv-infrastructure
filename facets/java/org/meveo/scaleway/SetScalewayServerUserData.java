@@ -24,7 +24,7 @@ public class SetScalewayServerUserData extends Script {
 
 
     
-    private static final Logger logger = LoggerFactory.getLogger(ListScalewayServerUserData.class);
+    private static final Logger logger = LoggerFactory.getLogger(SetScalewayServerUserData.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
@@ -72,10 +72,12 @@ public class SetScalewayServerUserData extends Script {
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/user_data/"+serverSideKey);
 
-        Map<String, Object> body = new HashMap<String, Object>();
-        body.put(serverSideKey, content);
-        String resp = JacksonUtil.toStringPrettyPrinted(body);
-        Response response = CredentialHelperService.setCredential(target.request("text/plain"), credential).method("PATCH", Entity.json(resp));
+        // Map<String, Object> body = new HashMap<String, Object>();
+        // body.put(serverSideKey, content);
+        // String resp = JacksonUtil.toStringPrettyPrinted(body);
+        String resp = content;
+        logger.debug("server user data body: {}", resp);
+        Response response = CredentialHelperService.setCredential(target.request(), credential).method("PATCH", Entity.text(resp));
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
         logger.debug("response status : {}", response.getStatus());
@@ -86,7 +88,7 @@ public class SetScalewayServerUserData extends Script {
                 crossStorageApi.createOrUpdate(defaultRepo, sUserData);
                 logger.info("User Data : {} successfully set for Server : {}", serverSideKey, serverId);
             } catch (Exception e) {
-                logger.error("Error setting User Data {} for Server", serverSideKey, serverId);
+                logger.error("Error setting User Data {} for Server: {}", serverSideKey, serverId, e.getMessage());
             }
         }
         response.close();
