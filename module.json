@@ -5,9 +5,11 @@
   "currentVersion" : "1.31",
   "isInDraft" : true,
   "moduleDependencies" : [ {
-    "code" : "credential",
+    "code" : "mv-credentials",
     "description" : "credentials",
-    "currentVersion" : "1.2.5"
+    "currentVersion" : "1.2.5",
+    "gitUrl": "https://github.com/webdrone-fr/mv-credentials",
+    "gitBranch" : "master"
   } ],
   "moduleFiles" : [ ]
 }
