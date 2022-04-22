@@ -352,7 +352,7 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 ### OVH/ OpenStack<a name="openStack"></a>
 - keyname
 - Server Network (Entity)
-- Authentication used :
+- Authentication used : User/Password and/or token
 - API Url: SERVICE.ZONE.cloud.ovh.net/VERSION/
 #### OVH Token<a name="openStackTokenScripts"></a>
 ##### Check OVH Token Validity<a name="checkOpenStackToken"></a>
@@ -407,8 +407,19 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 #### API<a name="openStackAPIScripts"></a>
 ##### Block Storage<a name="blockStorageOpenStackAPI"></a>
 - Required fields:
+	+ Option 1 - Create Backup :
+		* Project id
+		* Volume id
+		* Name
+	+ Option 2 - Restore Backup :
+		* Project id
+		* Backup id
+	+ Option 3 - Restore Backup :
+		* Project id
+		* Backup id
 - Process:
 - Restrictions/ Notes:
+	+ Save data of the server, can be restored an another server
 	+ OpenStack documentation url: https://docs.openstack.org/api-ref/block-storage/v3/
 	+ Version: 3.59 (v3.0)
 ##### Compute<a name="computeOpenStackAPI"></a>
