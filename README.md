@@ -357,25 +357,53 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 #### OVH Token<a name="openStackTokenScripts"></a>
 ##### Check OVH Token Validity<a name="checkOpenStackToken"></a>
 - Required fields:
+	+ Credential of the openstack account 
 - Process:
+	+ Start from Credentials
+	+ OVH Check Token (Btn)
 - Restrictions/ Notes:
 #### Server<a name="openStackServerScripts"></a>
 ##### List OVH Servers<a name="listOVHServers"></a>
 - Required fields:
+	+ A valid openstack token
 - Process:
+	+ Server provider (CET)
+	+ OVH (entity)
+	+ List Servers (Btn)
 - Restrictions/ Notes:
 ##### Create OVH Server<a name="createOVHServer"></a>
 - Required fields:
+	+ A valid openstack token
+	+ Server OVH (Entity)
+	+ Instance Name (Field)
+	+ Server Type (Entity)
+	+ Image (Entity)
+	+ Ssh Key Name (Field)
+	+ Network (Entity)
 - Process:
+	+ Fill all required field
+	+ Return to the listing of Server entity
+	+ Go back again on the entity
+	+ Create Server (Btn)
 - Restrictions/ Notes:
 ##### Update OVH Server<a name="updateOVHServer"></a>
 - Required fields:
 - Process:
+	+ Update the field you want (see Restrictions )
 - Restrictions/ Notes:
+	+ Used the update field of an existing server
+	+ Can't change the provider if the server is created
+	+ Instance name cannot be empty
+	+ No restriction for organization
+	+ No restriction for Security Group entity
+	+ Ssh Key Name cannot be empty
+	+ Network cannot be empty
 ##### Delete OVH Server<a name="deleteOVHServer"></a>
 - Required fields:
 - Process:
+	+ Delete Server (Btn)
 - Restrictions/ Notes:
+	+ The server will be delete without any backup
 #### API<a name="openStackAPIScripts"></a>
 ##### Block Storage<a name="blockStorageOpenStackAPI"></a>
 - Required fields:
