@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +46,7 @@ public class ListScalewayBootscripts extends Script {
 
         // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         List<String> zones = provider.getZones();
+        List<String> providerSideIds = new ArrayList<String>();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
@@ -58,6 +60,7 @@ public class ListScalewayBootscripts extends Script {
                 for (JsonElement element : rootArray) {
                     JsonObject bootscriptObj = element.getAsJsonObject();
                     String bootscriptId = bootscriptObj.get("id").getAsString();
+                    providerSideIds.add(bootscriptId);
                     Bootscript bootscript = null;
                     try {
                         if(crossStorageApi.find(defaultRepo, Bootscript.class).by("providerSideId", bootscriptId).getResult() != null) {
@@ -73,6 +76,7 @@ public class ListScalewayBootscripts extends Script {
                     }
                 }
             }
+            // ScalewayHelperService.filterToLatestValues("Bootscript", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

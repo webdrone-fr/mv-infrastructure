@@ -13,6 +13,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.ServerVolume;
+import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.model.storage.Repository;
@@ -35,16 +36,19 @@ public class CreateScalewayVolume extends Script{
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = parameters.get(CONTEXT_ACTION).toString();
+        ServiceProvider provider = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServiceProvider.class);
         ServerVolume volume = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), ServerVolume.class);
 
         if (volume.getName() == null) {
             throw new BusinessException("Invalid Volume Name");
         } else if (volume.getVolumeType() == null) {
             throw new BusinessException("Invalid Volume Type");
-        } else if (volume.getSize() == null) {
-            throw new BusinessException("Invalid Volume Size");
-        } else if (volume.getZone() == null) {
+        }else if (volume.getZone() == null) {
             throw new BusinessException("Invalid Volume Zone"); // required
+        } else if (volume.getSize() == null && volume.getBaseVolume() == null) {
+            throw new BusinessException("One of Volume Size or Base Volume can be selected");
+        } else if(volume.getSize()!= null && volume.getBaseVolume()!= null) {
+            throw new BusinessException("Only one of Volume Size or Base Volume can be selected");
         }
 
         String zone = volume.getZone(); // required for path
@@ -84,16 +88,34 @@ public class CreateScalewayVolume extends Script{
 
         // Only 1 of volume size and base_volume can be set
         // base_volume is id of volume whose parameters are to "copy"
-        // Size
-        Long volumeSize = Long.valueOf(volume.getSize());
-        if (volumeSize >= volumeTypeMinSize && volumeSize < volumeTypeMaxSize) {
-            logger.debug("volume size = {}, volume size long = {} ", volume.getSize(), volumeSize);
-            body.put("size", volumeSize); // check output after size formating
+        if(volume.getSize()!= null) {
+            // Size
+            Long volumeSize = Long.valueOf(volume.getSize());
+            if (volumeSize >= volumeTypeMinSize && volumeSize < volumeTypeMaxSize) {
+                logger.debug("volume size = {}, volume size long = {} ", volume.getSize(), volumeSize);
+                body.put("size", volumeSize); // check output after size formating
+            }
+        } else if (volume.getBaseVolume()!= null) {
+            String baseVolumeId = volume.getBaseVolume();
+            try {
+                ServerVolume baseVolume = crossStorageApi.find(defaultRepo, ServerVolume.class).by("providerSideId", baseVolumeId).getResult();
+                if (baseVolume.getVolumeType()!= volume.getVolumeType()) {
+                    logger.error("Invalid volume type : {} selected, base volume type is :{}", volume.getVolumeType(), baseVolume.getVolumeType());
+                }
+                // Long baseVolumeSize = Long.valueOf(baseVolume.getSize());
+                // if (baseVolumeSize >= volumeTypeMinSize && baseVolumeSize < volumeTypeMaxSize) {
+                //     logger.debug("base volume size = {}, volume size long = {} ", volume.getSize(), baseVolumeSize);
+                // }
+            } catch (Exception e) {
+               throw new BusinessException("Invalid base volume for volume type selected");
+            }
+            body.put("base_volume", volume.getBaseVolume());
         }
 
         // Project
         // Webdrone ID = 6a0c2ca8-917a-418a-90a3-05949b55a7ae
-        String projectId = "6a0c2ca8-917a-418a-90a3-05949b55a7ae";
+        // String projectId = "6a0c2ca8-917a-418a-90a3-05949b55a7ae";
+        String projectId = provider.getOrganization().get("Webdrone");
         // if (volume.getProject() != null) {
         //     projectId = volume.getProject();
         // }

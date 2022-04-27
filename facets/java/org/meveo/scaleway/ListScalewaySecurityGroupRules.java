@@ -1,5 +1,7 @@
 package org.meveo.scaleway;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -23,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class ListScalewaySecurityGroupRules extends Script{
 
 
-        private static final Logger logger = LoggerFactory.getLogger(ListScalewaySecurityGroupRules.class);
+    private static final Logger logger = LoggerFactory.getLogger(ListScalewaySecurityGroupRules.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private Repository defaultRepo = repositoryService.findDefaultRepository();
@@ -45,6 +47,7 @@ public class ListScalewaySecurityGroupRules extends Script{
 
         String zone = securityGroup.getZone();
         String securityGroupId = securityGroup.getProviderSideId();
+        List<String> providerSideIds = new ArrayList<String>();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups/"+securityGroupId+"/rules");
@@ -57,6 +60,7 @@ public class ListScalewaySecurityGroupRules extends Script{
             for (JsonElement element : rootArray) {
                 JsonObject ruleObj = element.getAsJsonObject();
                 String ruleId = ruleObj.get("id").getAsString();
+                providerSideIds.add(ruleId);
                 SecurityRule rule = null;
                 try {
                     if(crossStorageApi.find(defaultRepo, SecurityRule.class).by("providerSideId", ruleId).getResult()!=null){
@@ -73,6 +77,7 @@ public class ListScalewaySecurityGroupRules extends Script{
                 }
             }
         }
+        // ScalewayHelperService.filterToLatestValues("SecurityRule", providerSideIds, crossStorageApi, defaultRepo);
         response.close();
     }
 }

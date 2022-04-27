@@ -2,6 +2,7 @@ package org.meveo.scaleway;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.*;
@@ -13,6 +14,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.CustomEntityInstance;
 import org.meveo.model.customEntities.ScalewayServer;
 import org.meveo.model.customEntities.ServerVolume;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -39,7 +41,7 @@ public class ScalewayHelperService extends Script{
             Long rootVolumeSize = Long.valueOf(serverRootVolume.getSize());
             allVolumesSizes.add(rootVolumeSize);
         } catch (Exception e) {
-            logger.error("Error retrieving root volume, {}", e.getMessage());
+            logger.error("Error retrieving root volume", e.getMessage());
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
@@ -51,7 +53,7 @@ public class ScalewayHelperService extends Script{
                     Long serverAdditionalVolumeSize = Long.valueOf(serverAdditionalVolume.getSize());
                     allVolumesSizes.add(serverAdditionalVolumeSize);
                 } catch (Exception e) {
-                    logger.error("Error retrieving additional volumes {}", e.getMessage());
+                    logger.error("Error retrieving additional volumes", e.getMessage());
                 }
             }
         }
@@ -75,7 +77,7 @@ public class ScalewayHelperService extends Script{
                 allLocalVolumesSizes.add(rootVolumeSize);
             }
         } catch (Exception e) {
-            logger.error("Error retrieving root volume, {}", e.getMessage());
+            logger.error("Error retrieving local root volume", e.getMessage());
         }
         // Additional volumes
         if (server.getAdditionalVolumes() != null){
@@ -90,7 +92,7 @@ public class ScalewayHelperService extends Script{
                         allLocalVolumesSizes.add(serverAdditionalVolumeSize);
                     }
                 } catch (Exception e) {
-                    logger.error("Error retrieving additional volumes {}", e.getMessage());
+                    logger.error("Error retrieving local additional volumes {}", e.getMessage());
                 }
             }
         }
@@ -140,25 +142,26 @@ public class ScalewayHelperService extends Script{
         return serverAvailabilityObj;
     }
 
-    public static JsonObject getServerUserData(String zone, String serverId, String key, Credential credential) throws BusinessException {
-        JsonObject serverUserDataObj = new JsonObject();
+    public static String getServerUserData(String zone, String serverId, String key, Credential credential) throws BusinessException {
+        String serverUserDataStr = null;
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/servers/"+serverId+"/user_data/"+key);
         Response response = CredentialHelperService.setCredential(target.request("application/json"), credential).get();
         String value = response.readEntity(String.class);
+        logger.debug("server user data value: {}", value);
 
         if(response.getStatus()<300) {
-            serverUserDataObj = new JsonParser().parse(value).getAsJsonObject();
+            serverUserDataStr = value;
         } else {
             throw new BusinessException("Error retrieving Server : "+serverId+" User data");
         }
         response.close();
-        return serverUserDataObj;
+        return serverUserDataStr;
     }
 
-    public static JsonObject getServerDetailsAfterSuccessfulAction(String zone, String serverId, Credential credential) throws BusinessException {
+    public static JsonObject getServerDetails(String zone, String serverId, Credential credential) throws BusinessException {
         JsonObject serverDetailsObj = new JsonObject();
 
         Client client = ClientBuilder.newClient();
@@ -270,4 +273,30 @@ public class ScalewayHelperService extends Script{
     //     response.close();
     //     return securityGroupObj;
     // }
+
+    public static void filterToLatestValues(String cetCode, List<String> providerUuids, CrossStorageApi crossStorageApi, Repository defaultRepo) throws BusinessException {
+        List<String> entitiesToRemove = new ArrayList<String>();
+        List<String> clientSideIds = new ArrayList<String>();
+
+        // get client side ids for cet
+        List<CustomEntityInstance> cetInstances = crossStorageApi.find(defaultRepo, cetCode).getResults();
+        for (CustomEntityInstance cetInstance : cetInstances) {
+            clientSideIds.add(cetInstance.getUuid());
+        }
+
+        // check if matching latest
+        for (String clientUuid : clientSideIds) {
+            if (!providerUuids.contains(clientUuid)) {
+                entitiesToRemove.add(clientUuid);
+            }
+        }
+
+        for (String entityId : entitiesToRemove) {
+            try {
+                crossStorageApi.remove(defaultRepo, entityId, cetCode);
+            } catch (Exception e) {
+                logger.error("Error clearing {} : {}",cetCode, entityId, e.getMessage());
+            }
+        }
+    }
 }

@@ -41,7 +41,7 @@ public class DeleteScalewayServer extends Script{
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
-        } else if (server.getStatus() != "stopped") {
+        } else if (!server.getStatus().equalsIgnoreCase("stopped")) {
             throw new BusinessException("Unable to delete Server \n Server is still running");
         }
 
@@ -67,7 +67,7 @@ public class DeleteScalewayServer extends Script{
                 }
             }
         }
-
+        // TODO could use terminate call to delete volumes as well
         // Option to delete associated volumes
         if (server.getRootVolume() != null || server.getAdditionalVolumes() != null) {
             if(action.equalsIgnoreCase("deleteScalewayServerWithVolumes")) {

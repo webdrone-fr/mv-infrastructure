@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.MeveoMatrix;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -24,13 +25,15 @@ public class ServiceProvider implements CustomEntity {
 
     private String apiBaseUrl;
 
-    private Map<String, String> images = new HashMap<>();
+    private MeveoMatrix<String> providerImages;
 
     private String code;
 
     private Map<String, String> organization = new HashMap<>();
 
     private Map<String, String> serverType = new HashMap<>();
+
+    private MeveoMatrix<String> providerServerTypes;
 
     private String description;
 
@@ -65,12 +68,12 @@ public class ServiceProvider implements CustomEntity {
         this.apiBaseUrl = apiBaseUrl;
     }
 
-    public Map<String, String> getImages() {
-        return images;
+    public MeveoMatrix<String> getProviderImages() {
+        return providerImages;
     }
 
-    public void setImages(Map<String, String> images) {
-        this.images = images;
+    public void setProviderImages(MeveoMatrix<String> providerImages) {
+        this.providerImages = providerImages;
     }
 
     public String getCode() {
@@ -95,6 +98,14 @@ public class ServiceProvider implements CustomEntity {
 
     public void setServerType(Map<String, String> serverType) {
         this.serverType = serverType;
+    }
+
+    public MeveoMatrix<String> getProviderServerTypes() {
+        return providerServerTypes;
+    }
+
+    public void setProviderServerTypes(MeveoMatrix<String> providerServerTypes) {
+        this.providerServerTypes = providerServerTypes;
     }
 
     public String getDescription() {

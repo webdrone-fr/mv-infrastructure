@@ -1,5 +1,9 @@
 package org.meveo.scaleway;
 
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +19,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.MeveoMatrix;
 import org.meveo.model.customEntities.PublicIp;
 import org.meveo.model.customEntities.ServerImage;
 import org.meveo.model.customEntities.ServiceProvider;
@@ -48,15 +53,18 @@ public class PopulateProviderFields extends Script {
         }
 
         String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
+        
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
 
-        // Configuration
         List<String> providerZones = new ArrayList<String>();
         Map<String, String> providerOrganizations = new HashMap<String, String>();
-        // Webdrone ID = 6a0c2ca8-917a-418a-90a3-05949b55a7ae
         Map<String, String> serverTypes = new HashMap<String, String>();
-        Map<String, String> images = new HashMap<String, String>();
+        MeveoMatrix<String> serverTypesMatrix = new MeveoMatrix<String>();
+        MeveoMatrix<String> imagesMatrix = new MeveoMatrix<String>();
+        
+        List<String> providerSideImageIds = new ArrayList<String>();
+        List<String> providerSidePublicIpIds = new ArrayList<String>();
         List<String> publicIpRecords = new ArrayList<String>();
         for(String zone : zones) {
             providerZones.add(zone);
@@ -68,19 +76,24 @@ public class PopulateProviderFields extends Script {
             // Server Types
             JsonObject serverTypesObj = ScalewayHelperService.getProviderServerTypes(zone, provider, credential);
             Set<Map.Entry<String, JsonElement>> entries = serverTypesObj.entrySet();
-            for(Map.Entry<String, JsonElement> entry: entries) {
+            for(Map.Entry<String, JsonElement> entry : entries) {
                 JsonObject serverTypeObj =  entry.getValue().getAsJsonObject();
                 Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
                 serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
+
+                String ram = serverType.get("ram").toString();
+                String disk = serverType.get("volumes_constraint").toString();
+                String ncpus = serverType.get("ncpus").toString();
+                String name = entry.getKey();
+                serverTypesMatrix.set(zone, ram, disk, ncpus, name, JacksonUtil.toStringPrettyPrinted(serverType));
             }
-            // Sort entries TODO
-            Map<String, String> treeMap = new TreeMap<String, String>(serverTypes);
             
             // Images
             JsonArray imagesArr = ScalewayHelperService.getProviderImages(zone, provider, credential);
             for (JsonElement imageEl : imagesArr) {
                 JsonObject imageObj = imageEl.getAsJsonObject();
                 String imageId = imageObj.get("id").getAsString();
+                providerSideImageIds.add(imageId);
                 ServerImage image = null;
                 try {
                     if(crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult()!=null)  {
@@ -96,15 +109,18 @@ public class PopulateProviderFields extends Script {
                     logger.error("Error creating image : {}", imageId, e.getMessage());
                 }
                 String imageName = imageObj.get("name").getAsString();
-                images.put(imageId, imageName+" : "+zone);
+                Instant instant = image.getCreationDate();
+                OffsetDateTime odt = instant.atOffset(ZoneOffset.UTC);
+                String creationDate = odt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME).replace("T", " ");
+                imagesMatrix.set(zone, imageName, creationDate, imageId);
             }
-            logger.info("IMAGES IN LIST COUNT: {}", images.size());
             
             // Public Ips
             JsonArray ipsArr = ScalewayHelperService.getProviderPublicIps(zone, provider, credential);
             for (JsonElement ipEl : ipsArr) {
                 JsonObject publicIpObj = ipEl.getAsJsonObject();
                 String publicIpId = publicIpObj.get("id").getAsString();
+                providerSidePublicIpIds.add(publicIpId);
                 PublicIp publicIp = null;
                 try {
                     if (crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult()!=null) {
@@ -129,10 +145,24 @@ public class PopulateProviderFields extends Script {
                 }
             }
         }
+
+        // Sort Provider Server Types
+        Map<String, String> sortedServerTypes = new TreeMap<String, String>(serverTypes);
+        // logger.info("sorted server types: {}", sortedServerTypes);
+
+        // clear values that are not present on provider side
+        // server images
+        ScalewayHelperService.filterToLatestValues("ServerImage", providerSideImageIds, crossStorageApi, defaultRepo);
+        // public Ips
+        // ScalewayHelperService.filterToLatestValues("PublicIp", providerSidePublicIpIds, crossStorageApi, defaultRepo);
+
         provider.setZones(providerZones);
         provider.setOrganization(providerOrganizations);
-        provider.setServerType(serverTypes);
-        provider.setImages(images);
+        provider.setServerType(sortedServerTypes);
+        provider.setProviderServerTypes(serverTypesMatrix);
+        provider.setProviderImages(imagesMatrix);
+        logger.info("query matrix : {}", imagesMatrix.getClosestMatch("fr-par-3", "ArchLinux"));
+        // logger.info("Images Matrix : {}", JacksonUtil.toStringPrettyPrinted(imagesMatrix));
         provider.setPublicIp(publicIpRecords);
         try {
             crossStorageApi.createOrUpdate(defaultRepo, provider);

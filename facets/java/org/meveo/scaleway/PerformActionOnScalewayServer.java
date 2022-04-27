@@ -130,7 +130,7 @@ public class PerformActionOnScalewayServer extends Script {
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, serverAction);
             } catch (Exception e) {
-                logger.error("error creating server action {} : {}", serverAction.getUuid(), e.getMessage());
+                logger.error("error creating server action : {}", serverAction.getUuid(), e.getMessage());
             }
             response.close();
         }

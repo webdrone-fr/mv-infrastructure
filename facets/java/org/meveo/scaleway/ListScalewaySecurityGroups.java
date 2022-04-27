@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +50,7 @@ public class ListScalewaySecurityGroups extends Script {
         // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         List<String> zones = provider.getZones();
         Client client = ClientBuilder.newClient();
+        List<String> providerSideIds = new ArrayList<String>();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
             WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups");
@@ -62,7 +64,7 @@ public class ListScalewaySecurityGroups extends Script {
                     JsonObject secGroupObj = element.getAsJsonObject();
                     SecurityGroup securityGroup = null;
                     String securityGroupId = secGroupObj.get("id").getAsString();
-
+                    providerSideIds.add(securityGroupId);
                     try {
                         if(crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult()!= null){
                             securityGroup = crossStorageApi.find(defaultRepo, SecurityGroup.class).by("providerSideId", securityGroupId).getResult();
@@ -77,6 +79,7 @@ public class ListScalewaySecurityGroups extends Script {
                     }
                 }
             }
+            // ScalewayHelperService.filterToLatestValues("SecurityGroup", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }
