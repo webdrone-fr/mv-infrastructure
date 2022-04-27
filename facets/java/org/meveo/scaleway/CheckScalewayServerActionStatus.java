@@ -82,7 +82,7 @@ public class CheckScalewayServerActionStatus extends Script{
                     action.setElapsedTimeMs(timeElapsed.toMillis());
                     action.setProgress(taskObj.get("progress").getAsLong());
                     actionComplete = true;
-                    parameters.put(RESULT_GUI_MESSAGE, "Action :"+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
+                    parameters.put(RESULT_GUI_MESSAGE, "Action : "+action.getAction() +" terminated in : "+action.getElapsedTimeMs()+" with status : "+action.getResponse());
                 } else if (action.getResponse().equalsIgnoreCase("failure")) {
                     throw new BusinessException("Task failed");
                 } else {
@@ -92,14 +92,14 @@ public class CheckScalewayServerActionStatus extends Script{
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, action);
                 } catch (Exception e) {
-                    logger.error("Error with Action Status : {}", e.getMessage());
+                    logger.error("Error with Action Status : {}", action.getResponse(), e.getMessage());
                 }
             }
             response.close();
         } while (actionComplete != true);
 
         if (action.getResponse().equalsIgnoreCase("success")) {
-            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetailsAfterSuccessfulAction(zone, server.getProviderSideId(), credential);
+            JsonObject serverDetailsObj = ScalewayHelperService.getServerDetails(zone, server.getProviderSideId(), credential);
             // Values to update
             // Default Server values
             String publicIp = null;
@@ -132,15 +132,18 @@ public class CheckScalewayServerActionStatus extends Script{
                         String node_id = locationObj.get("node_id").getAsString();
                         location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
                     }
+                    // Private IP
                     if(!serverDetailsObj.get("private_ip").isJsonNull()) {
                         privateIp = serverDetailsObj.get("private_ip").getAsString();
                     }
-                    
+                    // IPV6
                     if (!serverDetailsObj.get("ipv6").isJsonNull()) {
                         ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
                     }
-                    
-                    status = "running";
+                    // Status
+                    if (!serverDetailsObj.get("state").isJsonNull()) {
+                        status = serverDetailsObj.get("state").getAsString();
+                    }
                     break;
                 case "poweroff":
                     // Server Actions
@@ -148,7 +151,10 @@ public class CheckScalewayServerActionStatus extends Script{
                     for (JsonElement allowedAction : allowedActions) {
                         serverActions.add(allowedAction.getAsString());
                     }
-                    status = "stopped";
+                    // Status
+                    if (!serverDetailsObj.get("state").isJsonNull()) {
+                        status = serverDetailsObj.get("state").getAsString();
+                    }
                     break;
                 case "stop_in_place":
                     // Public Ip
@@ -170,15 +176,51 @@ public class CheckScalewayServerActionStatus extends Script{
                         String node_id = locationObj.get("node_id").getAsString();
                         location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
                     }
+                    // Private Ip
                     if(!serverDetailsObj.get("private_ip").isJsonNull()) {
                         privateIp = serverDetailsObj.get("private_ip").getAsString();
                     }
-                    
+                    // IPV6
                     if (!serverDetailsObj.get("ipv6").isJsonNull()) {
                         ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
                     }
-
-                    status = "stopped in place";
+                    // Status
+                    if (!serverDetailsObj.get("state").isJsonNull()) {
+                        status = serverDetailsObj.get("state").getAsString();
+                    }
+                    break;
+                case "backup":
+                        // Public Ip
+                        if(!serverDetailsObj.get("public_ip").isJsonNull()){
+                            publicIp = serverDetailsObj.get("public_ip").getAsJsonObject().get("address").getAsString();
+                        }
+                        // Server Actions
+                        allowedActions = serverDetailsObj.get("allowed_actions").getAsJsonArray();
+                        for (JsonElement allowedAction : allowedActions) {
+                            serverActions.add(allowedAction.getAsString());
+                        }
+                        // Location
+                        if (!serverDetailsObj.get("location").isJsonNull()) {
+                            JsonObject locationObj = serverDetailsObj.get("location").getAsJsonObject();
+                            String zone_id = locationObj.get("zone_id").getAsString();
+                            String platform_id = locationObj.get("platform_id").getAsString();
+                            String cluster_id = locationObj.get("cluster_id").getAsString();
+                            String hypervisor_id = locationObj.get("hypervisor_id").getAsString();
+                            String node_id = locationObj.get("node_id").getAsString();
+                            location = zone_id+"/"+platform_id+"/"+cluster_id+"/"+hypervisor_id+"/"+node_id;
+                        }
+                        // Private IP
+                        if(!serverDetailsObj.get("private_ip").isJsonNull()) {
+                            privateIp = serverDetailsObj.get("private_ip").getAsString();
+                        }
+                        // IPV6
+                        if (!serverDetailsObj.get("ipv6").isJsonNull()) {
+                            ipVSix = serverDetailsObj.get("ipv6").getAsJsonObject().get("address").getAsString();
+                        }
+                        // Status
+                        if (!serverDetailsObj.get("state").isJsonNull()) {
+                            status = serverDetailsObj.get("state").getAsString();
+                        }
                     break;
             }
             server.setLastUpdate(OffsetDateTime.parse(serverDetailsObj.get("modification_date").getAsString()).toInstant());

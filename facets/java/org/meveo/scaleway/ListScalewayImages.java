@@ -1,5 +1,6 @@
 package org.meveo.scaleway;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class ListScalewayImages extends Script{
 
         // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         List<String> zones = provider.getZones();
+        List<String> providerSideIds = new ArrayList<String>();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
         for (String zone : zones) {
@@ -57,6 +59,7 @@ public class ListScalewayImages extends Script{
                 for (JsonElement element : rootArray) {
                     JsonObject imageObj = element.getAsJsonObject();
                     String imageId = imageObj.get("id").getAsString();
+                    providerSideIds.add(imageId);
                     ServerImage image = null;
                     try {
                         if(crossStorageApi.find(defaultRepo, ServerImage.class).by("providerSideId", imageId).getResult() != null) {
@@ -72,6 +75,7 @@ public class ListScalewayImages extends Script{
                     }
                 }
             }
+            // ScalewayHelperService.filterToLatestValues("ServerImage", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

@@ -48,6 +48,7 @@ public class ListScalewayFlexibleIps extends Script{
 
         // String[] zones = new String[] {"fr-par-1", "fr-par-2", "fr-par-3", "nl-ams-1", "pl-waw-1"};
         List<String> zones = provider.getZones();
+        List<String> providerSideIds = new ArrayList<String>();
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
 
@@ -64,6 +65,7 @@ public class ListScalewayFlexibleIps extends Script{
                 for (JsonElement element : rootArray) {
                     JsonObject publicIpObj = element.getAsJsonObject();
                     String publicIpId = publicIpObj.get("id").getAsString();
+                    providerSideIds.add(publicIpId);
                     PublicIp publicIp = null;
                     try {
                         if(crossStorageApi.find(defaultRepo, PublicIp.class).by("providerSideId", publicIpId).getResult() != null) {
@@ -94,6 +96,7 @@ public class ListScalewayFlexibleIps extends Script{
                     logger.error("Error retrieving public ip records for provider : {}", provider.getCode(), e.getMessage());
                 }
             }
+            // ScalewayHelperService.filterToLatestValues("PublicIp", providerSideIds, crossStorageApi, defaultRepo);
             response.close();
         }
     }

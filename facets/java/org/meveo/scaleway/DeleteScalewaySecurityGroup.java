@@ -11,7 +11,6 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
 import org.meveo.model.customEntities.SecurityGroup;
-import org.meveo.model.customEntities.SecurityRule;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -19,8 +18,8 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DeleteScalewaySecurityGroupRule extends Script{
-
+public class DeleteScalewaySecurityGroup extends Script {
+    
 
     private static final Logger logger = LoggerFactory.getLogger(DeleteScalewaySecurityGroupRule.class);
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
@@ -33,30 +32,16 @@ public class DeleteScalewaySecurityGroupRule extends Script{
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         String action = parameters.get(CONTEXT_ACTION).toString();
-        SecurityRule rule = CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), SecurityRule.class);
+        SecurityGroup securityGroup =  CEIUtils.ceiToPojo((org.meveo.model.customEntities.CustomEntityInstance)parameters.get(CONTEXT_ENTITY), SecurityGroup.class);
 
-        if(rule.getZone()==null) {
-            throw new BusinessException("Invalid Security Rule Zone"); // required
-        } else if(rule.getSecurityGroup()==null) {
-            throw new BusinessException("Invalid Security Group for Security Rule"); // required
-        } else if(rule.getIpRange()==null) {
-            throw new BusinessException("Invalid Security Rule IP Range"); // required
-        } else if(rule.getProviderSideId()==null) {
-            throw new BusinessException("Invalid Security Rule Provider-side ID");
+        if(securityGroup.getZone()== null) {
+            throw new BusinessException("Invalid Security Group Zone"); // required
+        } else if(securityGroup.getProviderSideId()==null) {
+            throw new BusinessException("Invalid Security Gropup Provider-side ID"); // required
         }
 
-        String zone = rule.getZone();
-        String ruleId = rule.getProviderSideId();
-        // Security Group
-        String securityGroupUuid = rule.getSecurityGroup().getUuid();
-        String securityGroupId = null;
-        SecurityGroup securityGroup = null;
-        try {
-            securityGroup = crossStorageApi.find(defaultRepo, securityGroupUuid, SecurityGroup.class);
-            securityGroupId = securityGroup.getProviderSideId();
-        } catch (Exception e) {
-            throw new BusinessException("Error retrieving security group : "+securityGroupUuid +e.getMessage());
-        }
+        String zone = securityGroup.getZone();
+        String securityGroupId = securityGroup.getProviderSideId();
 
         Credential credential = CredentialHelperService.getCredential(SCALEWAY_URL, crossStorageApi, defaultRepo);
         if (credential == null) {
@@ -67,7 +52,7 @@ public class DeleteScalewaySecurityGroupRule extends Script{
 
         Client client = ClientBuilder.newClient();
         client.register(new CredentialHelperService.LoggingFilter());
-        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups/"+securityGroupId+"/rules/"+ruleId);
+        WebTarget target = client.target("https://"+SCALEWAY_URL+BASE_PATH+zone+"/security_groups/"+securityGroupId);
         Response response = CredentialHelperService.setCredential(target.request(), credential).delete();
         String value = response.readEntity(String.class);
         logger.info("response : {}", value);
@@ -75,10 +60,10 @@ public class DeleteScalewaySecurityGroupRule extends Script{
         parameters.put(RESULT_GUI_MESSAGE, "Status: "+response.getStatus()+", response:"+value);
         if (response.getStatus()<300) {
             try {
-                crossStorageApi.remove(defaultRepo, rule.getUuid(), SecurityRule.class);
-                logger.info("security rule : {} for security group : {} deleted at : {}", ruleId, securityGroupId, Instant.now());
+                crossStorageApi.remove(defaultRepo, securityGroup.getUuid(), SecurityGroup.class);
+                logger.info("security group : {} deleted at : {}", securityGroupId, Instant.now());
             } catch (Exception e) {
-                logger.error("error deleting security rule : {} for security group : {}", ruleId, securityGroupId, e.getMessage());
+                logger.error("error deleting security group : {}", securityGroupId, e.getMessage());
             }
         }
         response.close();

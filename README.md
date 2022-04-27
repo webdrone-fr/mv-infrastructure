@@ -62,7 +62,6 @@
 			3. [Update Server Volume](#updateScalewayServerVolume)
 			4. [Delete Server Volume](#deleteScalewayServerVolume)
 
-
 ## Requirements<a name="requirements"></a>
 ### [mv-credentials](https://github.com/webdrone-fr/mv-credentials)
 #### Cloudflare
@@ -121,7 +120,7 @@
 4. Server
 	1. List Servers (limited to names starting with "dev-" and "int"(integration))
 	2. To create a Server:
-		1. From an Image (recomended):
+		1. From an Image (recommended):
 			1. Select an Image(copy uuid)
 			2. Create a new (ProviderName)Server Entity
 				1. Required fields:
@@ -175,7 +174,7 @@
 		1. Includes IP address and domain for Server
 
 ## Entities (For terminology and restrictions)<a name="entities"></a>
-### Bootscript
+### Bootscript (Scaleway)
 Bootscripts are a combination of a Kernel and of an initrd. They tell to the instance how to start and configure its starting process and settings.
 ### Dns Record
 - attached to a domain name
@@ -185,10 +184,10 @@ Associated to a domain name and concerns the different dns records of that domai
 - limit to max number of active rules, based on account type(TBC), current is 3
 ### OVH Server
 
-### Public IP
+### Public IP (Scaleway)
 A flexible IP address is an IP address which is held independently of any server. It can be attached to any server and do live migrations of the IP address between servers.
 Be aware that attaching a flexible IP address to a server will remove the previous public IP address of the server and cut any ongoing public connection to the server.
-### Scaleway Server
+### Scaleway Server (Scaleway)
 Scaleway offers Virtual Cloud and dedicated GPU instances.Virtual cloud instances are offering the best performance/price ratio for most workloads.
  - The Development instances range provides stable and consistent performance for development needs.
 - The General Purpose instances range is the solution for demanding workloads.
@@ -209,7 +208,7 @@ Images are backups of your instances. You can reuse that Image to restore your d
 An image is a complete backup of your server including all volumes.
 ### Server Network (OVH)
 Address range from which a Server instance will be allocated a public IP.
-### Server User Data
+### Server User Data (Scaleway)
 User data is a key value store API you can use to provide data from and to your server without authentication.
 ### Server Volume
 A volume is where you store your data inside your instance. It appears as a block device on Linux that you can use to create a filesystem and mount it.
@@ -352,7 +351,7 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 ### OVH/ OpenStack<a name="openStack"></a>
 - keyname
 - Server Network (Entity)
-- Authentication used : User/Password and/or token
+- Authentication used :
 - API Url: SERVICE.ZONE.cloud.ovh.net/VERSION/
 #### OVH Token<a name="openStackTokenScripts"></a>
 ##### Check OVH Token Validity<a name="checkOpenStackToken"></a>
@@ -495,7 +494,7 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 	+ Maintenances: planned maintenance to be performed on the server
 	+ Placement group: seperation of server instances
 	+ Private NICs: private networks server belongs to, additional functionality offered by Scaleway
-- /tasks for check action status => not listed inSscaleway documentation
+- /tasks for check action status => not listed in Scaleway documentation
 ##### List Servers <a name="listScalewayServers"></a>
 - Required fields:
 	+ Credential (Entity) for Scaleway
@@ -590,7 +589,7 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 	+ Fill in Backup Name (Optional)
 	+ Backup Server (Btn)
 - Restrictions/ Notes:
-	+ Creates an Image + associated Volumes
+	+ Creates an Image + associated Volume(s)
 	+ Limited to the same zone as the original Server (TBC)
 
 #### Security Group<a name="scalewaySecurityGroupScripts"></a>
@@ -727,8 +726,7 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 ##### Create Server Image<a name="createScalewayServerImage"></a>
 - Required fields:
 - Process:
-	+ Option 1: from a Server => backup(link)
-		* [Backup Server](#backupScalewayServer)
+	+ Option 1: [Backup from a Server](#backupScalewayServer)
 	+ Option 2: from scratch (not yet implemented)
 - Restrictions/ Notes:
 
@@ -799,3 +797,166 @@ External Provider that manages infrastructure (IaaS) including servers and domai
 	+ Delete Scaleway Server Volume (Btn)
 - Restrictions/ Notes:
 	+ Check if Volume(s) is not attached to a Server and that Server is not running
+
+#### Server User Data<a name="scalewayServerUserDataScripts"></a>
+##### List Scaleway Server User Data<a name="listScalewayServerUserData"></a>
+- Required fields:
+	+ Service Provider (Entity) for Scaleway
+	+ Scaleway Server (Entity)
+	+ Zone
+- Process:
+	+ Start form Scaleway Server (Entity)
+	+ List Scaleway Server User Data (Btn)
+- Restrictions/ Notes:
+##### Create Scaleway Server User Data<a name="createScalewayServerUserData"></a>
+- Required fields:
+- Process:(not yet implemented)
+- Restrictions/ Notes:
+##### Update Scaleway Server User Data<a name="updateScalewayServerUserData"></a>
+- Required fields:
+- Process:(not yet implemented)
+- Restrictions/ Notes:
+##### Delete Scaleway Server User Data<a name="deleteScalewayServerUserData"></a>
+- Required fields:
+- Process:(not yet implemented)
+- Restrictions/ Notes:
+
+#### Additional Scripts
+##### Scaleway Setters
+- Server Volume
+	+ Inputs:
+		* JsonObject volumeObj
+		* ServerVolume volume
+		* CrossStorageAPI crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* ServerVolume volume (Entity)
+	+ Restrictions/ Notes:
+- Server Image
+	+ Inputs:
+		* JsonObject imageObj
+		* ServerImage image
+		* CrossStorageApi crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* ServerImage image (Entity)
+	+ Restrictions/ Notes:
+		* Image from server (relation) only set if Server Instance exists on Meveo
+		* checks if Volumes and Bootscript exist as Instances, else creates new
+- Bootscript
+	+ Inputs: 
+		* JsonObject bootscriptObj
+		* Bootscript bootscript
+		* CrossStorageApi crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* Bootscript bootscript (Entity)
+	+ Restrictions/ Notes:
+- Scaleway Server
+	+ Inputs:
+		* JsonObject serverObj
+		* ScalewayServer server
+		* ServiceProvider provider
+		* CrossStorageApi crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* ScalewayServer server (Entity)
+	+ Restrictions/ Notes:
+		* checks if Image, Volumes, Bootscript and Security Group exist as Instances, else creates new
+- Public IP
+	+ Inputs:
+		* JsonObject publicIpObj
+		* PublicIp publicIp
+		* ServiceProvider provider
+		* CrossStorageApi crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* PublicIp publicIp (Entity)
+	+ Restrictions/ Notes:
+		* References to Server if Server exists as Instace on meveo and start with either "dev-" or "int"
+- Security Group
+	+ Inputs:
+		* JsonObject securityGroupObj
+		* SecurityGroup securityGroup
+		* CrossStorageApi crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* SecurityGroup securityGroup (Entity)
+	+ Restrictions/ Notes:
+- Security Rule
+	+ Inputs:
+		* JsonObject ruleObj
+		* SecurityRule rule
+		* CrossStorageApi crossStorageApi
+		* Repository defaultRepo
+	+ Returns:
+		* SecurityRule rule (Entity)
+	+ Restrictions/ Notes:
+- Server Type
+	+ Inputs:
+		* JsonObject serverTypeObj
+	+ Returns:
+		* Map<String, Object> serverType
+	+ Restrictions/ Notes:
+		* Hourly prices sent as int, does not allow for calculations of actual prices as missing data (decimals)
+##### Scaleway Helper Service
+- Calculate Server Total Volumes Size
+- Calculate Server Total Local Volumes Sizes
+- GET Server Type Requirements
+- GET Server Type Availability In Zone
+- GET Server User Data
+- Get Server Details after Successful Action
+- GET Provider Server Types
+- Get Provider Images
+- GET Provider Public IPs
+- DELETE Volume
+##### Perform Action on Scaleway Server
+- Required fields:
+	+ Scaleway Server (Entity)
+	+ Action
+	+ List of allowed actions on Server
+		* From Server Instance
+		* Possible values include poweron, backup, stop_in_place, poweroff, terminate and reboot
+		* Default is poweron
+- Process:
+	+ Start from Scaleway Server (Entity)
+	+ (Action) (Btn)
+		* if action is "backup" : checks for backup name
+	+ Checks Server Type Constraints
+		* Local Volume Size
+- Restrictions/ Notes:
+##### Check Scaleway Server Action Status
+- Inputs:
+	+ ServerAction action
+- Process:
+	+ Check for Provider Side ID
+	+ Check for Associated Server
+	+ Loop to get action details until action is terminated
+	+ Until action terminated => status is "pending"
+		* change status of Server (Entity) depending on action
+			- "poweron": "starting"
+			- "poweroff": "stopping"
+			- "stop_in_place": "stopping"
+			- "reboot": "rebooting"
+			- "backup": "backing up"
+	+ When action terminated and action status is "success"
+		* Update Server (Entity)
+- Restrictions/ Notes:
+
+#### Template<a name="templateScripts"></a>
+##### List Template<a name="listTemplate"></a>
+- Required fields:
+- Process:
+- Restrictions/ Notes:
+##### Create Template<a name="createTemplate"></a>
+- Required fields:
+- Process:
+- Restrictions/ Notes:
+##### Update Template<a name="updateTemplate"></a>
+- Required fields:
+- Process:
+- Restrictions/ Notes:
+##### Delete Template<a name="deleteTemplate"></a>
+- Required fields:
+- Process:
+- Restrictions/ Notes:
