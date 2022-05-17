@@ -1,11 +1,11 @@
 {
-  "code" : "infrastructure",
+  "code" : "mv-infrastructure",
   "description" : "Infrastructure management",
   "license" : "GPL",
   "currentVersion" : "1.31",
   "isInDraft" : true,
   "moduleDependencies" : [ {
-    "code" : "credential",
+    "code" : "mv-credentials",
     "description" : "credentials",
     "currentVersion" : "1.2.5"
   } ],
