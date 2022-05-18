@@ -59,7 +59,7 @@ public class PopulateProviderFields extends Script {
 
         List<String> providerZones = new ArrayList<String>();
         Map<String, String> providerOrganizations = new HashMap<String, String>();
-        Map<String, String> serverTypes = new HashMap<String, String>();
+        // Map<String, String> serverTypes = new HashMap<String, String>();
         MeveoMatrix<String> serverTypesMatrix = new MeveoMatrix<String>();
         MeveoMatrix<String> imagesMatrix = new MeveoMatrix<String>();
         
@@ -79,7 +79,7 @@ public class PopulateProviderFields extends Script {
             for(Map.Entry<String, JsonElement> entry : entries) {
                 JsonObject serverTypeObj =  entry.getValue().getAsJsonObject();
                 Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
-                serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
+                // serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
 
                 String ram = serverType.get("ram").toString();
                 String disk = serverType.get("volumes_constraint").toString();
@@ -105,7 +105,6 @@ public class PopulateProviderFields extends Script {
                     image = ScalewaySetters.setServerImage(imageObj, image, crossStorageApi, defaultRepo);
                     crossStorageApi.createOrUpdate(defaultRepo, image);
                 } catch (Exception e) {
-                    logger.error("ERROR WITH IMAGE CREATION", e);
                     logger.error("Error creating image : {}", imageId, e.getMessage());
                 }
                 String imageName = imageObj.get("name").getAsString();
@@ -147,7 +146,7 @@ public class PopulateProviderFields extends Script {
         }
 
         // Sort Provider Server Types
-        Map<String, String> sortedServerTypes = new TreeMap<String, String>(serverTypes);
+        // Map<String, String> sortedServerTypes = new TreeMap<String, String>(serverTypes);
         // logger.info("sorted server types: {}", sortedServerTypes);
 
         // clear values that are not present on provider side
@@ -158,10 +157,10 @@ public class PopulateProviderFields extends Script {
 
         provider.setZones(providerZones);
         provider.setOrganization(providerOrganizations);
-        provider.setServerType(sortedServerTypes);
+        // provider.setServerType(sortedServerTypes);
         provider.setProviderServerTypes(serverTypesMatrix);
         provider.setProviderImages(imagesMatrix);
-        logger.info("query matrix : {}", imagesMatrix.getClosestMatch("fr-par-3", "ArchLinux"));
+        // logger.info("query matrix : {}", imagesMatrix.getClosestMatch("fr-par-3", "ArchLinux"));
         // logger.info("Images Matrix : {}", JacksonUtil.toStringPrettyPrinted(imagesMatrix));
         provider.setPublicIp(publicIpRecords);
         try {

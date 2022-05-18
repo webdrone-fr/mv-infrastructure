@@ -1,0 +1,58 @@
+{
+  "code" : "providerServerTypes",
+  "description" : "Provider Server Types",
+  "fieldType" : "STRING",
+  "accountLevel" : "CE_ServiceProvider",
+  "appliesTo" : "CE_ServiceProvider",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "MATRIX",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "maxValue" : 255,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Server Types:2;field:2",
+  "identifier" : false,
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : false,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false,
+  "matrixColumns" : [ {
+    "columnUse" : "USE_KEY",
+    "position" : 1,
+    "code" : "zone",
+    "label" : "Zone",
+    "keyType" : "STRING"
+  }, {
+    "columnUse" : "USE_KEY",
+    "position" : 2,
+    "code" : "ram",
+    "label" : "Ram",
+    "keyType" : "STRING"
+  }, {
+    "columnUse" : "USE_KEY",
+    "position" : 3,
+    "code" : "disk",
+    "label" : "Disk Size",
+    "keyType" : "STRING"
+  }, {
+    "columnUse" : "USE_KEY",
+    "position" : 4,
+    "code" : "ncpus",
+    "label" : "Number of CPUs",
+    "keyType" : "STRING"
+  }, {
+    "columnUse" : "USE_KEY",
+    "position" : 5,
+    "code" : "name",
+    "label" : "Name",
+    "keyType" : "STRING"
+  } ]
+}
