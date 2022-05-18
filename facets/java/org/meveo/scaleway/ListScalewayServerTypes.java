@@ -14,6 +14,7 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.credentials.CredentialHelperService;
 import org.meveo.model.customEntities.Credential;
+import org.meveo.model.customEntities.MeveoMatrix;
 import org.meveo.model.customEntities.ServiceProvider;
 import org.meveo.model.persistence.CEIUtils;
 import org.meveo.model.persistence.JacksonUtil;
@@ -56,15 +57,28 @@ public class ListScalewayServerTypes extends Script{
             logger.info("response : " + value);
             logger.debug("response status : {}", response.getStatus());
             if (response.getStatus() < 300) {
+                MeveoMatrix<String> serverTypesMatrix = new MeveoMatrix<String>();
                 JsonObject serverTypesObj = new JsonParser().parse(value).getAsJsonObject().get("servers").getAsJsonObject();
-                Map<String, String> serverTypes = new HashMap<String, String>();
                 Set<Map.Entry<String, JsonElement>> entries = serverTypesObj.entrySet();
-                for(Map.Entry<String, JsonElement> entry: entries) {
-                    JsonObject serverTypeObj = entry.getValue().getAsJsonObject();
+                // Map<String, String> serverTypes = new HashMap<String, String>();
+                // for(Map.Entry<String, JsonElement> entry: entries) {
+                //     JsonObject serverTypeObj = entry.getValue().getAsJsonObject();
+                //     Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
+                //     serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
+                // }
+                // provider.setServerType(serverTypes);
+                for(Map.Entry<String, JsonElement> entry : entries) {
+                    JsonObject serverTypeObj =  entry.getValue().getAsJsonObject();
                     Map<String, Object> serverType = ScalewaySetters.setServerType(serverTypeObj);
-                    serverTypes.put(entry.getKey(), JacksonUtil.toStringPrettyPrinted(serverType));
+    
+                    String ram = serverType.get("ram").toString();
+                    String disk = serverType.get("volumes_constraint").toString();
+                    String ncpus = serverType.get("ncpus").toString();
+                    String name = entry.getKey();
+                    serverTypesMatrix.set(zone, ram, disk, ncpus, name, JacksonUtil.toStringPrettyPrinted(serverType));
                 }
-                provider.setServerType(serverTypes);
+
+                provider.setProviderServerTypes(serverTypesMatrix);
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, provider);
                 } catch (Exception e) {

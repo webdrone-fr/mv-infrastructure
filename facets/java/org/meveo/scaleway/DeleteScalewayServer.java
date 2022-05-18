@@ -41,7 +41,7 @@ public class DeleteScalewayServer extends Script{
             throw new BusinessException("Invalid Server Zone");
         } else if(server.getProviderSideId()==null) { //Required
             throw new BusinessException("Invalid Server Provider-side ID");
-        } else if (!server.getStatus().equalsIgnoreCase("stopped")) {
+        } else if (!server.getStatus().equalsIgnoreCase("stopped") && !server.getStatus().equalsIgnoreCase("stopped in place")) {
             throw new BusinessException("Unable to delete Server \n Server is still running");
         }
 
