@@ -48,11 +48,11 @@ public class PopulateServerProvider extends Script {
         		Credential credential = CredentialHelperService.getCredential(serverProvider.getApiBaseUrl(), crossStorageApi, defaultRepo);
                 checkOVHToken.checkOVHToken(credential, serverProvider);
             	List<JsonObject> flavors = openstackAPI.computeAPI(url, credential, null, "get", "flavor");
-                Map<String, String> serverTypes = new HashMap<String, String>();
+                //Map<String, String> serverTypes = new HashMap<String, String>();
             	for (JsonObject flavor : flavors) {
-                  	serverTypes.put(flavor.get("id").getAsString(), flavor.toString());
+                  	//serverTypes.put(flavor.get("id").getAsString(), flavor.toString());
                 }
-            	serverProvider.setServerType(serverTypes);
+            	//serverProvider.setServerType(serverTypes);
                 logger.info("server types: {}", JacksonUtil.toStringPrettyPrinted(serverTypes));
             	try {
                   	crossStorageApi.createOrUpdate(defaultRepo, serverProvider);
