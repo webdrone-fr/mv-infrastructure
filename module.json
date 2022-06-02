@@ -8,7 +8,7 @@
     "code" : "mv-credentials",
     "description" : "credentials",
     "currentVersion" : "1.2.5",
-    "gitUrl": "https://github.com/webdrone-fr/mv-credentials",
+    "gitUrl": "https://github.com/webdrone-fr/mv-credentials.git",
     "gitBranch" : "master"
   } ],
   "moduleFiles" : [ ]
